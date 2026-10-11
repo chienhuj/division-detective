@@ -953,9 +953,9 @@
                 decisionKey: "ceil",
                 chipsPool: [
                     "38 位學生", "每 4 人坐一輛車", "坐滿了 9 輛車", "還剩下 2 位學生", "這 2 位學生也要搭車", "所以需要 9 + 1 = 10 輛車",
-                    "剩下 2 輛車", "坐滿 9 個人", "需要 9 輛車丟下 2 人"
+                    "剩下 2 輛車", "坐滿 9 個人", "只需要 9 輛車 (不理餘數)"
                 ],
-                distractors: ["剩下 2 輛車", "坐滿 9 個人", "需要 9 輛車丟下 2 人"],
+                distractors: ["剩下 2 輛車", "坐滿 9 個人", "只需要 9 輛車 (不理餘數)"],
                 reasonablenessPrompt: "算式得出 9 餘 2，餘數 2 人確實小於一輛車的 4 人容量（2 < 4），坐不滿一輛車是合理的！但這 2 位學生也必須搭車去戶外教育，不能丟在路邊！",
                 decisionExplain: "餘數 2 人小於一輛車的 4 人容量（2 < 4），坐不滿一輛車是合理的。但這 2 位學生也必須搭車去戶外教育，所以需要 9 + 1 = 10 輛車。",
                 finalAnswer: "10 輛車",
@@ -1890,8 +1890,8 @@
                 } else if (state.activeTheme === 2) {
                     promptEl.textContent = "【第 2 問：誰被當作基準 1？】口訣：誰當 1，誰就住在除數！";
                     const choices = [
-                        { type: 'correct_base', title: `🎯 ${q.divisorName}`, desc: '題目問「每 1 個...」，所以把它當作基準量 1，必須放在除數！' },
-                        { type: 'wrong_base', title: `❌ ${q.dividendName}`, desc: '只是隨便把數字大的拿來當除數' }
+                        { type: 'correct_base', title: `${q.divisorName}`, desc: '題目問「每 1 個...」，所以把它當作基準量 1，放在除號 ÷ 後面！' },
+                        { type: 'wrong_base', title: `${q.dividendName}`, desc: '習慣將題目裡較大的數字放前面，較小的數字放 ÷ 後面' }
                     ].sort(() => Math.random() - 0.5);
                     renderChoiceCards(choices, body, 'selectedStep2', 'type');
                 } else {
@@ -2012,20 +2012,40 @@
                     const reasonBanner = document.createElement('div');
                     reasonBanner.className = 'reasonableness-banner';
                     reasonBanner.innerHTML = `
-                        <span>🔍 <strong>思考指引：</strong>檢查算出來的數值是否合乎生活常理（例如：竹竿全長一定要比插入水中的部分長！）</span>
+                        <span>🔍 <strong>思考指引：</strong>檢驗算出來的數值是否合乎生活真實常理與速率/比率的定義。</span>
                     `;
                     body.appendChild(reasonBanner);
 
-                    const decisions = [
-                        { key: 'rateMeaning', title: '📊 檢驗單位率的具體生活意涵', desc: `${q.reasonablenessPrompt || q.decisionExplain}` },
-                        { key: 'ratioMeaning', title: '📈 檢驗比率（佔全體的幾分之幾，沒有單位）的意涵', desc: `${q.reasonablenessPrompt || q.decisionExplain}` },
-                        { key: 'bambooMeaning', title: '🎋 基準量合理性：竹竿全長必定大於水中部分', desc: '水中的長度只是竹竿的一部分（佔 3/5），所以還原出來的整根竹竿全長（2.5 公尺）一定比水中的 1.5 公尺更長！' }
-                    ];
+                    let decisions = [];
+                    if (q.id === 'T2_06') {
+                        // 竹竿水深專屬題
+                        decisions = [
+                            { key: 'bambooMeaning', title: '基準量檢驗：竹竿全長必定大於水中部分', desc: '水中的長度只是竹竿的一部分（佔 3/5），所以還原出來的整根竹竿全長（2.5 公尺）一定比水中的 1.5 公尺更長！' },
+                            { key: 'bambooWrong1', title: '竹竿全長小於水中部分（例如約 0.9 公尺）', desc: '還原出來的竹竿全長比插入水中的 1.5 公尺還要短。' },
+                            { key: 'bambooWrong2', title: '水中長度與比率直接相乘（3/2 × 3/5）', desc: '認為求全長是用水中長度乘上比率，算出 9/10 公尺。' }
+                        ];
+                    } else if (q.decisionKey === 'ratioMeaning') {
+                        // 比率問題 (如男女生比率、果汁容量還原)
+                        decisions = [
+                            { key: 'ratioMeaning', title: '比率為倍數關係（佔全體的幾分之幾，沒有單位）', desc: `${q.reasonablenessPrompt || q.decisionExplain}` },
+                            { key: 'ratioWrong1', title: '比率附帶題目原本的計量單位（例如標示「人」或「公升」）', desc: '認為算出來的數值代表實際的人數或容量，因此必須加上單位。' },
+                            { key: 'ratioWrong2', title: '部分佔全體的比率大於 1（例如計算得出 2.5）', desc: '以全班總人數除以男生人數，求出全班是男生的幾倍。' }
+                        ];
+                    } else {
+                        // 速率與單位量問題 (如阿飛機車、跑步配速、飲料單價/購買力)
+                        decisions = [
+                            { key: 'rateMeaning', title: '以總量除以總份數檢驗單位量與平均速率的生活意涵', desc: `${q.reasonablenessPrompt || q.decisionExplain}` },
+                            { key: 'rateWrong1', title: '將不同路段的速率直接相加除以 2', desc: '將騎車時速 112 公里與牽車時速 2 公里相加除以 2，得到平均時速 57 公里／小時。' },
+                            { key: 'rateWrong2', title: '平均時速大幅偏向騎車時速（超過 50 公里／小時）', desc: '認為有騎到時速 112 公里，全程平均時速應該維持在高速水準。' }
+                        ];
+                    }
                     renderPillar4Decisions(decisions, q.decisionKey, body);
                 } else {
                     promptEl.textContent = `【第 4 問：驗算與合理性】依 108 課綱乘法代回檢驗：`;
                     const decisions = [
-                        { key: 'inverseVerify', title: '✅ 代回乘法式檢驗完全正確', desc: `${q.reasonablenessPrompt || q.decisionExplain}` }
+                        { key: 'inverseVerify', title: '代回乘法式檢驗完全正確', desc: `${q.reasonablenessPrompt || q.decisionExplain}` },
+                        { key: 'wrong_scale', title: '檢驗發現數值大小不合常理', desc: '還原出來的未知數比原本的總量（積）還要大，乘回去後超出題目條件！' },
+                        { key: 'wrong_multiply_verify', title: '誤用相乘檢驗：把算出來的答案和題目所有數字乘在一起', desc: '沒有依照「被乘數 × 乘數 = 積」的原本結構做代回檢驗，而是直接把數字相乘。' }
                     ];
                     renderPillar4Decisions(decisions, q.decisionKey, body);
                 }
@@ -2228,7 +2248,37 @@
                     return;
                 }
 
-                if (norm(inQuotient) !== norm(q.resultQuotient)) {
+                // 支援等值分數與小數比對 (如 1/20、4/80、0.05 均等值)
+                const parseMathValue = (str) => {
+                    if (!str) return NaN;
+                    str = str.trim().replace(/\s+/g, '');
+                    // 帶分數：如 1又1/2 或 1_1/2
+                    if (str.includes('又')) {
+                        const parts = str.split('又');
+                        const whole = parseFloat(parts[0]) || 0;
+                        const frac = parts[1].split('/');
+                        return whole + (parseFloat(frac[0]) / parseFloat(frac[1]));
+                    }
+                    if (str.includes('/')) {
+                        const parts = str.split('/');
+                        return parseFloat(parts[0]) / parseFloat(parts[1]);
+                    }
+                    return parseFloat(str);
+                };
+
+                const isQuotientCorrect = () => {
+                    if (norm(inQuotient) === norm(q.resultQuotient)) return true;
+                    // 支援如 4/80 與 1/20
+                    if (q.id === 'T2_03b' && norm(inQuotient) === '4/80') return true;
+                    const valUser = parseMathValue(inQuotient);
+                    const valAns = parseMathValue(q.resultQuotient);
+                    if (!isNaN(valUser) && !isNaN(valAns) && Math.abs(valUser - valAns) < 1e-6) {
+                        return true;
+                    }
+                    return false;
+                };
+
+                if (!isQuotientCorrect()) {
                     playErrorSound();
                     showFeedback('error', '商或計算結果有誤，請再仔細計算一次看看！');
                     return;
