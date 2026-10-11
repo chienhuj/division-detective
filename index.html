@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>數學國的除法語言：理解題目在問什麼</title>
+    <style>
+        :root {
+            /* 莫蘭迪低飽和柔和色系規範 (全域開發規範) */
+            --bg-main: #f5f6f8;
+            --panel-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: #ffffff;
+            --border-soft: #e2e8f0;
+            --border-focus: #94a3b8;
+            --text-main: #2d3748;
+            --text-muted: #64748b;
+            
+            /* 三大主題代表色 (低飽和莫蘭迪調) */
+            --theme1-color: #5c738a;         /* 主題一: 板岩灰藍 (分裝與平分生活館) */
+            --theme1-light: #e8edf2;
+            --theme2-color: #638475;         /* 主題二: 鼠尾草灰綠 (比率與速率偵探所) */
+            --theme2-light: #eaf1ed;
+            --theme3-color: #8c738a;         /* 主題三: 灰丁香紫 (乘除逆轉解謎室) */
+            --theme3-light: #f2edf2;
+
+            --warning: #b38258;          /* 陶土杏仁暖棕 (字卡與提示) */
+            --warning-light: #f7f1eb;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding: 16px;
+        }
+
+        /* 頂部標題與主選單 */
+        header {
+            max-width: 1360px;
+            width: 100%;
+            margin: 0 auto 12px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .brand-zone {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            background: var(--theme1-color);
+            color: #ffffff;
+            font-size: 0.82rem;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: background 0.3s;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 三大生活主題切換頁籤 (Tab Bar) - 親切無「柱」名詞 */
+        .theme-nav {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            background: rgba(0,0,0,0.03);
+            padding: 6px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-soft);
+        }
+
+        @media (max-width: 768px) {
+            .theme-nav {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .theme-tab {
+            background: transparent;
+            border: none;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            text-align: left;
+        }
+        .theme-tab:hover {
+            background: rgba(255, 255, 255, 0.7);
+            color: var(--text-main);
+        }
+        .theme-tab.active-t1 {
+            background: #ffffff;
+            color: var(--theme1-color);
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--theme1-color);
+        }
+        .theme-tab.active-t2 {
+            background: #ffffff;
+            color: var(--theme2-color);
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--theme2-color);
+        }
+        .theme-tab.active-t3 {
+            background: #ffffff;
+            color: var(--theme3-color);
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--theme3-color);
+        }
+
+        .theme-subtext {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        /* 題目篩選列 (數域 + 題目下拉選單) */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: #ffffff;
+            border: 1px solid var(--border-soft);
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .domain-pills-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .domain-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-right: 4px;
+        }
+        .domain-pill {
+            background: #f1f5f9;
+            border: 1px solid var(--border-soft);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .domain-pill:hover {
+            border-color: var(--border-focus);
+        }
+        .domain-pill.active {
+            background: var(--text-main);
+            color: #ffffff;
+            border-color: var(--text-main);
+        }
+
+        .select-styled {
+            background: #f8fafc;
+            border: 1px solid var(--border-soft);
+            color: var(--text-main);
+            padding: 7px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.92rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            max-width: 480px;
+            flex: 1 1 260px;
+        }
+
+        .btn-action {
+            background: #ffffff;
+            border: 1px solid var(--border-soft);
+            color: var(--text-main);
+            padding: 7px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .btn-action:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+        }
+
+        /* 題目主卡片 */
+        .problem-container {
+            max-width: 1360px;
+            width: 100%;
+            margin: 0 auto 16px auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .problem-info {
+            flex: 1 1 700px;
+        }
+
+        .problem-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag-pill {
+            font-size: 0.78rem;
+            padding: 3px 9px;
+            border-radius: 14px;
+            font-weight: 700;
+        }
+        .tag-pill.domain { background: #e2e8f0; color: #475569; }
+        .tag-pill.type { background: var(--theme1-light); color: var(--theme1-color); }
+        .tag-pill.focus { background: var(--warning-light); color: var(--warning); }
+
+        .problem-text {
+            font-size: 1.35rem;
+            line-height: 1.6;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .problem-text mark {
+            background: rgba(179, 130, 88, 0.15);
+            color: inherit;
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        .problem-tts-btn {
+            background: #f8fafc;
+            color: var(--text-main);
+            border: 1px solid var(--border-soft);
+            padding: 9px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.92rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .problem-tts-btn:hover {
+            background: #e2e8f0;
+        }
+
+        /* 主要雙欄佈局 (台帳 vs 控制台) */
+        .workspace {
+            max-width: 1360px;
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.35fr;
+            gap: 18px;
+            flex: 1;
+            align-items: start;
+        }
+
+        @media (max-width: 960px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 左側：思考歷程台帳 (Steps Ledger) */
+        .ledger-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .panel-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-soft);
+            padding-bottom: 12px;
+            margin-bottom: 4px;
+        }
+
+        .panel-heading h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ledger-step {
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-md);
+            padding: 13px 16px;
+            background: #fafbfc;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .ledger-step.active {
+            border-color: var(--theme-color, var(--theme1-color));
+            background: var(--theme-light, var(--theme1-light));
+            box-shadow: 0 0 0 2px rgba(92, 115, 138, 0.12);
+        }
+
+        .ledger-step.completed {
+            border-color: var(--theme2-color);
+            background: var(--theme2-light);
+        }
+
+        .step-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .step-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .active .step-title { color: var(--theme-color, var(--theme1-color)); }
+        .completed .step-title { color: var(--theme2-color); }
+
+        .step-status-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: #e2e8f0;
+            color: var(--text-muted);
+        }
+        .active .step-status-badge { background: var(--theme-color, var(--theme1-color)); color: #fff; }
+        .completed .step-status-badge { background: var(--theme2-color); color: #fff; }
+
+        .step-content-display {
+            font-size: 1.02rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+            min-height: 24px;
+        }
+        .completed .step-content-display {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        .step-eq-highlight {
+            font-family: "Courier New", Courier, monospace;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--theme-color, var(--theme1-color));
+            margin-top: 4px;
+        }
+
+        /* 右側：作答控制台 (Interactive Console) */
+        .console-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            min-height: 500px;
+        }
+
+        .step-instruction-box {
+            background: #fafbfc;
+            border-left: 4px solid var(--theme-color, var(--theme1-color));
+            padding: 12px 16px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            transition: border-color 0.3s;
+        }
+        .instruction-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .instruction-question {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 2px;
+        }
+
+        .step-body {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+
+        /* 選擇卡片組 */
+        .option-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+        }
+
+        .choice-card {
+            background: #f8fafc;
+            border: 2px solid var(--border-soft);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            user-select: none;
+        }
+        .choice-card:hover {
+            border-color: var(--theme-color, var(--theme1-color));
+            background: var(--theme-light, var(--theme1-light));
+            transform: translateY(-2px);
+        }
+        .choice-card.selected {
+            border-color: var(--theme-color, var(--theme1-color));
+            background: var(--theme-light, var(--theme1-light));
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .choice-title {
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .choice-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+
+        /* 算式輸入格 (Step 3 自適應多數域) */
+        .equation-builder {
+            background: #f8fafc;
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .equation-inputs-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .eq-input-box {
+            min-width: 76px;
+            max-width: 130px;
+            height: 48px;
+            border: 2px solid var(--border-soft);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: inherit;
+            color: var(--text-main);
+            outline: none;
+            background: #ffffff;
+            transition: border-color 0.2s;
+            padding: 0 6px;
+        }
+        .eq-input-box:focus {
+            border-color: var(--theme-color, var(--theme1-color));
+        }
+
+        .eq-symbol {
+            color: var(--text-muted);
+            user-select: none;
+        }
+
+        /* 詞卡拼組區 (Word Chips Scaffolding - 強化誘答項) */
+        .chips-section {
+            background: var(--warning-light);
+            border: 1px dashed var(--warning);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chips-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--warning);
+        }
+
+        .chips-sentence-box {
+            background: #ffffff;
+            border: 1px solid rgba(179, 130, 88, 0.3);
+            border-radius: var(--radius-sm);
+            min-height: 52px;
+            padding: 8px 12px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+        }
+        .placeholder-hint {
+            color: #94a3b8;
+            font-size: 0.88rem;
+            font-style: italic;
+        }
+
+        .chips-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .word-chip {
+            background: #ffffff;
+            color: var(--text-main);
+            border: 1px solid var(--border-soft);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            user-select: none;
+        }
+        .word-chip:hover {
+            border-color: var(--warning);
+            background: #fffdf9;
+            transform: translateY(-1px);
+        }
+        .word-chip.in-sentence {
+            background: var(--theme-color, var(--theme1-color));
+            color: #ffffff;
+            border-color: var(--theme-color, var(--theme1-color));
+        }
+
+        /* 合理性檢驗鏡提示框 */
+        .reasonableness-banner {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        /* 反饋訊息 */
+        .feedback-banner {
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        .feedback-banner.error {
+            background: #fdf2f2;
+            border: 1px solid #f8b4b4;
+            color: #9b1c1c;
+        }
+        .feedback-banner.success {
+            background: var(--theme2-light);
+            border: 1px solid rgba(99, 132, 117, 0.3);
+            color: var(--theme2-color);
+        }
+
+        /* 動作按鈕排 */
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-soft);
+        }
+
+        .btn-submit {
+            background: var(--theme-color, var(--theme1-color));
+            color: #ffffff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: var(--radius-md);
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-submit:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+        .btn-submit:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-hint {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-soft);
+            padding: 12px 18px;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-hint:hover {
+            background: #f1f5f9;
+            color: var(--text-main);
+        }
+
+        /* 頁尾資訊列 */
+        .site-footer {
+            max-width: 1360px;
+            width: 100%;
+            margin: 24px auto 32px auto;
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-soft);
+            letter-spacing: 0.3px;
+        }
+
+        /* 結算慶祝彈窗 */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(45, 55, 72, 0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 580px;
+            padding: 32px 28px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-icon { font-size: 3.5rem; margin-bottom: 12px; }
+        .modal-title { font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
+
+        .modal-summary-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: left;
+            margin: 18px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 頂部標題與主選單 -->
+    <header>
+        <div class="header-top">
+            <div class="brand-zone">
+                <h1>數學國的除法語言：理解題目在問什麼</h1>
+            </div>
+            <button class="btn-action" onclick="resetCurrentQuestion()">🔄 重新探究本題</button>
+        </div>
+
+        <!-- 三大生活主題切換頁籤 (Tab Bar) - 親切易懂，正名戶外教育與符合課綱 -->
+        <nav class="theme-nav">
+            <button class="theme-tab active-t1" id="tab-t1" onclick="switchTheme(1)">
+                <span>📦 主題一：分裝與平分生活館</span>
+                <span class="theme-subtext">實體量的分裝、平分、餘數決策與合理性檢驗 (餘數必須小於除數)</span>
+            </button>
+            <button class="theme-tab" id="tab-t2" onclick="switchTheme(2)">
+                <span>⚖️ 主題二：比率與單位量</span>
+                <span class="theme-subtext">比率、求每1個單位量、誰是基準量</span>
+            </button>
+            <button class="theme-tab" id="tab-t3" onclick="switchTheme(3)">
+                <span>🔄 主題三：乘除逆轉解謎室</span>
+                <span class="theme-subtext">面積回推、打折原價、年齡問題</span>
+            </button>
+        </nav>
+
+        <!-- 題庫篩選列 (數域切換 + 題目選單) -->
+        <div class="filter-bar">
+            <div class="domain-pills-group">
+                <span class="domain-label">數域切換：</span>
+                <span class="domain-pill active" onclick="setDomainFilter('all', this)">全部數域</span>
+                <span class="domain-pill" onclick="setDomainFilter('integer', this)">🔢 整數</span>
+                <span class="domain-pill" onclick="setDomainFilter('fraction', this)">🍰 分數</span>
+                <span class="domain-pill" onclick="setDomainFilter('decimal', this)">🔘 小數</span>
+            </div>
+            <select id="question-selector" class="select-styled" onchange="onSelectQuestionChange(this.value)">
+                <!-- 動態注入題目選單 -->
+            </select>
+        </div>
+    </header>
+
+    <!-- 題目主卡片 -->
+    <section class="problem-container">
+        <div class="problem-info">
+            <div class="problem-meta">
+                <span class="tag-pill grade" id="meta-grade">適合四年級</span>
+                <span class="tag-pill domain" id="meta-domain">整數</span>
+                <span class="tag-pill type" id="meta-subtype">戶外教育搭車</span>
+                <span class="tag-pill focus" id="meta-focus">餘數決策：無條件進入</span>
+                <span style="font-size: 0.85rem; color: var(--text-muted);" id="meta-num">題目 1 / 8</span>
+            </div>
+            <div class="problem-text" id="problem-text-el">
+                <!-- 題目內容 -->
+            </div>
+        </div>
+        <button class="problem-tts-btn" onclick="speakProblem()">
+            🔊 語音朗讀
+        </button>
+    </section>
+
+    <!-- 主要工作區 (雙欄佈局) -->
+    <main class="workspace">
+        
+        <!-- 左側：思考歷程台帳 (Steps Ledger) -->
+        <section class="ledger-panel">
+            <div class="panel-heading">
+                <h2>📋 思維外顯歷程台帳</h2>
+                <span style="font-size: 0.85rem; color: var(--text-muted);" id="ledger-progress-indicator">步驟 1 / 4</span>
+            </div>
+
+            <!-- 台帳步驟 1 -->
+            <div class="ledger-step active" id="ledger-step-1">
+                <div class="step-header-row">
+                    <span class="step-title" id="ledger-title-1">① 什麼被分？ (被除數)</span>
+                    <span class="step-status-badge" id="badge-step-1">進行中</span>
+                </div>
+                <div class="step-content-display" id="display-step-1">請先找出題目中的關鍵主角...</div>
+            </div>
+
+            <!-- 台帳步驟 2 -->
+            <div class="ledger-step" id="ledger-step-2">
+                <div class="step-header-row">
+                    <span class="step-title" id="ledger-title-2">② 怎麼分？ (除數意義)</span>
+                    <span class="step-status-badge" id="badge-step-2">待解鎖</span>
+                </div>
+                <div class="step-content-display" id="display-step-2">等待解鎖...</div>
+            </div>
+
+            <!-- 台帳步驟 3 -->
+            <div class="ledger-step" id="ledger-step-3">
+                <div class="step-header-row">
+                    <span class="step-title" id="ledger-title-3">③ 分的結果是什麼？剩下什麼？ (商與餘數)</span>
+                    <span class="step-status-badge" id="badge-step-3">待解鎖</span>
+                </div>
+                <div class="step-content-display" id="display-step-3">等待解鎖...</div>
+                <div class="step-eq-highlight" id="display-eq-step-3" style="display:none;"></div>
+            </div>
+
+            <!-- 台帳步驟 4 (核心檢驗：這個答案合理嗎？生活決策) -->
+            <div class="ledger-step" id="ledger-step-4">
+                <div class="step-header-row">
+                    <span class="step-title" id="ledger-title-4">④ 這個答案合理嗎？生活決策 (餘數必須小於除數)</span>
+                    <span class="step-status-badge" id="badge-step-4">待解鎖</span>
+                </div>
+                <div class="step-content-display" id="display-step-4">等待解鎖...</div>
+            </div>
+        </section>
+
+        <!-- 右側：作答控制台 (Interactive Console) -->
+        <section class="console-panel">
+            <div class="step-instruction-box" id="step-instruction-box-el">
+                <div class="instruction-title" id="console-step-tag">步驟 1 / 4 🔍</div>
+                <div class="instruction-question" id="console-question-prompt">題目中是「誰」被拿去分？（找出被除數）</div>
+            </div>
+
+            <!-- 動態作答區 -->
+            <div class="step-body" id="console-interactive-body">
+                <!-- 依當前步驟動態渲染 HTML -->
+            </div>
+
+            <!-- 反饋提示區域 -->
+            <div class="feedback-banner" id="feedback-banner-el"></div>
+
+            <!-- 底部按鈕控制區 -->
+            <div class="action-row">
+                <button class="btn-hint" onclick="showPedagogicalHint()">💡 思考指引</button>
+                <button class="btn-submit" id="main-submit-btn" onclick="submitCurrentStep()">下一步 ➔</button>
+            </div>
+        </section>
+
+    </main>
+ 
+    <!-- 頁尾署名與來源致謝 -->
+    <footer class="site-footer">
+        數學國除法語言提問來源：許扶堂 老師 ／ 網頁與自學提示設計：謝千慧 老師
+    </footer>
+
+    <!-- 闖關成功結算彈窗 -->
+    <div class="modal-backdrop" id="celebration-modal">
+        <div class="modal-card">
+            <div class="modal-icon">🎉</div>
+            <h2 class="modal-title">完整推理成功！</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">你已經清楚理解題目在問什麼，並檢驗了算式的合理性！</p>
+            <div class="modal-summary-box" id="modal-summary-text">
+                <!-- 動態注入題目思維總結 -->
+            </div>
+            <button class="btn-submit" style="width: 100%;" onclick="nextQuestion()">挑戰下一題 ➔</button>
+        </div>
+    </div>
+
+    <script>
+        /* ========================================================
+           題庫矩陣：三大探索主題 × 數域躍遷 (整數 / 分數 / 小數)
+           嚴格遵循中華民國 108 課綱：
+           1. 乘號前為「被乘數」，乘號後為「乘數」
+           2. 全面正名為「戶外教育」
+           3. 包含大量誘答字卡與「餘數小於除數」檢驗
+        ======================================================== */
+        const QUESTION_DATABASE = [
+            // ==================== 【主題一：分裝與平分生活館】 ====================
+            {
+                id: "T1_01",
+                grade: 4,
+                curriculumCode: "108課綱 N-4-2",
+                theme: 1,
+                domain: "integer",
+                title: "戶外教育搭計程車",
+                subType: "戶外教育交通",
+                focus: "餘數決策：無條件進入 (+1)",
+                text: "五年級有 <mark>38 位學生</mark> 參加戶外教育，每輛計程車限乘 <mark>4 個人</mark>，至少需要幾輛計程車才能把全部學生載完？",
+                dividendName: "38 位學生",
+                dividendNum: "38",
+                divisorName: "每輛車乘 4 人",
+                divisorNum: "4",
+                divisionType: "containment",
+                divisionTypeName: "包含除 (分裝：每份固定乘 4 人，求需要幾輛車)",
+                equationStr: "38 ÷ 4 = 9 ... 2",
+                resultQuotient: "9",
+                resultRemainder: "2",
+                resultUnit: "輛車",
+                remainderUnit: "位學生",
+                hasRemainder: true,
+                decisionKey: "ceil",
+                chipsPool: [
+                    "38 位學生", "每 4 人坐一輛車", "坐滿了 9 輛車", "還剩下 2 位學生", "這 2 位學生也要搭車", "所以需要 9 + 1 = 10 輛車",
+                    "剩下 2 輛車", "坐滿 9 個人", "需要 9 輛車丟下 2 人"
+                ],
+                distractors: ["剩下 2 輛車", "坐滿 9 個人", "需要 9 輛車丟下 2 人"],
+                reasonablenessPrompt: "算式得出 9 餘 2，餘數 2 人確實小於一輛車的 4 人容量（2 < 4），坐不滿一輛車是合理的！但這 2 位學生也必須搭車去戶外教育，不能丟在路邊！",
+                decisionExplain: "餘數 2 人小於一輛車的 4 人容量（2 < 4），坐不滿一輛車是合理的。但這 2 位學生也必須搭車去戶外教育，所以需要 9 + 1 = 10 輛車。",
+                finalAnswer: "10 輛車",
+                hint: "找一找被載走的主角是誰？剩下的 2 位學生也必須搭車去戶外教育喔！"
+            },
+            {
+                id: "T1_02",
+                grade: 4,
+                curriculumCode: "108課綱 N-4-2",
+                theme: 1,
+                domain: "integer",
+                title: "美味蘋果裝盒",
+                subType: "水果分裝",
+                focus: "餘數決策：無條件捨去 (取商)",
+                text: "果園採收了 <mark>38 顆蘋果</mark>，每 <mark>4 顆</mark> 裝成一盒精緻禮盒，最多可以裝成幾盒？還剩下幾顆蘋果？",
+                dividendName: "38 顆蘋果",
+                dividendNum: "38",
+                divisorName: "每 4 顆裝一盒",
+                divisorNum: "4",
+                divisionType: "containment",
+                divisionTypeName: "包含除 (分裝：每盒固定 4 顆，求盒數)",
+                equationStr: "38 ÷ 4 = 9 ... 2",
+                resultQuotient: "9",
+                resultRemainder: "2",
+                resultUnit: "盒",
+                remainderUnit: "顆蘋果",
+                hasRemainder: true,
+                decisionKey: "floor",
+                chipsPool: [
+                    "38 顆蘋果", "每 4 顆裝一盒", "裝滿了 9 盒", "還剩下 2 顆蘋果", "剩下的 2 顆不夠裝滿一盒", "所以最多裝 9 盒",
+                    "剩下 2 盒", "可以裝 10 盒", "剩下 4 顆蘋果"
+                ],
+                distractors: ["剩下 2 盒", "可以裝 10 盒", "剩下 4 顆蘋果"],
+                reasonablenessPrompt: "餘數 2 顆蘋果小於一盒的 4 顆（2 < 4），剩下的不夠湊滿一整盒，這是合理的！所以最多只能裝滿 9 盒。",
+                decisionExplain: "裝滿一盒需要 4 顆蘋果，剩下的 2 顆小於一盒的 4 顆（2 < 4），不夠裝滿一整盒，所以最多只能裝 9 盒（剩下 2 顆）。",
+                finalAnswer: "最多裝 9 盒，剩下 2 顆",
+                hint: "剩下的 2 顆蘋果不夠湊滿一整盒，禮盒只能算完整裝滿的數量！"
+            },
+            {
+                id: "T1_03",
+                grade: 5,
+                curriculumCode: "108課綱 N-5-7",
+                theme: 1,
+                domain: "decimal",
+                title: "桶裝果汁小數分裝與餘數",
+                subType: "容積分裝 (小數)",
+                focus: "小數包含除：餘數合理性檢驗",
+                text: "廚房有 <mark>7.5 公升</mark> 的果汁，每 <mark>0.8 公升</mark> 裝滿一瓶，最多可以裝滿幾瓶？還剩下幾公升果汁？",
+                dividendName: "7.5 公升果汁",
+                dividendNum: "7.5",
+                divisorName: "每瓶 0.8 公升",
+                divisorNum: "0.8",
+                divisionType: "containment",
+                divisionTypeName: "包含除 (每瓶固定 0.8 公升，求瓶數與剩餘)",
+                equationStr: "7.5 ÷ 0.8 = 9 ... 0.3",
+                resultQuotient: "9",
+                resultRemainder: "0.3",
+                resultUnit: "瓶",
+                remainderUnit: "公升",
+                hasRemainder: true,
+                decisionKey: "decimalRemainder",
+                chipsPool: [
+                    "7.5 公升果汁", "每瓶裝 0.8 公升", "裝滿了 9 瓶", "還剩下 0.3 公升", "餘數 0.3 小於一瓶的 0.8 公升", "剩下的不夠再裝一瓶",
+                    "還剩下 3 公升", "還剩下 3 瓶", "還剩下 0.3 瓶", "裝滿 9 公升"
+                ],
+                distractors: ["還剩下 3 公升", "還剩下 3 瓶", "還剩下 0.3 瓶", "裝滿 9 公升"],
+                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：如果你覺得剩下 3 公升，一瓶只要 0.8 公升，3 公升明明比 0.8 大（3 > 0.8），為什麼不繼續裝瓶？！餘數必須小於除數（0.3 < 0.8）才合理！",
+                decisionExplain: "7.5 ÷ 0.8 = 9 餘 0.3。裝滿 9 瓶用掉 7.2 公升，剩下的果汁是 0.3 公升（0.3 < 0.8 小於一瓶容量，非常合理！）。如果寫成剩下 3 公升就太荒謬了，因為 3 公升還能再裝好幾瓶！",
+                finalAnswer: "裝滿 9 瓶，剩下 0.3 公升",
+                hint: "小數點要垂直對齊原被除數 7.5 的位置！餘數一定要小於一瓶的 0.8 公升！"
+            },
+            {
+                id: "T1_04",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-3",
+                theme: 1,
+                domain: "fraction",
+                title: "手工緞帶剪段與餘數",
+                subType: "長度分裝 (分數)",
+                focus: "分數包含除：餘數合理性檢驗",
+                text: "小莉有一條長 <mark>2又1/2 公尺 (即 10/4 公尺)</mark> 的緞帶，每 <mark>3/4 公尺</mark> 剪成一段做一朵花，最多可以做幾朵花？還剩下幾公尺緞帶？",
+                dividendName: "10/4 公尺長緞帶",
+                dividendNum: "10/4",
+                divisorName: "每朵花 3/4 公尺",
+                divisorNum: "3/4",
+                divisionType: "containment",
+                divisionTypeName: "包含除 (每朵 3/4 公尺，求朵數與剩餘)",
+                equationStr: "10/4 ÷ 3/4 = 3 ... 1/4",
+                resultQuotient: "3",
+                resultRemainder: "1/4",
+                resultUnit: "朵花",
+                remainderUnit: "公尺",
+                hasRemainder: true,
+                decisionKey: "fractionRemainder",
+                chipsPool: [
+                    "10/4 公尺緞帶", "每朵花用 3/4 公尺", "最多做 3 朵花", "還剩下 1/4 公尺緞帶", "1/4 公尺小於一朵的 3/4 公尺", "所以不能再做一朵",
+                    "還剩下 1 公尺", "還剩下 1 朵花", "還剩下 1/3 朵花", "最多做 3 公尺"
+                ],
+                distractors: ["還剩下 1 公尺", "還剩下 1 朵花", "還剩下 1/3 朵花", "最多做 3 公尺"],
+                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：通分後是 10 個 1/4 除以 3 個 1/4，商是 3 朵花，餘數是 1 個 1/4 公尺。1/4 公尺小於做一朵花所需的 3/4 公尺（1/4 < 3/4），完全合理！如果說剩下 1 公尺就錯了，因為 1 公尺大於 3/4 公尺，還能再做一朵！",
+                decisionExplain: "做了 3 朵花共用掉 9/4 公尺，剩下 1/4 公尺緞帶。因為 1/4 < 3/4，餘數小於除數，不夠再做一朵花，非常合理！",
+                finalAnswer: "最多做 3 朵花，剩下 1/4 公尺",
+                hint: "通分後 10/4 拿去除以 3/4，剩下的是 1/4 公尺，不是 1 公尺喔！"
+            },
+            {
+                id: "T1_05",
+                grade: 5,
+                curriculumCode: "108課綱 N-5-7",
+                theme: 1,
+                domain: "decimal",
+                title: "砂糖分裝秤重",
+                subType: "重量分裝 (小數)",
+                focus: "小數包含除：除以小於 1 商變大",
+                text: "烘焙坊買了 <mark>6 公斤</mark> 的砂糖，每 <mark>0.4 公斤</mark> 裝成一小袋，總共可以分裝成幾小袋？",
+                dividendName: "6 公斤砂糖",
+                dividendNum: "6",
+                divisorName: "每袋 0.4 公斤",
+                divisorNum: "0.4",
+                divisionType: "containment",
+                divisionTypeName: "包含除 (每袋 0.4 公斤，求袋數)",
+                equationStr: "6 ÷ 0.4 = 15",
+                resultQuotient: "15",
+                resultRemainder: "0",
+                resultUnit: "袋",
+                remainderUnit: "公斤",
+                hasRemainder: false,
+                decisionKey: "fractionBigQuotient",
+                chipsPool: [
+                    "6 公斤砂糖", "每袋裝 0.4 公斤", "6 裡面有 15 個 0.4", "總共裝成 15 袋", "除以小於1的數商反而變多",
+                    "只能裝 1.5 袋", "只能裝 2.4 袋", "剩下 2.4 公斤"
+                ],
+                distractors: ["只能裝 1.5 袋", "只能裝 2.4 袋", "剩下 2.4 公斤"],
+                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：1 公斤就可以裝 2.5 袋，6 公斤當然可以裝 15 袋！商數 15 比被除數 6 還大完全合理！",
+                decisionExplain: "6 ÷ 0.4 = 15 袋。因為每一袋 0.4 公斤比 1 公斤還小，所以 6 公斤裡面包含了 15 個 0.4，分裝出來的袋數當然比 6 還多！",
+                finalAnswer: "15 袋",
+                hint: "除以小於 1 的小數，算出來的袋數會比原來的 6 還多！"
+            },
+            {
+                id: "T1_06",
+                grade: 5,
+                curriculumCode: "108課綱 N-5-4",
+                theme: 1,
+                domain: "fraction",
+                title: "彩色緞帶剪段手作花",
+                subType: "長度分裝 (分數)",
+                focus: "分數包含除：商比被除數還大！",
+                text: "美勞課有一條長 <mark>3/4 公尺</mark> 的緞帶，每 <mark>1/8 公尺</mark> 剪成一段做一朵花，總共可以剪成幾段？",
+                dividendName: "3/4 公尺長緞帶",
+                dividendNum: "3/4",
+                divisorName: "每段 1/8 公尺",
+                divisorNum: "1/8",
+                divisionType: "containment",
+                divisionTypeName: "包含除 (每份固定 1/8 公尺，求段數)",
+                equationStr: "3/4 ÷ 1/8 = 6",
+                resultQuotient: "6",
+                resultRemainder: "0",
+                resultUnit: "段",
+                remainderUnit: "公尺",
+                hasRemainder: false,
+                decisionKey: "fractionBigQuotient",
+                chipsPool: [
+                    "3/4 公尺緞帶", "每 1/8 公尺剪一段", "3/4 裡面包了 6 個 1/8", "所以剪出了 6 段", "除以小於1的數商反而變多",
+                    "剪出 3/8 段", "剪出 1/6 段"
+                ],
+                distractors: ["剪出 3/8 段", "剪出 1/6 段"],
+                reasonablenessPrompt: "3/4 公尺通分就是 6/8 公尺，裡面包含 6 個 1/8 公尺，剪出 6 段合情合理！",
+                decisionExplain: "3/4 裡面包含了 6 個 1/8（通分後 6/8 包含 6 個 1/8），所以可以剪成 6 段。商比被除數大是因為除數小於 1！",
+                finalAnswer: "6 段",
+                hint: "3/4 通分就是 6/8，裡面有幾個 1/8 呢？"
+            },
+            {
+                id: "T1_07",
+                grade: 4,
+                curriculumCode: "108課綱 N-4-2",
+                theme: 1,
+                domain: "integer",
+                title: "手工珠子串手鍊差額",
+                subType: "手工藝差額",
+                focus: "餘數決策：差額運算 (除數 - 餘數)",
+                text: "小涵有 <mark>38 顆珠子</mark>，每 <mark>4 顆</mark> 串成一條手鍊，串完所有能串的手鍊後，她還差幾顆珠子才能再多串一條？",
+                dividendName: "38 顆珠子",
+                dividendNum: "38",
+                divisorName: "每 4 顆串一條",
+                divisorNum: "4",
+                divisionType: "containment",
+                divisionTypeName: "包含除 (每條固定 4 顆，求條數)",
+                equationStr: "38 ÷ 4 = 9 ... 2",
+                resultQuotient: "9",
+                resultRemainder: "2",
+                resultUnit: "條",
+                remainderUnit: "顆珠子",
+                hasRemainder: true,
+                decisionKey: "gap",
+                chipsPool: [
+                    "38 顆珠子", "每 4 顆串一條", "串了 9 條手鍊", "還剩下 2 顆珠子", "串一條需要 4 顆", "所以還差 4 - 2 = 2 顆",
+                    "還差 9 顆", "還差 4 顆", "剩下 9 條珠子"
+                ],
+                distractors: ["還差 9 顆", "還差 4 顆", "剩下 9 條珠子"],
+                reasonablenessPrompt: "剩下的 2 顆珠子小於串一條所需的 4 顆（2 < 4），所以不夠串；還差 4 - 2 = 2 顆就能補滿 4 顆！",
+                decisionExplain: "串一條手鍊需要 4 顆珠子，現在只剩下 2 顆，還差 4 - 2 = 2 顆珠子就能再串一條。",
+                finalAnswer: "還差 2 顆珠子",
+                hint: "一條要 4 顆，手邊剩 2 顆，還差幾顆呢？"
+            },
+            {
+                id: "T1_08",
+                grade: 4,
+                curriculumCode: "108課綱 R-4-4",
+                theme: 1,
+                domain: "integer",
+                title: "彩燈循環週期位次",
+                subType: "規律週期",
+                focus: "週期位次：商看組數、餘數看位次",
+                text: "燈泡按照「紅、黃、藍、綠」這 <mark>4 種顏色</mark> 的順序重複排列，排到第 <mark>35 顆</mark> 燈泡時，它是什麼顏色？",
+                dividendName: "第 35 顆燈泡位置",
+                dividendNum: "35",
+                divisorName: "4 種顏色一循環",
+                divisorNum: "4",
+                divisionType: "containment",
+                divisionTypeName: "包含除 (每組循環 4 個，求循環組數與餘數)",
+                equationStr: "35 ÷ 4 = 8 ... 3",
+                resultQuotient: "8",
+                resultRemainder: "3",
+                resultUnit: "組完整循環",
+                remainderUnit: "個位次",
+                hasRemainder: true,
+                decisionKey: "cycleRank",
+                chipsPool: [
+                    "算到第 35 顆", "4 種顏色一循環", "完成了 8 組完整循環", "剩下 3 顆進入下一輪", "第 1紅、第 2黃、第 3藍", "所以第 35 顆是藍色",
+                    "第 35 顆是綠色", "答案是 8 顆藍色"
+                ],
+                distractors: ["第 35 顆是綠色", "答案是 8 顆藍色"],
+                reasonablenessPrompt: "餘數 3 小於一組循環的 4 個（3 < 4），代表它剛好排到下一組循環裡的第 3 個！",
+                decisionExplain: "完成了 8 組完整的「紅黃藍綠」循環後，還剩下 3 個，第 3 個就是藍色（紅➔黃➔藍），所以第 35 顆是藍色。",
+                finalAnswer: "藍色燈泡",
+                hint: "商是 8 代表有 8 組完整循環，看餘數 3 是循環裡的第幾名！"
+            },
+            {
+                id: "T1_09",
+                grade: 5,
+                curriculumCode: "108課綱 N-5-2 / D-5-1",
+                theme: 1,
+                domain: "integer",
+                title: "三個罐子糖果移多補少平分",
+                subType: "平均問題 (等分除)",
+                focus: "全部倒出來加總 ➔ 再重新平分給 3 個罐子",
+                text: "有甲、乙、丙三個罐子，分別放了 <mark>3 顆</mark>、<mark>17 顆</mark> 和 <mark>139 顆</mark> 糖果（三罐總共有 <mark>159 顆</mark> 糖果），有什麼方法可以讓每個罐子裡的糖果數量一樣多？平均每個罐子會有幾顆？",
+                dividendName: "糖果總數 159 顆 (3+17+139)",
+                dividendNum: "159",
+                divisorName: "3 個罐子 (平分對象)",
+                divisorNum: "3",
+                divisionType: "sharing",
+                divisionTypeName: "等分除 (總和 ÷ 個數 = 平均每個罐子的數量)",
+                equationStr: "159 ÷ 3 = 53",
+                resultQuotient: "53",
+                resultRemainder: "0",
+                resultUnit: "顆/罐",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "averageMeaning",
+                chipsPool: [
+                    "全部倒出來加總", "總共有 159 顆糖果", "再重新平分", "平分給 3 個罐子", "159 ÷ 3 = 53", "每個罐子有 53 顆",
+                    "每個罐子有 159 顆", "拿甲罐的 3 顆直接分", "乘以 3 個罐子"
+                ],
+                distractors: ["每個罐子有 159 顆", "拿甲罐的 3 顆直接分", "乘以 3 個罐子"],
+                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：原本三個罐子最少是 3 顆、最多是 139 顆。把糖果全部倒出來加總後再重新平分，算出來的平均 53 顆正好介於 3 顆與 139 顆之間（3 < 53 < 139），非常合理！",
+                decisionExplain: "要讓三個罐子數量一樣多，最標準的方法就是「全部倒出來加總 (3+17+139=159)」，然後「再重新平分給 3 個罐子」：159 ÷ 3 = 53 顆。平均 53 顆介於最少 3 顆與最多 139 顆之間，完全符合平均的本質！",
+                finalAnswer: "全部倒出來加總再重新平分，每個罐子 53 顆",
+                hint: "想一想：先把所有糖果集中起來加總，再平分給 3 個罐子！"
+            },
+
+            // ==================== 【主題二：比率與單位量】 ====================
+            {
+                id: "T2_01",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-8",
+                theme: 2,
+                domain: "decimal",
+                title: "蝸牛爬行速率 (每秒走幾公尺)",
+                subType: "速率問題 (小數)",
+                focus: "誰當 1 誰在除數：小除大迷思突破",
+                text: "一隻蝸牛爬行 <mark>20 公尺</mark> 總共花了 <mark>25 秒</mark>，平均每秒爬行多少公尺？",
+                dividendName: "爬行距離 20 公尺",
+                dividendNum: "20",
+                divisorName: "花費時間 25 秒 (基準1秒)",
+                divisorNum: "25",
+                divisionType: "rate",
+                divisionTypeName: "速率計算 (問每 1 秒，時間當基準量放在除數)",
+                equationStr: "20 ÷ 25 = 0.8",
+                resultQuotient: "0.8",
+                resultRemainder: "0",
+                resultUnit: "公尺/秒",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "rateMeaning",
+                chipsPool: [
+                    "距離 20 公尺", "花費 25 秒", "求每 1 秒爬行量", "誰當1誰住在除數", "所以除以 25 秒", "得到每秒 0.8 公尺",
+                    "每秒爬 1.25 公尺", "除以 20 公尺", "大數除以小數"
+                ],
+                distractors: ["每秒爬 1.25 公尺", "除以 20 公尺", "大數除以小數"],
+                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：蝸牛爬 20 公尺花了 25 秒，花的時間比距離還多，1 秒鐘怎麼可能爬超過 1 公尺？算出來 0.8 公尺/秒（不到 1 公尺）完全合情合理！",
+                decisionExplain: "題目求『每 1 秒』走幾公尺，所以 1 秒是基準量，25 秒必須放在除數！算出來是 0.8 公尺/秒（不到 1 公尺，非常合理）。",
+                finalAnswer: "0.8 公尺/秒",
+                hint: "記住黃金口訣：求『每 1 秒』，就是把 1 秒當基準，時間 25 秒一定要放在除數！"
+            },
+            {
+                id: "T2_02",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-8",
+                theme: 2,
+                domain: "decimal",
+                title: "慢跑花費時間 (每公尺花幾秒)",
+                subType: "反向單位率 (小數)",
+                focus: "誰當 1 誰在除數：基準量置換",
+                text: "接續上題，如果體育老師想知道：蝸牛爬行 <mark>1 公尺</mark> 平均需要花費多少秒？",
+                dividendName: "花費時間 25 秒",
+                dividendNum: "25",
+                divisorName: "爬行距離 20 公尺 (基準1公尺)",
+                divisorNum: "20",
+                divisionType: "rate",
+                divisionTypeName: "單位率計算 (問每 1 公尺，距離當基準量放在除數)",
+                equationStr: "25 ÷ 20 = 1.25",
+                resultQuotient: "1.25",
+                resultRemainder: "0",
+                resultUnit: "秒/公尺",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "rateMeaning",
+                chipsPool: [
+                    "花費 25 秒", "距離 20 公尺", "求每 1 公尺花幾秒", "1 公尺是基準量", "所以除以 20 公尺", "每公尺需要 1.25 秒",
+                    "每公尺花 0.8 秒", "除以 25 秒"
+                ],
+                distractors: ["每公尺花 0.8 秒", "除以 25 秒"],
+                reasonablenessPrompt: "這題是求每 1 公尺花幾秒，所以 1 公尺是基準，除以 20 公尺！",
+                decisionExplain: "這次問的是『每 1 公尺』花幾秒，所以 1 公尺是基準，距離 20 公尺要放在除數！25 ÷ 20 = 1.25 秒/公尺。",
+                finalAnswer: "1.25 秒/公尺",
+                hint: "看清楚！這題問的是『每 1 公尺花幾秒』，所以 1 公尺是基準，除以 20 公尺！"
+            },
+            {
+                id: "T2_03a",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-8",
+                theme: 2,
+                domain: "integer",
+                title: "飲料花費 (平均 1 杯幾元)",
+                subType: "單價問題 (求每1杯)",
+                focus: "想求每 1 杯 ➔ 杯數放除數",
+                text: "小堂花 <mark>80 元</mark> 買了 <mark>4 杯飲料</mark>，平均 1 杯是多少元？",
+                dividendName: "總花費 80 元 (目標量)",
+                dividendNum: "80",
+                divisorName: "飲料總數 4 杯 (基準1杯)",
+                divisorNum: "4",
+                divisionType: "rate",
+                divisionTypeName: "單價計算 (求每 1 杯多少元，杯數當基準放除數)",
+                equationStr: "80 ÷ 4 = 20",
+                resultQuotient: "20",
+                resultRemainder: "0",
+                resultUnit: "元/杯",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "rateMeaning",
+                chipsPool: [
+                    "總花費 80 元", "買了 4 杯飲料", "求每 1 杯的價錢", "1 杯是基準量", "除以 4 杯", "平均 1 杯是 20 元",
+                    "平均 1 杯是 0.05 元", "除以 80 元", "用乘法 80 × 4"
+                ],
+                distractors: ["平均 1 杯是 0.05 元", "除以 80 元", "用乘法 80 × 4"],
+                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：4 杯要 80 元，1 杯一定是 20 元（4 × 20 = 80），合情合理！",
+                decisionExplain: "題目問『平均 1 杯幾元』，想求每 1 杯，就把 1 杯當基準，杯數 4 杯放在除數！80 ÷ 4 = 20 元/杯。",
+                finalAnswer: "20 元/杯",
+                hint: "問『1 杯幾元』，基準是 1 杯，除數就要放『杯數』！"
+            },
+            {
+                id: "T2_03b",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-8",
+                theme: 2,
+                domain: "fraction",
+                title: "飲料購買力 (平均 1 元買幾杯)",
+                subType: "購買力問題 (求每1元)",
+                focus: "想求每 1 元 ➔ 總價元數放除數",
+                text: "小堂花 <mark>80 元</mark> 買了 <mark>4 杯飲料</mark>，平均 1 元可以買到幾杯飲料？",
+                dividendName: "飲料總數 4 杯 (目標量)",
+                dividendNum: "4",
+                divisorName: "總花費 80 元 (基準1元)",
+                divisorNum: "80",
+                divisionType: "rate",
+                divisionTypeName: "購買力計算 (求每 1 元能買幾杯，元數當基準放除數)",
+                equationStr: "4 ÷ 80 = 1/20",
+                resultQuotient: "1/20",
+                resultRemainder: "0",
+                resultUnit: "杯/元",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "rateMeaning",
+                chipsPool: [
+                    "買了 4 杯飲料", "總共花費 80 元", "求每 1 元買幾杯", "1 元是基準量", "除以 80 元", "1 元買到 1/20 杯 (0.05杯)",
+                    "1 元買到 20 杯", "除以 4 杯", "用乘法 80 × 4"
+                ],
+                distractors: ["1 元買到 20 杯", "除以 4 杯", "用乘法 80 × 4"],
+                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：花 80 元才買 4 杯飲料，錢比飲料多很多，1 元絕對買不到 1 整杯飲料！只能買到 1/20 杯（即 0.05 杯），完全合理！如果寫 1 元買 20 杯就太誇張了！",
+                decisionExplain: "題目問『平均 1 元買幾杯』，想求每 1 元，就把 1 元當基準，總價 80 元放在除數！4 ÷ 80 = 4/80 = 1/20 杯（或 0.05 杯）。千萬別和『1 杯 20 元』搞混了！",
+                finalAnswer: "1/20 杯 (或 0.05 杯)",
+                hint: "問『1 元買幾杯』，基準是 1 元，除數就要放『元數 (80元)』！"
+            },
+            {
+                id: "T2_04",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-6",
+                theme: 2,
+                domain: "fraction",
+                title: "男生佔全班的比率",
+                subType: "部分佔全體 (分數)",
+                focus: "比較量 ÷ 基準量 = 比率 (無名數)",
+                text: "五年一班男生有 <mark>12 人</mark>，全班總共有 <mark>30 人</mark>，男生人數佔全班的幾分之幾？",
+                dividendName: "男生人數 12 人 (比較量)",
+                dividendNum: "12",
+                divisorName: "全班總數 30 人 (基準量 1)",
+                divisorNum: "30",
+                divisionType: "ratio",
+                divisionTypeName: "比率計算 (全班當作 1，全班人數在除數)",
+                equationStr: "12 ÷ 30 = 2/5",
+                resultQuotient: "2/5",
+                resultRemainder: "0",
+                resultUnit: "(比率，無單位)",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "ratioMeaning",
+                chipsPool: [
+                    "男生 12 人", "全班 30 人", "全班是基準量 1", "除以全班 30 人", "得到比率 2/5", "比率沒有單位",
+                    "比率是 2.5 人", "男生佔 2/5 人", "30 ÷ 12 = 2.5"
+                ],
+                distractors: ["比率是 2.5 人", "男生佔 2/5 人", "30 ÷ 12 = 2.5"],
+                reasonablenessPrompt: "比率是部分佔整體的比例，男生比全班少，比率一定要小於 1（2/5 < 1），而且比率是純數值，沒有單位！",
+                decisionExplain: "全班人數是基準量 1（放在除數），男生是比較量，12 ÷ 30 約分後等於 2/5（或 0.4）。比率是純數值，沒有單位！",
+                finalAnswer: "2/5 (或 0.4)",
+                hint: "求『佔全班的幾分之幾』，全班就是基準量 1，放除數！"
+            },
+            {
+                id: "T2_05",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-3",
+                theme: 2,
+                domain: "fraction",
+                title: "果汁一整瓶容量還原",
+                subType: "等分除基準量還原 (分數)",
+                focus: "量 ÷ 比率 = 基準量",
+                text: "小芳喝了 <mark>2/3 瓶</mark> 的蘋果汁，正好是 <mark>4/5 公升</mark>，請問一整瓶蘋果汁是多少公升？",
+                dividendName: "實際容量 4/5 公升",
+                dividendNum: "4/5",
+                divisorName: "所佔比率 2/3 瓶",
+                divisorNum: "2/3",
+                divisionType: "rate",
+                divisionTypeName: "基準量還原 (量 ÷ 比率 = 1 瓶總容量)",
+                equationStr: "4/5 ÷ 2/3 = 6/5",
+                resultQuotient: "6/5",
+                resultRemainder: "0",
+                resultUnit: "公升/瓶",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "ratioMeaning",
+                chipsPool: [
+                    "4/5 公升果汁", "佔了 2/3 瓶", "求一整瓶容量", "除以 2/3 瓶", "乘上倒數 3/2", "一整瓶是 6/5 公升",
+                    "一整瓶是 8/15 公升", "用乘法 4/5 × 2/3"
+                ],
+                distractors: ["一整瓶是 8/15 公升", "用乘法 4/5 × 2/3"],
+                reasonablenessPrompt: "2/3 瓶是 4/5 公升，一整瓶當然要比 4/5 公升更多！6/5 公升大於 4/5 公升，完全合理！",
+                decisionExplain: "2/3 瓶是 4/5 公升，求一整瓶（1瓶）就是用量除以比率：4/5 ÷ 2/3 = 4/5 × 3/2 = 6/5 公升（1又1/5公升）。",
+                finalAnswer: "6/5 公升 (或 1.2 公升)",
+                hint: "知道部分量和它對應的分數，求一整瓶要用除法（量 ÷ 比率）！"
+            },
+            {
+                id: "T2_06",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-3 / N-6-6",
+                theme: 2,
+                domain: "fraction",
+                title: "池塘竹竿插入水中深度",
+                subType: "基準量與比較量 (竹竿水深)",
+                focus: "比較量 ÷ 比率 = 全長基準量 1",
+                text: "一根竹竿垂直插入水池中，插入水中的部分佔了全長的 <mark>3/5</mark>，量得在水中的部分長度是 <mark>1又1/2 公尺 (即 3/2 公尺)</mark>。請問這根竹竿全長是多少公尺？",
+                dividendName: "水中長度 3/2 公尺 (比較量)",
+                dividendNum: "3/2",
+                divisorName: "所佔比例 3/5 (水深比率)",
+                divisorNum: "3/5",
+                divisionType: "rate",
+                divisionTypeName: "基準量求法 (比較量 ÷ 對應比率 = 全長基準量 1)",
+                equationStr: "3/2 ÷ 3/5 = 5/2",
+                resultQuotient: "5/2",
+                resultRemainder: "0",
+                resultUnit: "公尺",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "bambooMeaning",
+                chipsPool: [
+                    "水中部分 3/2 公尺", "佔了全長的 3/5", "竹竿全長當作基準 1", "比較量 ÷ 比率 = 基準量", "除以比率 3/5", "竹竿全長是 5/2 公尺 (2.5公尺)",
+                    "全長是 9/10 公尺", "用乘法 3/2 × 3/5", "水深比竹竿全長還長"
+                ],
+                distractors: ["全長是 9/10 公尺", "用乘法 3/2 × 3/5", "水深比竹竿全長還長"],
+                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：水中的部分（3/2 公尺＝1.5公尺）只是竹竿的一部分，整根竹竿全長一定要比 1.5 公尺更長！算出來 5/2 公尺（2.5公尺）大於 1.5 公尺（2.5 > 1.5），完全符合生活常理！如果算成 9/10 公尺（0.9公尺），整根竹竿比插在水裡的還短，那就太不合理了！",
+                decisionExplain: "水深 3/2 公尺是比較量，它佔了全長的 3/5。把全長看作基準量 1：比較量 ÷ 比率 = 基準量，3/2 ÷ 3/5 = 3/2 × 5/3 = 5/2 公尺（即 2.5 公尺）。整根竹竿比水中的部分更長，合情合理！",
+                finalAnswer: "5/2 公尺 (即 2.5 公尺)",
+                hint: "竹竿全長是基準量 1！知道水中長度與它佔的幾分之幾，用「比較量 ÷ 比率」還原全長！"
+            },
+
+            // ==================== 【主題三：乘除逆轉解謎室】 ====================
+            // 嚴格落實 108 課綱定義：乘號前為「被乘數」，乘號後為「乘數」
+            {
+                id: "T3_01",
+                grade: 4,
+                curriculumCode: "108課綱 S-4-3 / R-4-2",
+                theme: 3,
+                domain: "integer",
+                title: "長方形面積回推寬度",
+                subType: "幾何乘除互逆 (整數)",
+                focus: "長(被乘數) × 寬(未知乘數) = 面積 ➔ 面積 ÷ 長 = 寬",
+                text: "一塊長方形花圃的面積是 <mark>96 平方公尺</mark>，已知長是 <mark>12 公尺</mark>，請問花圃的寬是多少公尺？",
+                dividendName: "花圃面積 96 平方公尺 (積)",
+                dividendNum: "96",
+                divisorName: "已知長度 12 公尺 (被乘數)",
+                divisorNum: "12",
+                divisionType: "inverse",
+                divisionTypeName: "乘除互逆 (求未知乘數：寬 = 面積 ÷ 長)",
+                // 108 課綱乘法定位
+                inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：\n原本乘法關係是「長 (被乘數 12) × 寬 (未知乘數) = 面積 (積 96)」，\n依乘除互逆還原：未知寬 (乘數) = 積 (96) ÷ 已知長 (被乘數 12) = 8 公尺！",
+                equationStr: "96 ÷ 12 = 8",
+                resultQuotient: "8",
+                resultRemainder: "0",
+                resultUnit: "公尺",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "inverseVerify",
+                chipsPool: [
+                    "長是 12 公尺(被乘數)", "寬是未知量(乘數)", "長(被乘數) × 寬(乘數) = 面積", "乘除互逆：未知乘數 = 積 ÷ 被乘數", "96 ÷ 12 = 8", "寬度是 8 公尺",
+                    "寬度是 1152 公尺", "用乘法 96 × 12", "原本是乘數×未知數"
+                ],
+                distractors: ["寬度是 1152 公尺", "用乘法 96 × 12", "原本是乘數×未知數"],
+                reasonablenessPrompt: "【108 課綱檢驗】：長 (被乘數 12) × 寬 (乘數 8) = 面積 96 平方公尺，答案完全吻合！",
+                decisionExplain: "原本乘法關係是 長 (被乘數 12) × 寬 (乘數) = 面積 96。運用乘除互逆：寬 (未知乘數) = 96 ÷ 12 = 8 公尺。驗算：12 × 8 = 96 完全正確！",
+                finalAnswer: "8 公尺",
+                hint: "課綱公式：乘號前是長(被乘數)，乘號後是寬(乘數)。未知數在乘數位置！"
+            },
+            {
+                id: "T3_02",
+                grade: 5,
+                curriculumCode: "108課綱 S-5-1 / R-5-2",
+                theme: 3,
+                domain: "decimal",
+                title: "平行四邊形面積回推高",
+                subType: "幾何乘除互逆 (小數)",
+                focus: "底(被乘數) × 高(未知乘數) = 面積 ➔ 面積 ÷ 底 = 高",
+                text: "一個平行四邊形招牌的面積是 <mark>42.5 平方公分</mark>，它的底邊長是 <mark>8.5 公分</mark>，請問這塊招牌的高是多少公分？",
+                dividendName: "招牌面積 42.5 平方公分 (積)",
+                dividendNum: "42.5",
+                divisorName: "已知底邊長 8.5 公分 (被乘數)",
+                divisorNum: "8.5",
+                divisionType: "inverse",
+                divisionTypeName: "乘除互逆 (求未知乘數：高 = 面積 ÷ 底)",
+                // 108 課綱乘法定位
+                inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：\n原本乘法關係是「底 (被乘數 8.5) × 高 (未知乘數) = 面積 (積 42.5)」，\n依乘除互逆還原：未知高 (乘數) = 積 (42.5) ÷ 已知底 (被乘數 8.5) = 5 公分！",
+                equationStr: "42.5 ÷ 8.5 = 5",
+                resultQuotient: "5",
+                resultRemainder: "0",
+                resultUnit: "公分",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "inverseVerify",
+                chipsPool: [
+                    "底是 8.5 公分(被乘數)", "高是未知量(乘數)", "底(被乘數) × 高(乘數) = 面積", "乘除互逆：未知乘數 = 積 ÷ 被乘數", "42.5 ÷ 8.5 = 5", "高是 5 公分",
+                    "高是 361.25 公分", "用乘法 42.5 × 8.5", "原本是乘數×未知數"
+                ],
+                distractors: ["高是 361.25 公分", "用乘法 42.5 × 8.5", "原本是乘數×未知數"],
+                reasonablenessPrompt: "【108 課綱檢驗】：底 (被乘數 8.5) × 高 (乘數 5) = 面積 42.5 平方公分，驗算完全吻合！",
+                decisionExplain: "公式為 底 (被乘數 8.5) × 高 (乘數) = 面積 42.5。運用乘除互逆：高 (未知乘數) = 42.5 ÷ 8.5 = 5 公分。驗算：8.5 × 5 = 42.5 完全正確！",
+                finalAnswer: "5 公分",
+                hint: "課綱公式：乘號前是底(被乘數)，乘號後是高(乘數)。高在乘數位置！"
+            },
+            {
+                id: "T3_03",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-6",
+                theme: 3,
+                domain: "decimal",
+                title: "百貨換季打折回推原價",
+                subType: "折扣逆運算 (小數)",
+                focus: "原價(未知被乘數) × 折數(乘數) = 售價 ➔ 售價 ÷ 折數 = 原價",
+                text: "百貨公司週年慶全面打八折（即乘 0.8），小華買了一雙特價 <mark>720 元</mark> 的球鞋，請問這雙球鞋的原價是多少元？",
+                dividendName: "特價售價 720 元 (積)",
+                dividendNum: "720",
+                divisorName: "打八折 0.8 (乘數)",
+                divisorNum: "0.8",
+                divisionType: "inverse",
+                divisionTypeName: "折扣逆運算 (求未知被乘數：原價 = 售價 ÷ 折數)",
+                // 108 課綱乘法定位
+                inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：\n原本乘法關係是「原價 (未知被乘數) × 折數 (乘數 0.8) = 售價 (積 720)」，\n依乘除互逆還原：未知原價 (被乘數) = 積 (720) ÷ 已知折數 (乘數 0.8) = 900 元！",
+                equationStr: "720 ÷ 0.8 = 900",
+                resultQuotient: "900",
+                resultRemainder: "0",
+                resultUnit: "元",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "inverseVerify",
+                chipsPool: [
+                    "原價是未知基準(被乘數)", "折數是倍數 0.8(乘數)", "原價(被乘數) × 0.8(乘數) = 720", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "720 ÷ 0.8 = 900", "原價是 900 元",
+                    "原價是 576 元", "用乘法 720 × 0.8"
+                ],
+                distractors: ["原價是 576 元", "用乘法 720 × 0.8"],
+                reasonablenessPrompt: "特價是打折後的價格，原價一定要比 720 元更貴！900 元比 720 元多，驗算 原價(被乘數 900) × 折數(乘數 0.8) = 720，完全合理！",
+                decisionExplain: "題目原本的關係是 原價 (被乘數) × 0.8 (乘數) = 720，求未知的原價 (被乘數) 運用乘除互逆：720 ÷ 0.8 = 900 元。驗算：900 × 0.8 = 720！",
+                finalAnswer: "900 元",
+                hint: "先列出順向式子：原價(被乘數) × 0.8(乘數) = 720，所以原價 = 720 ÷ 0.8！"
+            },
+            {
+                id: "T3_04",
+                grade: 6,
+                curriculumCode: "108課綱 S-6-3",
+                theme: 3,
+                domain: "decimal",
+                title: "圓周長回推直徑",
+                subType: "圓周公式逆推 (小數)",
+                focus: "直徑(未知被乘數) × 圓周率(乘數) = 圓周長 ➔ 圓周長 ÷ 3.14 = 直徑",
+                text: "一個圓形花圃的外圍長度（圓周長）是 <mark>31.4 公尺</mark>，已知圓周率約為 3.14，請問這個花圃的直徑是多少公尺？",
+                dividendName: "圓周長 31.4 公尺 (積)",
+                dividendNum: "31.4",
+                divisorName: "圓周率 3.14 (乘數)",
+                divisorNum: "3.14",
+                divisionType: "inverse",
+                divisionTypeName: "圓周公式逆推 (求未知被乘數：直徑 = 周長 ÷ 3.14)",
+                inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：\n原本乘法關係是「直徑 (未知被乘數) × 圓周率 (乘數 3.14) = 圓周長 (積 31.4)」，\n依乘除互逆還原：未知直徑 (被乘數) = 積 (31.4) ÷ 已知圓周率 (乘數 3.14) = 10 公尺！",
+                equationStr: "31.4 ÷ 3.14 = 10",
+                resultQuotient: "10",
+                resultRemainder: "0",
+                resultUnit: "公尺",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "inverseVerify",
+                chipsPool: [
+                    "直徑是未知基準(被乘數)", "圓周率是 3.14(乘數)", "直徑(被乘數) × 3.14(乘數) = 周長", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "31.4 ÷ 3.14 = 10", "直徑是 10 公尺",
+                    "直徑是 98.596 公尺", "用乘法 31.4 × 3.14"
+                ],
+                distractors: ["直徑是 98.596 公尺", "用乘法 31.4 × 3.14"],
+                reasonablenessPrompt: "驗算：直徑 (被乘數 10) × 圓周率 (乘數 3.14) = 圓周長 31.4 公尺，完全正確！",
+                decisionExplain: "公式為 直徑 (被乘數) × 3.14 (乘數) = 圓周長 31.4，所以 直徑 (被乘數) = 圓周長 ÷ 3.14 = 31.4 ÷ 3.14 = 10 公尺。驗算：10 × 3.14 = 31.4！",
+                finalAnswer: "10 公尺",
+                hint: "圓周長公式：直徑(被乘數) × 3.14(乘數) = 周長，所以直徑 = 周長 ÷ 3.14！"
+            },
+            {
+                id: "T3_05",
+                grade: 5,
+                curriculumCode: "108課綱 R-5-2",
+                theme: 3,
+                domain: "integer",
+                title: "年齡倍數差還原弟弟年齡",
+                subType: "倍數差基準量還原 (整數)",
+                focus: "弟弟年齡(未知被乘數) × 倍數差(乘數) = 年齡差",
+                text: "哥哥比弟弟大 <mark>12 歲</mark>，當哥哥的年齡是弟弟的 <mark>3 倍</mark> 時，請問弟弟當時是幾歲？",
+                dividendName: "年齡差 12 歲 (積)",
+                dividendNum: "12",
+                divisorName: "倍數差 (3 - 1 = 2 份，乘數)",
+                divisorNum: "2",
+                divisionType: "inverse",
+                divisionTypeName: "倍數差還原 (求未知被乘數：弟弟年齡 = 年齡差 ÷ 倍數差)",
+                inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：\n原本乘法關係是「弟弟年齡 (未知基準被乘數) × 倍數差 (乘數 2) = 年齡差 (積 12)」，\n依乘除互逆還原：弟弟年齡 (被乘數) = 積 (12) ÷ 乘數 (2) = 6 歲！",
+                equationStr: "12 ÷ 2 = 6",
+                resultQuotient: "6",
+                resultRemainder: "0",
+                resultUnit: "歲",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "inverseVerify",
+                chipsPool: [
+                    "弟弟年齡是基準(被乘數)", "哥哥比弟弟多 3 - 1 = 2 份(乘數)", "弟弟(被乘數) × 2(乘數) = 12(積)", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "12 ÷ 2 = 6", "弟弟當時是 6 歲",
+                    "相差 2 份對應 12 歲", "弟弟當時 4 歲", "直接除以 3 倍"
+                ],
+                distractors: ["弟弟當時 4 歲", "直接除以 3 倍"],
+                reasonablenessPrompt: "驗算：弟弟 6 歲，哥哥是 3 倍即 18 歲，兩人相差 18 - 6 = 12 歲，完全吻合！",
+                decisionExplain: "哥哥是 3 份，弟弟是 1 份，兩人相差 3 - 1 = 2 份。弟弟年齡 (被乘數) × 2 = 12 歲，所以 1 份（弟弟）= 12 ÷ 2 = 6 歲。哥哥當時 18 歲，相差 12 歲完全成立！",
+                finalAnswer: "6 歲",
+                hint: "年齡差 12 歲對應的是倍數差 (3 - 1 = 2 份)，所以除數是 2（倍數差），千萬不要直接除以 3 喔！"
+            }
+        ];
+
+        /* 全域遊戲狀態 */
+        let state = {
+            activeTheme: 1,         // 1: 分裝與平分, 2: 比率與速率, 3: 乘除互逆
+            activeDomain: "all",    // all, integer, fraction, decimal
+            filteredQuestions: [],
+            currentQIndex: 0,
+            step: 1,                // 1: 識別主角, 2: 意義分法, 3: 算式與字卡, 4: 剩下什麼與合理性檢驗
+            selectedStep1: null,
+            selectedStep2: null,
+            inputStep3: { dividend: "", divisor: "", quotient: "", remainder: "" },
+            sentenceChips: [],
+            selectedStep4Decision: null
+        };
+
+        // 啟動初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            switchTheme(1);
+        });
+
+        /* 切換主題 (1, 2, 3) - 無「柱」稱號 */
+        function switchTheme(themeNum) {
+            state.activeTheme = themeNum;
+
+            const root = document.documentElement;
+            // badge removed
+            
+            document.querySelectorAll('.theme-tab').forEach(tab => {
+                tab.classList.remove('active-t1', 'active-t2', 'active-t3');
+            });
+
+            if (themeNum === 1) {
+                root.style.setProperty('--theme-color', 'var(--theme1-color)');
+                root.style.setProperty('--theme-light', 'var(--theme1-light)');
+                document.getElementById('tab-t1').classList.add('active-t1');
+                // theme 1
+            } else if (themeNum === 2) {
+                root.style.setProperty('--theme-color', 'var(--theme2-color)');
+                root.style.setProperty('--theme-light', 'var(--theme2-light)');
+                document.getElementById('tab-t2').classList.add('active-t2');
+                // theme 2
+            } else if (themeNum === 3) {
+                root.style.setProperty('--theme-color', 'var(--theme3-color)');
+                root.style.setProperty('--theme-light', 'var(--theme3-light)');
+                document.getElementById('tab-t3').classList.add('active-t3');
+                // theme 3
+            }
+
+            updateLedgerTitlesForTheme(themeNum);
+            applyFilterAndReload();
+        }
+
+        /* 依主題更新左側台帳四問標題 */
+        function updateLedgerTitlesForTheme(themeNum) {
+            const t1 = document.getElementById('ledger-title-1');
+            const t2 = document.getElementById('ledger-title-2');
+            const t3 = document.getElementById('ledger-title-3');
+            const t4 = document.getElementById('ledger-title-4');
+
+            if (themeNum === 1) {
+                t1.textContent = "① 什麼被分？ (被除數)";
+                t2.textContent = "② 怎麼分？ (包含除或等分除)";
+                t3.textContent = "③ 分的結果是什麼？剩下什麼？ (商與餘數)";
+                t4.textContent = "④ 這個答案合理嗎？生活決策 (餘數必須小於除數)";
+            } else if (themeNum === 2) {
+                t1.textContent = "① 誰被拿來比？ (比較量或目標量)";
+                t2.textContent = "② 誰被當作「1」？ (基準量或單位量放除數)";
+                t3.textContent = "③ 算式與結果 (比率或單位量)";
+                t4.textContent = "④ 關係與生活合理性 (比1大還是小？)";
+            } else if (themeNum === 3) {
+                t1.textContent = "① 原本的關係是什麼？ (乘法關係)";
+                t2.textContent = "② 未知的是哪一個？ (未知主角：被乘數或乘數)";
+                t3.textContent = "③ 乘除互逆怎麼轉？ (依課綱被乘數乘數還原)";
+                t4.textContent = "④ 驗算與合理性 (代回乘法檢驗)";
+            }
+        }
+
+        /* 數域過濾 (all, integer, fraction, decimal) */
+        function setDomainFilter(domain, btnEl) {
+            state.activeDomain = domain;
+            document.querySelectorAll('.domain-pill').forEach(el => el.classList.remove('active'));
+            btnEl.classList.add('active');
+            applyFilterAndReload();
+        }
+
+        function applyFilterAndReload() {
+            state.filteredQuestions = QUESTION_DATABASE.filter(q => {
+                const matchTheme = q.theme === state.activeTheme;
+                const matchDomain = (state.activeDomain === "all") || (q.domain === state.activeDomain);
+                return matchTheme && matchDomain;
+            });
+
+            if (state.filteredQuestions.length === 0) {
+                // 若當前數域無題目，回退為當前主題全部題目
+                state.filteredQuestions = QUESTION_DATABASE.filter(q => q.theme === state.activeTheme);
+            }
+
+            // 依年級升冪排序（低年級排在最上方）
+            state.filteredQuestions.sort((a, b) => {
+                const gradeA = a.grade || 0;
+                const gradeB = b.grade || 0;
+                return gradeA - gradeB;
+            });
+
+            renderQuestionDropdown();
+            loadQuestion(0);
+        }
+
+        /* 建立題目下拉選單 (保留年級、數域、題目資訊) */
+        function renderQuestionDropdown() {
+            const selector = document.getElementById('question-selector');
+            selector.innerHTML = "";
+            state.filteredQuestions.forEach((q, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                const domainLabel = q.domain === 'integer' ? '整數' : (q.domain === 'fraction' ? '分數' : '小數');
+                const gradeText = q.grade ? `小${q.grade}` : '';
+                opt.textContent = `[${gradeText}·${domainLabel}] ${q.title} (${q.subType})`;
+                selector.appendChild(opt);
+            });
+        }
+
+        function onSelectQuestionChange(val) {
+            loadQuestion(parseInt(val));
+        }
+
+        /* 載入指定題目 */
+        function loadQuestion(idx) {
+            if (!state.filteredQuestions[idx]) return;
+            state.currentQIndex = idx;
+            state.step = 1;
+            state.selectedStep1 = null;
+            state.selectedStep2 = null;
+            state.inputStep3 = { dividend: "", divisor: "", quotient: "", remainder: "" };
+            state.sentenceChips = [];
+            state.selectedStep4Decision = null;
+
+            const q = state.filteredQuestions[idx];
+            document.getElementById('question-selector').value = idx;
+            
+            const domainLabel = q.domain === 'integer' ? '🔢 整數' : (q.domain === 'fraction' ? '🍰 分數' : '🔘 小數');
+            const gradeEl = document.getElementById('meta-grade');
+            if (gradeEl) {
+                gradeEl.textContent = q.grade ? `適合${q.grade}年級 (${q.curriculumCode || ''})` : '國小數學';
+            }
+            document.getElementById('meta-domain').textContent = domainLabel;
+            document.getElementById('meta-subtype').textContent = q.subType;
+            document.getElementById('meta-focus').textContent = q.focus;
+            document.getElementById('meta-num').textContent = `題目 ${idx + 1} / ${state.filteredQuestions.length}`;
+            document.getElementById('problem-text-el').innerHTML = q.text;
+
+            resetLedgerUI();
+            renderStepUI();
+            hideFeedback();
+        }
+
+        function resetCurrentQuestion() {
+            loadQuestion(state.currentQIndex);
+        }
+
+        function nextQuestion() {
+            closeModal();
+            const nextIdx = (state.currentQIndex + 1) % state.filteredQuestions.length;
+            loadQuestion(nextIdx);
+        }
+
+        /* 重置左側台帳 */
+        function resetLedgerUI() {
+            for (let i = 1; i <= 4; i++) {
+                const stepEl = document.getElementById(`ledger-step-${i}`);
+                const badgeEl = document.getElementById(`badge-step-${i}`);
+                const dispEl = document.getElementById(`display-step-${i}`);
+                stepEl.className = 'ledger-step';
+                if (i === 1) {
+                    stepEl.classList.add('active');
+                    badgeEl.textContent = '進行中';
+                    dispEl.textContent = '請先找出題目中的關鍵主角...';
+                } else {
+                    badgeEl.textContent = '待解鎖';
+                    dispEl.textContent = '等待解鎖...';
+                }
+            }
+            document.getElementById('display-eq-step-3').style.display = 'none';
+            document.getElementById('ledger-progress-indicator').textContent = '步驟 1 / 4';
+        }
+
+        /* 渲染右側作答控制台 */
+        function renderStepUI() {
+            const q = state.filteredQuestions[state.currentQIndex];
+            const body = document.getElementById('console-interactive-body');
+            const stepTag = document.getElementById('console-step-tag');
+            const promptEl = document.getElementById('console-question-prompt');
+            const submitBtn = document.getElementById('main-submit-btn');
+
+            hideFeedback();
+            body.innerHTML = "";
+
+            // ========== 步驟 1 ==========
+            if (state.step === 1) {
+                stepTag.textContent = "步驟 1 / 4 🔍";
+                submitBtn.textContent = "確認 ➔";
+                submitBtn.disabled = true;
+
+                if (state.activeTheme === 1) {
+                    promptEl.textContent = "【第 1 問：什麼被分？】請點選題目中「被拿去分的主角」：";
+                } else if (state.activeTheme === 2) {
+                    promptEl.textContent = "【第 1 問：誰被拿來比？】請點選題目中「被拿來比較的量（比較量）」：";
+                } else {
+                    promptEl.textContent = "【第 1 問：原本的關係是什麼？】請點選原本情境中的乘法總量目標（積）：";
+                }
+
+                const choices = [
+                    { id: 'correct', title: q.dividendName, desc: '題目裡的總量主體或乘法目標（積）' },
+                    { id: 'wrong', title: q.divisorName, desc: '題目裡的每份規格、基準量或乘數' }
+                ].sort(() => Math.random() - 0.5);
+
+                const grid = document.createElement('div');
+                grid.className = 'option-cards-grid';
+
+                choices.forEach(c => {
+                    const card = document.createElement('div');
+                    card.className = 'choice-card';
+                    card.innerHTML = `
+                        <div class="choice-title">${c.title}</div>
+                        <div class="choice-desc">${c.desc}</div>
+                    `;
+                    card.onclick = () => {
+                        grid.querySelectorAll('.choice-card').forEach(el => el.classList.remove('selected'));
+                        card.classList.add('selected');
+                        state.selectedStep1 = c.id;
+                        submitBtn.disabled = false;
+                        hideFeedback();
+                        playTone(400, 'sine', 0.08);
+                    };
+                    grid.appendChild(card);
+                });
+                body.appendChild(grid);
+
+            }
+            // ========== 步驟 2 (108 課綱嚴謹定義被乘數與乘數) ==========
+            else if (state.step === 2) {
+                stepTag.textContent = "步驟 2 / 4 ⚖️";
+                submitBtn.textContent = "確認 ➔";
+                submitBtn.disabled = true;
+
+                if (state.activeTheme === 1) {
+                    promptEl.textContent = "【第 2 問：怎麼分？】這是「包含除 (分裝)」還是「等分除 (平分)」？";
+                    const choices = [
+                        { type: 'containment', title: '📦 包含除 (分裝)', desc: '知道每份固定量（如每盒4顆、每車4人），求可以裝成幾份/幾車' },
+                        { type: 'sharing', title: '🤲 等分除 (平分)', desc: '知道要平分給幾個人/幾組，求每一份分到多少' }
+                    ];
+                    renderChoiceCards(choices, body, 'selectedStep2', 'type');
+                } else if (state.activeTheme === 2) {
+                    promptEl.textContent = "【第 2 問：誰被當作基準 1？】口訣：誰當 1，誰就住在除數！";
+                    const choices = [
+                        { type: 'correct_base', title: `🎯 ${q.divisorName}`, desc: '題目問「每 1 個...」，所以把它當作基準量 1，必須放在除數！' },
+                        { type: 'wrong_base', title: `❌ ${q.dividendName}`, desc: '只是隨便把數字大的拿來當除數' }
+                    ].sort(() => Math.random() - 0.5);
+                    renderChoiceCards(choices, body, 'selectedStep2', 'type');
+                } else {
+                    promptEl.textContent = "【第 2 問：乘除互逆怎麼轉？】依 108 課綱（乘號前為被乘數，乘號後為乘數）：";
+                    const descText = q.inverseRuleDesc || 
+                        `依 108 課綱「被乘數 × 乘數 = 積」：\n原本乘法關係乘號前為被乘數、乘號後為乘數，\n依乘除互逆：未知數 = 積 ÷ 已知數！`;
+
+                    // 依據題目情境產生真實具有誘答力的數學迷思選項
+                    const choices = [
+                        { 
+                            type: 'inverse_rule', 
+                            title: `🔄 108 課綱乘除互逆還原`, 
+                            desc: descText 
+                        },
+                        { 
+                            type: 'wrong_multiply', 
+                            title: `✖️ 反射動作直接相乘`, 
+                            desc: `看到題目給了兩個數字 (${q.dividendNum} 與 ${q.divisorNum}) 就直接乘起來：${q.dividendNum} × ${q.divisorNum}，誤把結果越乘越大！` 
+                        },
+                        { 
+                            type: 'wrong_order', 
+                            title: `🔀 被乘數與乘數角色顛倒`, 
+                            desc: `誤以為「已知數 (被除數) ÷ 積 (除數)」，拿小數除以大數 (${q.divisorNum} ÷ ${q.dividendNum})，顛倒了被除數與除數的關係！` 
+                        }
+                    ].sort(() => Math.random() - 0.5);
+                    renderChoiceCards(choices, body, 'selectedStep2', 'type');
+                }
+            }
+            // ========== 步驟 3 ==========
+            else if (state.step === 3) {
+                stepTag.textContent = "步驟 3 / 4 🔢";
+                promptEl.textContent = state.activeTheme === 1 
+                    ? "【第 3 問：分的結果是什麼？剩下什麼？】請填入算式與商、餘數，並用下方字卡拼出它的意思：" 
+                    : "【第 3 問：算式與結果】請在算式中填入數值，並用下方字卡拼出它的意思：";
+                submitBtn.textContent = "檢查算式與字卡 ➔";
+                submitBtn.disabled = false;
+
+                const eqDiv = document.createElement('div');
+                eqDiv.className = 'equation-builder';
+
+                if (q.hasRemainder) {
+                    eqDiv.innerHTML = `
+                        <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-muted);">
+                            請填寫算式：[被除數] ÷ [除數] = [商] ... [餘數]
+                        </div>
+                        <div class="equation-inputs-row">
+                            <input type="text" id="inp-dividend" class="eq-input-box" placeholder="被除數" value="${state.inputStep3.dividend}">
+                            <span class="eq-symbol">÷</span>
+                            <input type="text" id="inp-divisor" class="eq-input-box" placeholder="除數" value="${state.inputStep3.divisor}">
+                            <span class="eq-symbol">=</span>
+                            <input type="text" id="inp-quotient" class="eq-input-box" placeholder="商" value="${state.inputStep3.quotient}">
+                            <span class="eq-symbol">...</span>
+                            <input type="text" id="inp-remainder" class="eq-input-box" placeholder="餘數" value="${state.inputStep3.remainder}">
+                        </div>
+                    `;
+                } else {
+                    eqDiv.innerHTML = `
+                        <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-muted);">
+                            請填寫算式：[被除數] ÷ [除數] = [結果]（支援小數或分數）
+                        </div>
+                        <div class="equation-inputs-row">
+                            <input type="text" id="inp-dividend" class="eq-input-box" placeholder="被除數" value="${state.inputStep3.dividend}">
+                            <span class="eq-symbol">÷</span>
+                            <input type="text" id="inp-divisor" class="eq-input-box" placeholder="除數" value="${state.inputStep3.divisor}">
+                            <span class="eq-symbol">=</span>
+                            <input type="text" id="inp-quotient" class="eq-input-box" placeholder="答案" value="${state.inputStep3.quotient}">
+                        </div>
+                    `;
+                }
+                body.appendChild(eqDiv);
+
+                // 詞卡區 (含誘答項，打散排列)
+                const chipsContainer = document.createElement('div');
+                chipsContainer.className = 'chips-section';
+                chipsContainer.innerHTML = `
+                    <div class="chips-header">
+                        <span>💬 語意字卡台帳（注意！包含誘答字卡，請仔細分辨）：</span>
+                        <button style="background:none; border:none; color:var(--warning); cursor:pointer; font-size:0.8rem; font-weight:bold;" onclick="clearSentenceChips()">✕ 清空重拼</button>
+                    </div>
+                    <div class="chips-sentence-box" id="chips-sentence-box-el">
+                        <span class="placeholder-hint">尚未加入字卡...</span>
+                    </div>
+                    <div class="chips-pool" id="chips-pool-el"></div>
+                `;
+                body.appendChild(chipsContainer);
+
+                renderChipsPool();
+            }
+            // ========== 步驟 4 (核心升級：合理性檢驗鏡與餘數決策) ==========
+            else if (state.step === 4) {
+                stepTag.textContent = "步驟 4 / 4 🎯";
+                submitBtn.textContent = "完成本題推理 ➔";
+                submitBtn.disabled = true;
+
+                if (state.activeTheme === 1) {
+                    promptEl.textContent = `【第 4 問：這個答案合理嗎？生活決策】請檢驗生活情境決策：`;
+
+                    const reasonBanner = document.createElement('div');
+                    reasonBanner.className = 'reasonableness-banner';
+                    reasonBanner.innerHTML = `
+                        <span>🔍 <strong>思考指引：</strong>餘數代表剩下的量，<strong>餘數一定要小於除數</strong>（不夠再湊一份）才合理！根據生活情境，剩下的量該如何處理？</span>
+                    `;
+                    body.appendChild(reasonBanner);
+
+                    const decisions = [
+                        { key: 'ceil', title: '🚘 一個都不能少 (商 + 1：無條件進入)', desc: '搭車、露營等，剩下的人也必須有位置，所以商要 + 1！' },
+                        { key: 'floor', title: '✂️ 不夠湊滿就算了 (取商：無條件捨去)', desc: '做手工藝、買東西等，剩下的不夠再做一件，只能取商！' },
+                        { key: 'gap', title: '🎯 還差多少湊滿？ (除數 - 餘數)', desc: '差額運算，求還差多少東西或材料才能再湊出一整份！' },
+                        { key: 'cycleRank', title: '🔄 週期看餘數 (決定位次)', desc: '完成整組循環後，餘數決定是下一輪循環裡的第幾個！' },
+                        { key: 'decimalRemainder', title: '🔘 合理性檢驗：剩下的量必須小於一瓶容量', desc: '小數點垂直對齊！剩下不夠再裝一瓶，餘數一定要小於除數！如果大於等於除數就錯了！' },
+                        { key: 'fractionRemainder', title: '🍰 合理性檢驗：剩下的長度必須小於做一朵所需長度', desc: '做完 3 朵花後剩下 1/4 公尺緞帶，因為 1/4 < 3/4（餘數小於除數），不夠再做一朵花，完全合理！' },
+                        { key: 'fractionBigQuotient', title: '🍰 包含除檢驗：除以小於 1，商反而變大', desc: '小單位切分，分割出來的段數/份數一定比原來多！' },
+                        { key: 'averageMeaning', title: '📊 平均數合理性檢驗：介於最大值與最小值之間', desc: '平均值必定會落在整組數據的最多與最少之間，不可能比最少還少，也不可能比最多還多！' }
+                    ];
+                    renderPillar4Decisions(decisions, q.decisionKey, body);
+                } else if (state.activeTheme === 2) {
+                    promptEl.textContent = `【第 4 問：比率與生活詮釋】這個答案合理嗎？`;
+                    const reasonBanner = document.createElement('div');
+                    reasonBanner.className = 'reasonableness-banner';
+                    reasonBanner.innerHTML = `
+                        <span>🔍 <strong>思考指引：</strong>檢查算出來的數值是否合乎生活常理（例如：竹竿全長一定要比插入水中的部分長！）</span>
+                    `;
+                    body.appendChild(reasonBanner);
+
+                    const decisions = [
+                        { key: 'rateMeaning', title: '📊 檢驗單位率的具體生活意涵', desc: `${q.reasonablenessPrompt || q.decisionExplain}` },
+                        { key: 'ratioMeaning', title: '📈 檢驗比率（無名數）的意涵', desc: `${q.reasonablenessPrompt || q.decisionExplain}` },
+                        { key: 'bambooMeaning', title: '🎋 基準量合理性：竹竿全長必定大於水中部分', desc: '水中的長度只是竹竿的一部分（佔 3/5），所以還原出來的整根竹竿全長（2.5 公尺）一定比水中的 1.5 公尺更長！' }
+                    ];
+                    renderPillar4Decisions(decisions, q.decisionKey, body);
+                } else {
+                    promptEl.textContent = `【第 4 問：驗算與合理性】依 108 課綱乘法代回檢驗：`;
+                    const decisions = [
+                        { key: 'inverseVerify', title: '✅ 代回乘法式檢驗完全正確', desc: `${q.reasonablenessPrompt || q.decisionExplain}` }
+                    ];
+                    renderPillar4Decisions(decisions, q.decisionKey, body);
+                }
+            }
+        }
+
+        /* 渲染卡片輔助器 */
+        function renderChoiceCards(choices, container, stateKey, matchProp) {
+            const submitBtn = document.getElementById('main-submit-btn');
+            const grid = document.createElement('div');
+            grid.className = 'option-cards-grid';
+
+            choices.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'choice-card';
+                card.innerHTML = `
+                    <div class="choice-title">${c.title}</div>
+                    <div class="choice-desc">${c.desc}</div>
+                `;
+                card.onclick = () => {
+                    grid.querySelectorAll('.choice-card').forEach(el => el.classList.remove('selected'));
+                    card.classList.add('selected');
+                    state[stateKey] = c[matchProp];
+                    submitBtn.disabled = false;
+                    hideFeedback();
+                    playTone(420, 'sine', 0.08);
+                };
+                grid.appendChild(card);
+            });
+            container.appendChild(grid);
+        }
+
+        function renderPillar4Decisions(allDecisions, targetKey, container) {
+            const submitBtn = document.getElementById('main-submit-btn');
+            
+            // 確保正確答案一定在候選列表中
+            const targetItem = allDecisions.find(d => d.key === targetKey);
+            const otherItems = allDecisions.filter(d => d.key !== targetKey);
+            
+            // 從其餘選項隨機挑選 2 到 3 個作為誘答項
+            const shuffledOthers = [...otherItems].sort(() => Math.random() - 0.5).slice(0, 3);
+            
+            // 合併正確答案並隨機打散排列
+            const candidateList = targetItem ? [targetItem, ...shuffledOthers] : shuffledOthers;
+            const finalOptions = candidateList.sort(() => Math.random() - 0.5);
+
+            const grid = document.createElement('div');
+            grid.className = 'option-cards-grid';
+
+            finalOptions.forEach(d => {
+                const card = document.createElement('div');
+                card.className = 'choice-card';
+                card.innerHTML = `
+                    <div class="choice-title">${d.title}</div>
+                    <div class="choice-desc">${d.desc}</div>
+                `;
+                card.onclick = () => {
+                    grid.querySelectorAll('.choice-card').forEach(el => el.classList.remove('selected'));
+                    card.classList.add('selected');
+                    state.selectedStep4Decision = d.key;
+                    submitBtn.disabled = false;
+                    hideFeedback();
+                    playTone(450, 'sine', 0.08);
+                };
+                grid.appendChild(card);
+            });
+            container.appendChild(grid);
+        }
+
+        /* 字卡管理 (隨機打散含誘答字卡) */
+        function renderChipsPool() {
+            const q = state.filteredQuestions[state.currentQIndex];
+            const poolEl = document.getElementById('chips-pool-el');
+            if (!poolEl) return;
+            poolEl.innerHTML = "";
+
+            const shuffledPool = [...q.chipsPool].sort(() => Math.random() - 0.5);
+
+            shuffledPool.forEach((text, idx) => {
+                const chip = document.createElement('span');
+                chip.className = 'word-chip';
+                chip.textContent = text;
+                chip.onclick = () => addChipToSentence(text);
+                poolEl.appendChild(chip);
+            });
+        }
+
+        function addChipToSentence(text) {
+            state.sentenceChips.push(text);
+            updateSentenceBox();
+            playTone(480, 'sine', 0.05);
+        }
+
+        function clearSentenceChips() {
+            state.sentenceChips = [];
+            updateSentenceBox();
+            playTone(300, 'sine', 0.05);
+        }
+
+        function updateSentenceBox() {
+            const box = document.getElementById('chips-sentence-box-el');
+            if (!box) return;
+            if (state.sentenceChips.length === 0) {
+                box.innerHTML = `<span class="placeholder-hint">尚未加入字卡...</span>`;
+            } else {
+                box.innerHTML = "";
+                state.sentenceChips.forEach((text, i) => {
+                    const span = document.createElement('span');
+                    span.className = 'word-chip in-sentence';
+                    span.textContent = text;
+                    span.onclick = () => {
+                        state.sentenceChips.splice(i, 1);
+                        updateSentenceBox();
+                    };
+                    box.appendChild(span);
+                });
+            }
+        }
+
+        /* 提交步驟驗證 */
+        function submitCurrentStep() {
+            const q = state.filteredQuestions[state.currentQIndex];
+
+            // 步驟 1 檢查
+            if (state.step === 1) {
+                if (state.selectedStep1 === 'correct') {
+                    playSuccessSound();
+                    showFeedback('success', `答對了！鎖定目標主角：「${q.dividendName}」。`);
+                    
+                    const s1 = document.getElementById('ledger-step-1');
+                    s1.className = 'ledger-step completed';
+                    document.getElementById('badge-step-1').textContent = '已鎖定 ✓';
+                    document.getElementById('display-step-1').innerHTML = `<strong>${q.dividendName}</strong> 是關鍵目標`;
+
+                    state.step = 2;
+                    setTimeout(() => {
+                        document.getElementById('ledger-step-2').className = 'ledger-step active';
+                        document.getElementById('badge-step-2').textContent = '進行中';
+                        document.getElementById('ledger-progress-indicator').textContent = '步驟 2 / 4';
+                        renderStepUI();
+                    }, 800);
+                } else {
+                    playErrorSound();
+                    showFeedback('error', '再想一想，是誰被拿來做運算分配或乘法目標？不要看數字大小隨意猜測喔！');
+                }
+            }
+            // 步驟 2 檢查
+            else if (state.step === 2) {
+                let isStep2Correct = false;
+                if (state.activeTheme === 1) {
+                    isStep2Correct = (state.selectedStep2 === q.divisionType);
+                } else if (state.activeTheme === 2) {
+                    isStep2Correct = (state.selectedStep2 === 'correct_base');
+                } else {
+                    isStep2Correct = (state.selectedStep2 === 'inverse_rule');
+                }
+
+                if (isStep2Correct) {
+                    playSuccessSound();
+                    showFeedback('success', `太棒了！精準看清意義架構：${q.divisionTypeName}。`);
+
+                    const s2 = document.getElementById('ledger-step-2');
+                    s2.className = 'ledger-step completed';
+                    document.getElementById('badge-step-2').textContent = '已鎖定 ✓';
+                    document.getElementById('display-step-2').innerHTML = `運算意義：<strong>${q.divisionTypeName}</strong>`;
+
+                    state.step = 3;
+                    setTimeout(() => {
+                        document.getElementById('ledger-step-3').className = 'ledger-step active';
+                        document.getElementById('badge-step-3').textContent = '進行中';
+                        document.getElementById('ledger-progress-indicator').textContent = '步驟 3 / 4';
+                        renderStepUI();
+                    }, 800);
+                } else {
+                    playErrorSound();
+                    showFeedback('error', '意義判斷再想想：題目是問包含除還是等分除？誰當 1 誰住在除數？乘除互逆的被乘數與乘數關係為何？');
+                }
+            }
+            // 步驟 3 檢查 (嚴格檢查誘答字卡)
+            else if (state.step === 3) {
+                const inDividend = document.getElementById('inp-dividend')?.value.trim();
+                const inDivisor = document.getElementById('inp-divisor')?.value.trim();
+                const inQuotient = document.getElementById('inp-quotient')?.value.trim();
+                const inRemainder = document.getElementById('inp-remainder')?.value.trim();
+
+                if (!inDividend || !inDivisor || !inQuotient) {
+                    playErrorSound();
+                    showFeedback('error', '請將算式格子填滿喔！');
+                    return;
+                }
+
+                const norm = s => (s || '').replace(/\s+/g, '');
+                if (norm(inDividend) !== norm(q.dividendNum) || norm(inDivisor) !== norm(q.divisorNum)) {
+                    playErrorSound();
+                    if (q.id === 'T3_05' && norm(inDivisor) === '3') {
+                        showFeedback('error', '⚠️ 注意陷阱：年齡差 12 歲對應的是「倍數差 3 - 1 = 2 份」，除數應該是倍數差「2」而不是 3 喔！');
+                    } else {
+                        showFeedback('error', '被除數或除數填寫有誤！請回想前兩步驟確認的主角與除數，千萬別看數字大就隨意放前面喔！');
+                    }
+                    return;
+                }
+
+                if (norm(inQuotient) !== norm(q.resultQuotient)) {
+                    playErrorSound();
+                    showFeedback('error', '商或計算結果有誤，請再仔細計算一次看看！');
+                    return;
+                }
+
+                if (q.hasRemainder && norm(inRemainder) !== norm(q.resultRemainder)) {
+                    playErrorSound();
+                    if (q.domain === 'decimal') {
+                        showFeedback('error', '餘數有誤，請注意小數點必須垂直對齊原被除數，且餘數必須小於除數。');
+                    } else {
+                        showFeedback('error', '餘數有誤，餘數必須小於除數。');
+                    }
+                    return;
+                }
+
+                if (state.sentenceChips.length < 3) {
+                    playErrorSound();
+                    showFeedback('error', '算式對了！請點選下方語意字卡（至少 3 張），拼出這步算式的完整數學意義！');
+                    return;
+                }
+
+                // 檢查是否選中了誘答字卡
+                if (q.distractors && q.distractors.length > 0) {
+                    const pickedDistractor = state.sentenceChips.find(chip => q.distractors.includes(chip));
+                    if (pickedDistractor) {
+                        playErrorSound();
+                        showFeedback('error', `⚠️ 踩到誘答陷阱了！字卡中包含了錯誤的「${pickedDistractor}」。請想一想：被乘數與乘數的定義為何？餘數能大於一整份的容量嗎？請點擊移除這張字卡！`);
+                        return;
+                    }
+                }
+
+                playSuccessSound();
+                showFeedback('success', `算式與語意完全正確！${q.equationStr}`);
+
+                const s3 = document.getElementById('ledger-step-3');
+                s3.className = 'ledger-step completed';
+                document.getElementById('badge-step-3').textContent = '已鎖定 ✓';
+                document.getElementById('display-step-3').innerHTML = `意義詮釋：${state.sentenceChips.join(' ➔ ')}`;
+                const eqDisp = document.getElementById('display-eq-step-3');
+                eqDisp.style.display = 'block';
+                eqDisp.textContent = q.equationStr;
+
+                state.step = 4;
+                setTimeout(() => {
+                    document.getElementById('ledger-step-4').className = 'ledger-step active';
+                    document.getElementById('badge-step-4').textContent = '進行中';
+                    document.getElementById('ledger-progress-indicator').textContent = '步驟 4 / 4';
+                    renderStepUI();
+                }, 900);
+            }
+            // 步驟 4 檢查 (合理性檢驗)
+            else if (state.step === 4) {
+                if (state.selectedStep4Decision === q.decisionKey) {
+                    playFanfareSound();
+
+                    const s4 = document.getElementById('ledger-step-4');
+                    s4.className = 'ledger-step completed';
+                    document.getElementById('badge-step-4').textContent = '推理完成 ✓';
+                    document.getElementById('display-step-4').innerHTML = `<strong>生活與合理性檢驗：</strong>${q.decisionExplain}`;
+
+                    showCelebrationModal();
+                } else {
+                    playErrorSound();
+                    showFeedback('error', `請看清楚合理性檢驗：餘數必須小於除數，而且要符合生活常理喔！再選一次看看！`);
+                }
+            }
+        }
+
+        /* 彈窗顯示 */
+        function showCelebrationModal() {
+            const q = state.filteredQuestions[state.currentQIndex];
+            const modal = document.getElementById('celebration-modal');
+            const summary = document.getElementById('modal-summary-text');
+
+            summary.innerHTML = `
+                <div><strong>📌 題目：</strong>${q.title} (${q.subType})</div>
+                <div style="margin: 6px 0;"><strong>🔢 數學算式：</strong><code>${q.equationStr}</code></div>
+                <div style="margin: 6px 0;"><strong>⚖️ 合理性與生活意涵：</strong>${q.decisionExplain}</div>
+                <div style="margin-top: 8px; color: var(--theme2-color); font-weight: bold; font-size: 1.1rem;">💡 最終答案：${q.finalAnswer}</div>
+            `;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('celebration-modal').style.display = 'none';
+        }
+
+        /* 提示指引 */
+        function showPedagogicalHint() {
+            const q = state.filteredQuestions[state.currentQIndex];
+            showFeedback('error', `💡 提示：${q.hint}`);
+        }
+
+        function showFeedback(type, msg) {
+            const el = document.getElementById('feedback-banner-el');
+            el.className = `feedback-banner ${type}`;
+            el.innerHTML = msg;
+            el.style.display = 'block';
+        }
+
+        function hideFeedback() {
+            const el = document.getElementById('feedback-banner-el');
+            el.style.display = 'none';
+        }
+
+        /* 原生語音朗讀 */
+        function speakProblem() {
+            const q = state.filteredQuestions[state.currentQIndex];
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const plainText = q.text.replace(/<[^>]+>/g, '');
+                const utterance = new SpeechSynthesisUtterance(plainText);
+                utterance.lang = 'zh-TW';
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('您的瀏覽器不支援語音合成功能。');
+            }
+        }
+
+        /* Web Audio API 晶片音效 (零外網) */
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playTone(freq, type, duration) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function playSuccessSound() {
+            playTone(523.25, 'sine', 0.1);
+            setTimeout(() => playTone(659.25, 'sine', 0.15), 90);
+        }
+
+        function playErrorSound() {
+            playTone(280, 'triangle', 0.15);
+            setTimeout(() => playTone(240, 'triangle', 0.2), 120);
+        }
+
+        function playFanfareSound() {
+            playTone(523.25, 'sine', 0.1);
+            setTimeout(() => playTone(659.25, 'sine', 0.1), 100);
+            setTimeout(() => playTone(783.99, 'sine', 0.15), 200);
+            setTimeout(() => playTone(1046.50, 'sine', 0.35), 320);
+        }
+    </script>
+</body>
+</html>
