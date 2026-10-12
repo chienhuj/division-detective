@@ -1212,7 +1212,7 @@
                 hasRemainder: false,
                 decisionKey: "averageMeaning",
                 chipsPool: [
-                    "全部倒出來加總", "總共有 159 顆糖果", "再重新平分", "平分給 3 個罐子", "159 ÷ 3 = 53", "每個罐子有 53 顆",
+                    "全部倒出來加總", "總共有 159 顆糖果", "再重新平分", "平分給 3 個罐子", "算式列為 159 ÷ 3", "平均算出每個罐子的數量",
                     "每個罐子有 159 顆", "拿甲罐的 3 顆直接分", "乘以 3 個罐子"
                 ],
                 distractors: ["每個罐子有 159 顆", "拿甲罐的 3 顆直接分", "乘以 3 個罐子"],
@@ -1220,6 +1220,105 @@
                 decisionExplain: "要讓三個罐子數量一樣多，最標準的方法就是「全部倒出來加總 (3+17+139=159)」，然後「再重新平分給 3 個罐子」：159 ÷ 3 = 53 顆。平均 53 顆介於最少 3 顆與最多 139 顆之間，完全符合平均的本質！",
                 finalAnswer: "全部倒出來加總再重新平分，每個罐子 53 顆",
                 hint: "想一想：先把所有糖果集中起來加總，再平分給 3 個罐子！"
+            },
+            {
+                id: "T1_10",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-3",
+                theme: 1,
+                domain: "decimal",
+                title: "水龍頭流水分裝時間",
+                subType: "小數分裝 (求分鐘數)",
+                focus: "總水量 ÷ 每分鐘水量 = 需要的分鐘數",
+                text: "水龍頭每分鐘流出 <mark>3.7 公升</mark> 的水，累積 <mark>25.16 公升</mark> 的水，需要流多少分鐘？",
+                dividendName: "累積總水量 25.16 公升",
+                dividendNum: "25.16",
+                divisorName: "每分鐘流出 3.7 公升 (每份規格)",
+                divisorNum: "3.7",
+                divisionType: "containment",
+                divisionTypeName: "分裝 (每分鐘固定 3.7 公升，求需要幾分鐘)",
+                equationStr: "25.16 ÷ 3.7 = 6.8",
+                resultQuotient: "6.8",
+                resultRemainder: "0",
+                resultUnit: "分鐘",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "fractionBigQuotient",
+                chipsPool: [
+                    "總水量 25.16 公升", "每分鐘 3.7 公升", "25.16 裡面有幾個 3.7", "算式列為 25.16 ÷ 3.7", "計算出需要的分鐘數", "分鐘數合情合理",
+                    "算式列為 3.7 ÷ 25.16", "計算出 93.092 分鐘", "用乘法 25.16 × 3.7"
+                ],
+                distractors: ["算式列為 3.7 ÷ 25.16", "計算出 93.092 分鐘", "用乘法 25.16 × 3.7"],
+                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：1 分鐘流 3.7 公升，流 6 分鐘就有 22.2 公升，流 7 分鐘就有 25.9 公升。累積 25.16 公升的時間必定介於 6 到 7 分鐘之間，算出 6.8 分鐘完全合情合理！",
+                decisionExplain: "題目問累積 25.16 公升需要幾分鐘，是看總水量中包含幾個 3.7 公升（每份規格放除數）。25.16 ÷ 3.7 = 6.8 分鐘。驗算 6.8 × 3.7 = 25.16 公升，完全吻合！",
+                finalAnswer: "6.8 分鐘",
+                hint: "想一想：要累積的總水量是被分的主角，每分鐘流出的量是每一份的規格！"
+            },
+            {
+                id: "T1_11",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-3",
+                theme: 1,
+                domain: "decimal",
+                title: "全家喝鮮奶瓶數分裝",
+                subType: "小數分裝 (小數除以大數，商小於1)",
+                focus: "已喝水量 ÷ 一整瓶容量 = 喝了幾瓶 (商小於1)",
+                text: "家庭號鮮奶一瓶是 <mark>1.8 公升</mark>，今日全家共喝了 <mark>0.9 公升</mark>，是喝了幾瓶？",
+                dividendName: "喝掉的鮮奶 0.9 公升",
+                dividendNum: "0.9",
+                divisorName: "一整瓶容量 1.8 公升",
+                divisorNum: "1.8",
+                divisionType: "containment",
+                divisionTypeName: "分裝 (以 1.8 公升為一瓶單位，求 0.9 公升相當於幾瓶)",
+                equationStr: "0.9 ÷ 1.8 = 0.5",
+                resultQuotient: "0.5",
+                resultRemainder: "0",
+                resultUnit: "瓶",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "decimalSmallQuotient",
+                chipsPool: [
+                    "喝了 0.9 公升", "一瓶是 1.8 公升", "以一整瓶為單位放除數", "算式列為 0.9 ÷ 1.8", "計算相當於幾瓶鮮奶", "被除數比除數小商小於1",
+                    "計算相當於 2 瓶鮮奶", "大數除以小數 1.8 ÷ 0.9", "用乘法 1.8 × 0.9"
+                ],
+                distractors: ["計算相當於 2 瓶鮮奶", "大數除以小數 1.8 ÷ 0.9", "用乘法 1.8 × 0.9"],
+                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：全家只喝了 0.9 公升，連一整瓶（1.8 公升）都還沒喝完，算出來的瓶數一定要小於 1 瓶！算出 0.5 瓶（剛好半瓶，0.9 × 2 = 1.8）合情合理！如果算出 2 瓶就太誇張了，根本沒喝那麼多！",
+                decisionExplain: "想知道喝了幾瓶，是以「一整瓶的容量 1.8 公升」作為計量基準（除數）。實際喝掉的 0.9 公升是被除數：0.9 ÷ 1.8 = 0.5 瓶（即半瓶）。被除數小於除數，商小於 1 完全合理！",
+                finalAnswer: "0.5 瓶 (或 1/2 瓶)",
+                hint: "千萬別看數字大就直接放前面！全家只喝了 0.9 公升，連一整瓶都不到，除數要放一整瓶的容量 1.8 公升！"
+            },
+            {
+                id: "T1_12",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-3",
+                theme: 1,
+                domain: "decimal",
+                title: "滯洪池步道跑步圈數",
+                subType: "小數分裝 (小數除以大數，商小於1)",
+                focus: "已跑距離 ÷ 一整圈距離 = 跑了幾圈 (商小於1)",
+                text: "沿著滯洪池步道跑一圈的距離是 <mark>2.5 公里</mark>，小堂跑了 <mark>1 公里</mark>，是跑了幾圈？",
+                dividendName: "小堂跑的距離 1 公里",
+                dividendNum: "1",
+                divisorName: "跑一圈距離 2.5 公里",
+                divisorNum: "2.5",
+                divisionType: "containment",
+                divisionTypeName: "分裝 (以 2.5 公里為一圈單位，求 1 公里相當於幾圈)",
+                equationStr: "1 ÷ 2.5 = 0.4",
+                resultQuotient: "0.4",
+                resultRemainder: "0",
+                resultUnit: "圈",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "decimalSmallQuotient",
+                chipsPool: [
+                    "跑了 1 公里", "一圈是 2.5 公里", "以一整圈為單位放除數", "算式列為 1 ÷ 2.5", "計算跑了幾圈步道", "跑的距離比一圈短商小於1",
+                    "計算跑了 2.5 圈", "大數除以小數 2.5 ÷ 1", "用乘法 2.5 × 1"
+                ],
+                distractors: ["計算跑了 2.5 圈", "大數除以小數 2.5 ÷ 1", "用乘法 2.5 × 1"],
+                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：跑一圈需要 2.5 公里，小堂只跑了 1 公里，連半圈（1.25 公里）都不到，算出來的圈數必定小於 1 圈！算出來 0.4 圈（0.4 < 1）非常合情合理！如果寫成 2.5 圈就顛倒了！",
+                decisionExplain: "題目問的是「跑了幾圈」，所以要把「一整圈的長度 2.5 公里」當作除數。實際跑的 1 公里放在被除數：1 ÷ 2.5 = 0.4 圈。被除數小於除數，商小於 1 完全正確！",
+                finalAnswer: "0.4 圈 (或 2/5 圈)",
+                hint: "問跑了幾圈，基準是一整圈的長度（2.5 公里），所以除數要放 2.5 公里！"
             },
 
             // ==================== 【主題二：乘除互逆解謎室】 ====================
@@ -1253,10 +1352,10 @@
                 hasRemainder: false,
                 decisionKey: "inverseVerify",
                 chipsPool: [
-                    "長是 12 公尺(被乘數)", "寬是未知量(乘數)", "長(被乘數) × 寬(乘數) = 面積", "乘除互逆：未知乘數 = 積 ÷ 被乘數", "96 ÷ 12 = 8", "寬度是 8 公尺",
-                    "寬度是 1152 公尺", "用乘法 96 × 12", "算式列為 12 ÷ 96"
+                    "長是 12 公尺(被乘數)", "寬是未知量(乘數)", "長(被乘數) × 寬(乘數) = 面積", "乘除互逆：未知乘數 = 積 ÷ 被乘數", "解題算式：96 ÷ 12", "求出花圃寬度",
+                    "用乘法 96 × 12", "算式列為 12 ÷ 96"
                 ],
-                distractors: ["寬度是 1152 公尺", "用乘法 96 × 12", "算式列為 12 ÷ 96"],
+                distractors: ["用乘法 96 × 12", "算式列為 12 ÷ 96"],
                 reasonablenessPrompt: "【108 課綱檢驗】：長 (被乘數 12) × 寬 (乘數 8) = 面積 96 平方公尺，代回乘法式檢驗完全正確！",
                 decisionExplain: "原本乘法關係是 長 (被乘數 12) × 寬 (未知乘數) = 面積 96。運用乘除互逆：寬 (未知乘數) = 96 ÷ 12 = 8 公尺。驗算：12 × 8 = 96 完全正確！",
                 finalAnswer: "8 公尺",
@@ -1290,10 +1389,10 @@
                 hasRemainder: false,
                 decisionKey: "inverseVerify",
                 chipsPool: [
-                    "底是 8.5 公分(被乘數)", "高是未知量(乘數)", "底(被乘數) × 高(乘數) = 面積", "乘除互逆：未知乘數 = 積 ÷ 被乘數", "42.5 ÷ 8.5 = 5", "高是 5 公分",
-                    "高是 361.25 公分", "用乘法 42.5 × 8.5", "算式列為 8.5 ÷ 42.5"
+                    "底是 8.5 公分(被乘數)", "高是未知量(乘數)", "底(被乘數) × 高(乘數) = 面積", "乘除互逆：未知乘數 = 積 ÷ 被乘數", "解題算式：42.5 ÷ 8.5", "求出招牌的高",
+                    "用乘法 42.5 × 8.5", "算式列為 8.5 ÷ 42.5"
                 ],
-                distractors: ["高是 361.25 公分", "用乘法 42.5 × 8.5", "算式列為 8.5 ÷ 42.5"],
+                distractors: ["用乘法 42.5 × 8.5", "算式列為 8.5 ÷ 42.5"],
                 reasonablenessPrompt: "【108 課綱檢驗】：底 (被乘數 8.5) × 高 (乘數 5) = 面積 42.5 平方公分，驗算完全吻合！",
                 decisionExplain: "公式為 底 (被乘數 8.5) × 高 (未知乘數) = 面積 42.5。運用乘除互逆：高 (未知乘數) = 42.5 ÷ 8.5 = 5 公分。驗算：8.5 × 5 = 42.5 完全正確！",
                 finalAnswer: "5 公分",
@@ -1327,10 +1426,10 @@
                 hasRemainder: false,
                 decisionKey: "inverseVerify",
                 chipsPool: [
-                    "原價是未知基準(被乘數)", "折數是倍數 0.8(乘數)", "原價(被乘數) × 0.8(乘數) = 720", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "720 ÷ 0.8 = 900", "原價是 900 元",
-                    "原價是 576 元", "用乘法 720 × 0.8", "原價比特價更便宜"
+                    "原價是未知基準(被乘數)", "折數是倍數 0.8(乘數)", "原價(被乘數) × 0.8(乘數) = 720", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "解題算式：720 ÷ 0.8", "求出球鞋原價",
+                    "用乘法 720 × 0.8", "原價比特價更便宜"
                 ],
-                distractors: ["原價是 576 元", "用乘法 720 × 0.8", "原價比特價更便宜"],
+                distractors: ["用乘法 720 × 0.8", "原價比特價更便宜"],
                 reasonablenessPrompt: "特價是打折後的價格，原價一定要比 720 元更貴！900 元比 720 元多，驗算 原價(被乘數 900) × 折數(乘數 0.8) = 720，完全合理！",
                 decisionExplain: "題目原本的關係是 原價 (未知被乘數) × 0.8 (乘數) = 720，求未知的原價 (被乘數) 運用乘除互逆：720 ÷ 0.8 = 900 元。驗算：900 × 0.8 = 720！",
                 finalAnswer: "900 元",
@@ -1364,10 +1463,10 @@
                 hasRemainder: false,
                 decisionKey: "inverseVerify",
                 chipsPool: [
-                    "直徑是未知基準(被乘數)", "圓周率是 3.14(乘數)", "直徑(被乘數) × 3.14(乘數) = 周長", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "31.4 ÷ 3.14 = 10", "直徑是 10 公尺",
-                    "直徑是 98.596 公尺", "用乘法 31.4 × 3.14", "算式列為 3.14 ÷ 31.4"
+                    "直徑是未知基準(被乘數)", "圓周率是 3.14(乘數)", "直徑(被乘數) × 3.14(乘數) = 周長", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "解題算式：31.4 ÷ 3.14", "求出花圃直徑",
+                    "用乘法 31.4 × 3.14", "算式列為 3.14 ÷ 31.4"
                 ],
-                distractors: ["直徑是 98.596 公尺", "用乘法 31.4 × 3.14", "算式列為 3.14 ÷ 31.4"],
+                distractors: ["用乘法 31.4 × 3.14", "算式列為 3.14 ÷ 31.4"],
                 reasonablenessPrompt: "驗算：直徑 (被乘數 10) × 圓周率 (乘數 3.14) = 圓周長 31.4 公尺，完全正確！",
                 decisionExplain: "公式為 直徑 (未知被乘數) × 3.14 (乘數) = 圓周長 31.4，所以 直徑 = 圓周長 ÷ 3.14 = 31.4 ÷ 3.14 = 10 公尺。驗算：10 × 3.14 = 31.4！",
                 finalAnswer: "10 公尺",
@@ -1401,14 +1500,51 @@
                 hasRemainder: false,
                 decisionKey: "inverseVerify",
                 chipsPool: [
-                    "弟弟年齡是基準(被乘數)", "哥哥比弟弟多 3 - 1 = 2 份(乘數)", "弟弟(被乘數) × 2(乘數) = 12(積)", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "12 ÷ 2 = 6", "弟弟當時是 6 歲",
-                    "相差 2 份對應 12 歲", "弟弟當時 4 歲", "直接除以 3 倍"
+                    "弟弟年齡是基準(被乘數)", "哥哥比弟弟多 3 - 1 = 2 份(乘數)", "弟弟(被乘數) × 2(乘數) = 12(積)", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "解題算式：12 ÷ 2", "求出弟弟年齡",
+                    "相差 2 份對應 12 歲", "直接除以 3 倍"
                 ],
-                distractors: ["弟弟當時 4 歲", "直接除以 3 倍"],
+                distractors: ["直接除以 3 倍"],
                 reasonablenessPrompt: "驗算：弟弟 6 歲，哥哥是 3 倍即 18 歲，兩人相差 18 - 6 = 12 歲，完全吻合！",
                 decisionExplain: "哥哥是 3 份，弟弟是 1 份，兩人相差 3 - 1 = 2 份。弟弟年齡 (未知被乘數) × 2 = 12 歲，所以 1 份（弟弟）= 12 ÷ 2 = 6 歲。哥哥當時 18 歲，相差 12 歲完全成立！",
                 finalAnswer: "6 歲",
                 hint: "年齡差 12 歲對應的是倍數差 (3 - 1 = 2 份)，所以除數是 2（倍數差），千萬不要直接除以 3 喔！"
+            },
+            {
+                id: "T2_06",
+                grade: 6,
+                curriculumCode: "108課綱 N-6-3 / R-6-2",
+                theme: 2,
+                domain: "decimal",
+                title: "西瓜與奇異果重量倍數",
+                subType: "倍數關係 (小數倍數乘除互逆)",
+                focus: "奇異果重(基準被乘數) × 倍數(未知乘數) = 西瓜重 ➔ 倍數 = 西瓜重 ÷ 奇異果重",
+                text: "一顆西瓜重 <mark>5 公斤</mark>，一顆奇異果重 <mark>0.08 公斤</mark>，一顆西瓜的重量是一顆奇異果的幾倍？",
+                dividendName: "西瓜重量 5 公斤 (積)",
+                dividendNum: "5",
+                divisorName: "奇異果重量 0.08 公斤 (基準被乘數)",
+                divisorNum: "0.08",
+                divisionType: "inverse",
+                divisionTypeName: "乘除互逆 (求未知乘數倍數：倍數 = 西瓜重 ÷ 奇異果重)",
+                targetUnknown: "multiplier", // 未知乘數 (倍數未知)
+                forwardFormulaStr: "0.08 (奇異果基準被乘數) × ( 未知倍數 ) = 5 (西瓜重)",
+                inverseFormulaStr: "未知倍數 = 5 ÷ 0.08",
+                inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：原本乘法關係是「奇異果重 (基準被乘數 0.08) × 倍數 (未知乘數) = 西瓜重 (積 5)」，依乘除互逆還原：未知倍數 (乘數) = 積 (5) ÷ 基準 (0.08) = 62.5 倍！",
+                equationStr: "5 ÷ 0.08 = 62.5",
+                resultQuotient: "62.5",
+                resultRemainder: "0",
+                resultUnit: "倍",
+                remainderUnit: "",
+                hasRemainder: false,
+                decisionKey: "inverseVerify",
+                chipsPool: [
+                    "奇異果 0.08 公斤(基準被乘數)", "倍數是未知量(乘數)", "0.08(被乘數) × 倍數(乘數) = 5", "乘除互逆：未知乘數 = 積 ÷ 被乘數", "解題算式：5 ÷ 0.08", "求出西瓜是奇異果的幾倍",
+                    "算式列為 0.08 ÷ 5", "用乘法 5 × 0.08"
+                ],
+                distractors: ["算式列為 0.08 ÷ 5", "用乘法 5 × 0.08"],
+                reasonablenessPrompt: "【108 課綱檢驗】：西瓜（5 公斤）比一顆小奇異果（0.08 公斤＝80公克）重非常多，倍數必定遠大於 1！算出來是 62.5 倍，驗算：0.08 × 62.5 = 5 公斤完全吻合！如果算成 0.08 ÷ 5 = 0.016 倍，西瓜反而比奇異果輕，就完全不合常理了！",
+                decisionExplain: "題目問「西瓜是一顆奇異果的幾倍」，是以奇異果重 0.08 公斤為基準被乘數，順向算式為 0.08 × ( 未知倍數 ) = 5。依乘除互逆：未知倍數 = 5 ÷ 0.08 = 62.5 倍。驗算：0.08 × 62.5 = 5 完全正確！",
+                finalAnswer: "62.5 倍",
+                hint: "問「西瓜是一顆奇異果的幾倍」，奇異果是基準（放乘號前面），列出 0.08 × ( 未知倍數 ) = 5，所以倍數 = 5 ÷ 0.08！"
             }
         ];
 
@@ -1603,9 +1739,11 @@
 
                 if (state.activeTheme === 1) {
                     promptEl.textContent = "【第 1 問：什麼被分？】請點選題目中「被拿去分的主角」：";
+                    // 移除字卡中括號內的直接提示，讓學生依生活情境自行判斷主角
+                    const cleanName = s => (s || '').replace(/\s*\([^)]*\)/g, '').trim();
                     const choices = [
-                        { id: 'correct', title: q.dividendName, desc: '題目裡的總量主體（被除數）' },
-                        { id: 'wrong', title: q.divisorName, desc: '題目裡的每份規格或平分組數（除數）' }
+                        { id: 'correct', title: cleanName(q.dividendName), desc: '點選此項目確認為主角' },
+                        { id: 'wrong', title: cleanName(q.divisorName), desc: '點選此項目確認為主角' }
                     ].sort(() => Math.random() - 0.5);
                     renderChoiceCards(choices, body, 'selectedStep1', 'id');
                 } else {
@@ -1614,17 +1752,13 @@
                     const choices = [
                         { 
                             id: 'correct', 
-                            title: isMultiplicand ? `❓ 找出未知的「被乘數」（基準量/單價/每份量/直徑）` : `❓ 找出未知的「乘數」（數量/倍數/高/寬）`, 
-                            desc: isMultiplicand 
-                                ? `題目想求的是乘號前面的基準量或單價（如原價、直徑、基準年齡），乘號後是已知的倍數或折數。` 
-                                : `題目已知乘號前的基準量（長或底），想求的是乘號後面的寬度或高度（倍數或次數）。`
+                            title: isMultiplicand ? `❓ 找出未知的「被乘數」` : `❓ 找出未知的「乘數」`, 
+                            desc: '依題目線索，此量為乘法算式中未知的角色' 
                         },
                         { 
                             id: 'wrong', 
-                            title: isMultiplicand ? `找出未知的「乘數」（倍數/次數）` : `找出未知的「被乘數」（長度/底邊長）`, 
-                            desc: isMultiplicand 
-                                ? `題目已經給出倍數或折數了，未知的是乘號前面的基準量（被乘數）。` 
-                                : `長度或底邊長題目已經直接給出數值，它位在被乘數位置，並非未知數。`
+                            title: isMultiplicand ? `❓ 找出未知的「乘數」` : `❓ 找出未知的「被乘數」`, 
+                            desc: '依題目線索，此量為乘法算式中未知的角色' 
                         }
                     ].sort(() => Math.random() - 0.5);
                     renderChoiceCards(choices, body, 'selectedStep1', 'id');
@@ -1637,33 +1771,35 @@
                 submitBtn.disabled = true;
 
                 if (state.activeTheme === 1) {
-                    promptEl.textContent = "【第 2 問：怎麼分？(分裝與平分)】這是「分裝」還是「平分」？";
+                    promptEl.textContent = "【第 2 問：怎麼分？】這是「分裝」還是「平分」？";
                     const choices = [
                         { type: 'containment', title: '📦 分裝', desc: '知道每份固定量（如每盒4顆、每車4人），求可以裝成幾份/幾車' },
                         { type: 'sharing', title: '🤲 平分', desc: '知道要平分給幾個人/幾組，求每一份分到多少' }
                     ];
                     renderChoiceCards(choices, body, 'selectedStep2', 'type');
                 } else {
-                    promptEl.textContent = "【第 2 問：怎麼依題目寫算式？】依題目線索列出順向乘法算式：";
+                    promptEl.textContent = "【第 2 問：怎麼依題目寫算式？】依題目線索列出乘法算式：";
                     const isMultiplicand = q.targetUnknown === 'multiplicand';
                     
                     const choices = [
                         { 
                             type: 'forward_correct', 
-                            title: `📝 順向算式：${q.forwardFormulaStr}`, 
+                            title: `📝 算式：${q.forwardFormulaStr}`, 
                             desc: isMultiplicand 
-                                ? `未知數在乘號前面 (被乘數未知)，乘上已知的倍數/折數，等於題目給的總結果（積）。` 
-                                : `已知數在乘號前面 (基準被乘數)，乘上未知的數量/高寬 (乘數未知)，等於題目給的總結果（積）。`
+                                ? `以未知數量為基準量，乘上已知的倍數/數量，得到題目的總結果。` 
+                                : `以已知數量為基準量，乘上未知的倍數/數量，得到題目的總結果。`
                         },
                         { 
                             type: 'wrong_reverse_order', 
-                            title: `📝 算式順序顛倒：${isMultiplicand ? `${q.divisorNum} × ( 未知數 ) = ${q.dividendNum}` : `( 未知數 ) × ${q.divisorNum} = ${q.dividendNum}`}`, 
-                            desc: `顛倒了 108 課綱「被乘數 × 乘數 = 積」的順序，混淆了誰是每份基準量、誰是倍數或數量。` 
+                            title: `📝 算式：${isMultiplicand ? `${q.divisorNum} × ( 未知數 ) = ${q.dividendNum}` : `( 未知數 ) × ${q.divisorNum} = ${q.dividendNum}`}`, 
+                            desc: isMultiplicand
+                                ? `以題目給定的已知數為基準量，乘上未知數，得到題目的總結果。`
+                                : `以未知數為基準量，乘上題目給定的已知數，得到題目的總結果。`
                         },
                         { 
                             type: 'wrong_multiply_both', 
-                            title: `📝 直接列出相乘：${q.dividendNum} × ${q.divisorNum} = ?`, 
-                            desc: `看到題目給出兩個數字就直接乘起來，誤把求未知數當作求更大數值。` 
+                            title: `📝 算式：${q.dividendNum} × ${q.divisorNum} = ( 未知數 )`, 
+                            desc: `將題目中出現的兩個已知數字直接相乘，求出未知數。` 
                         }
                     ].sort(() => Math.random() - 0.5);
                     renderChoiceCards(choices, body, 'selectedStep2', 'type');
@@ -1753,6 +1889,7 @@
                         { key: 'decimalRemainder', title: '🔘 合理性檢驗：剩下的量必須小於一瓶容量', desc: '小數點垂直對齊！剩下不夠再裝一瓶，餘數一定要小於除數！如果大於等於除數就錯了！' },
                         { key: 'fractionRemainder', title: '🍰 合理性檢驗：剩下的長度必須小於做一朵所需長度', desc: '做完 3 朵花後剩下 1/4 公尺緞帶，因為 1/4 < 3/4（餘數小於除數），不夠再做一朵花，完全合理！' },
                         { key: 'fractionBigQuotient', title: '🍰 分裝檢驗：除以小於 1，商反而變大', desc: '小單位切分，分割出來的段數/份數一定比原來多！' },
+                        { key: 'decimalSmallQuotient', title: '🔘 分裝檢驗：被除數比除數小，商一定小於 1', desc: '實際分到的量還不到一整份（例如不到一整瓶、不到一整圈），商必定小於 1！' },
                         { key: 'averageMeaning', title: '📊 平均數合理性檢驗：介於最大值與最小值之間', desc: '平均值必定會落在整組數據的最多與最少之間，不可能比最少還少，也不可能比最多還多！' }
                     ];
                     renderPillar4Decisions(decisions, q.decisionKey, body);
@@ -1960,7 +2097,13 @@
                     if (state.activeTheme === 1) {
                         showFeedback('error', '分法再想想：是「分裝」(知道每份多少求幾份)，還是「平分」(平均分給幾個人求每份多少)？');
                     } else {
-                        showFeedback('error', '算式再想想：依題目線索，誰在乘號前面(被乘數)、誰在乘號後面(乘數)？不要直接相乘喔！');
+                        if (state.selectedStep2 === 'wrong_reverse_order') {
+                            showFeedback('error', '再想一想：依乘法結構「每份量(被乘數) × 份數/倍數(乘數) = 總量(積)」，被乘數與乘數的順序弄反了喔！請再確認誰才是基準量。');
+                        } else if (state.selectedStep2 === 'wrong_multiply_both') {
+                            showFeedback('error', '再想一想：題目給的數字包含總結果（積），如果直接將兩數相乘會把數值越算越大，不是求未知數的列式喔！');
+                        } else {
+                            showFeedback('error', '算式再想想：依題目線索，誰是每份基準量(被乘數)、誰是倍數或數量(乘數)？請選出正確的順向乘法算式！');
+                        }
                     }
                 }
             }
