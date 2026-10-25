@@ -619,6 +619,86 @@
             border-color: var(--theme-color, var(--theme1-color));
         }
 
+        /* 步驟 4 保留步驟 3 作答畫面之檢驗卡片 (莫蘭迪柔和調) */
+        .step3-review-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 6px;
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .review-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .review-edit-btn {
+            background: #ffffff;
+            border: 1px solid var(--border-soft);
+            color: var(--theme-color, var(--theme1-color));
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .review-edit-btn:hover {
+            background: var(--theme1-light);
+            border-color: var(--theme-color, var(--theme1-color));
+        }
+        .review-eq-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            background: #ffffff;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid #edf2f7;
+        }
+        .review-badge {
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: var(--theme1-light);
+            color: var(--theme-color, var(--theme1-color));
+        }
+        .review-eq-text {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .review-chips-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .review-chip-item {
+            background: #edf2f7;
+            color: var(--text-main);
+            font-size: 0.84rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
         /* 合理性檢驗鏡提示框 */
         .reasonableness-banner {
             background: #f1f5f9;
@@ -923,402 +1003,1424 @@
            3. 包含大量誘答字卡與「餘數小於除數」檢驗
         ======================================================== */
         const QUESTION_DATABASE = [
-            // ==================== 【主題一：分裝與平分生活館】 ====================
             {
-                id: "T1_01",
-                grade: 4,
-                curriculumCode: "108課綱 N-4-2",
-                theme: 1,
-                domain: "integer",
-                title: "戶外教育搭計程車",
-                subType: "戶外教育交通",
-                focus: "餘數決策：無條件進入 (+1)",
-                text: "五年級有 <mark>38 位學生</mark> 參加戶外教育，每輛計程車限乘 <mark>4 個人</mark>，至少需要幾輛計程車才能把全部學生載完？",
-                dividendName: "38 位學生",
-                dividendNum: "38",
-                divisorName: "每輛車乘 4 人",
-                divisorNum: "4",
-                divisionType: "containment",
-                divisionTypeName: "分裝 (每份固定乘 4 人，求需要幾輛車)",
-                equationStr: "38 ÷ 4 = 9 ... 2",
-                resultQuotient: "9",
-                resultRemainder: "2",
-                resultUnit: "輛車",
-                remainderUnit: "位學生",
-                hasRemainder: true,
-                decisionKey: "ceil",
-                chipsPool: [
-                    "38 位學生", "每 4 人坐一輛車", "坐滿了 9 輛車", "還剩下 2 位學生", "這 2 位學生也要搭車", "所以需要 9 + 1 = 10 輛車",
-                    "剩下 2 輛車", "坐滿 9 個人", "只需要 9 輛車 (不理餘數)"
-                ],
-                distractors: ["剩下 2 輛車", "坐滿 9 個人", "只需要 9 輛車 (不理餘數)"],
-                reasonablenessPrompt: "算式得出 9 餘 2，餘數 2 人確實小於一輛車的 4 人容量（2 < 4），坐不滿一輛車是合理的！但這 2 位學生也必須搭車去戶外教育，不能丟在路邊！",
-                decisionExplain: "餘數 2 人小於一輛車的 4 人容量（2 < 4），坐不滿一輛車是合理的。但這 2 位學生也必須搭車去戶外教育，所以需要 9 + 1 = 10 輛車。",
-                finalAnswer: "10 輛車",
-                hint: "找一找被載走的主角是誰？剩下的 2 位學生也必須搭車去戶外教育喔！"
+                      "id": "T1_01",
+                      "grade": 3,
+                      "curriculumCode": "108課綱 N-3-4",
+                      "theme": 1,
+                      "domain": "integer",
+                      "title": "芒果裝盒禮盒",
+                      "subType": "水果分裝",
+                      "focus": "餘數決策：無條件捨去 (取商)",
+                      "text": "果園採收了 <mark>38 顆芒果</mark>，每 <mark>5 顆</mark> 裝成一盒精緻禮盒，最多可以裝成幾盒？還剩下幾顆芒果？",
+                      "dividendName": "38 顆芒果",
+                      "dividendNum": "38",
+                      "divisorName": "每 5 顆裝成一盒",
+                      "divisorNum": "5",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每盒固定 5 顆，求盒數與剩餘)",
+                      "equationStr": "38 ÷ 5 = 7 ... 3",
+                      "resultQuotient": "7",
+                      "resultRemainder": "3",
+                      "resultUnit": "盒",
+                      "remainderUnit": "顆芒果",
+                      "hasRemainder": true,
+                      "decisionKey": "t1_01_decision",
+    "step4Options": [
+    {
+        "key": "t1_01_rem_check",
+        "title": "【餘數檢核】檢核算出來的「餘數」是否小於「除數」",
+        "desc": "剩下的 3 顆小於一盒 5 顆（餘數 3 < 除數 5 合理），確認不夠再裝滿一盒。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_01_decision",
+        "title": "【分裝決策】留意商與餘數的單位，最多裝滿 7 盒，還剩下 3 顆芒果",
+        "desc": "商數代表能裝滿的盒數（7盒），餘數代表剩下的芒果（3顆），兩者單位分明。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_01_distractor_quotient_less",
+        "title": "【商數檢核】檢核算出來的「商」是否小於「除數」",
+        "desc": "檢驗除法合理性時，檢查算出來的商數有沒有比除數小（商 7 大於除數 5）。",
+        "isCorrect": false,
+        "feedback": "再想一想：除法合理性中真正需要檢核的是「餘數小於除數」（剩下的量不夠再湊一盒），而不是「商小於除數」喔！商數的大小是由總數量決定的，可以比除數大也可以比除數小。"
+    },
+    {
+        "key": "t1_01_distractor_ceil",
+        "title": "【全數分裝】剩下的 3 顆也算一盒，所以最多可以裝成 8 盒",
+        "desc": "雖然剩下的 3 顆芒果不滿一整盒，但也多拿一個盒子裝起來，回答裝成 8 盒。",
+        "isCorrect": false,
+        "feedback": "再想一想：題目問的是「最多可以裝成幾盒精緻禮盒」，一盒必須裝滿 5 顆才合格，剩下的 3 顆不夠裝滿一整盒，不能算成一整盒喔！"
+    }
+],
+                      "chipsPool": [
+                                "38 顆芒果",
+                                "每 5 顆裝成一盒",
+                                "最多可以裝成 7 盒",
+                                "還剩下 3 顆芒果",
+                                "剩下的 3 顆不夠裝滿一盒",
+                                "所以最多裝 7 盒",
+                                "最多可以裝成 7 顆",
+                                "還剩下 3 盒",
+                                "可以裝成 8 盒"
+                      ],
+                      "distractors": [
+                                "最多可以裝成 7 顆",
+                                "還剩下 3 盒",
+                                "可以裝成 8 盒"
+                      ],
+                      "reasonablenessPrompt": "裝滿一盒需要 5 顆芒果，剩下的 3 顆小於一盒 5 顆（餘數 3 < 5 合理）；留意商與餘數的單位，最多只能裝滿 7 盒，還剩下 3 顆芒果！",
+                      "decisionExplain": "38 ÷ 5 = 7 盒 ... 剩下 3 顆。剩下的 3 顆小於一盒 5 顆（餘數小於除數合理），不夠裝滿一整盒；留意商與餘數的單位，商代表能裝滿的盒數（7盒），餘數代表剩下的芒果（3顆）。",
+                      "finalAnswer": "最多裝 7 盒，剩下 3 顆",
+                      "hint": "分裝後注意商和餘數的單位：商算出來的是『幾盒』，餘數是『剩下幾顆』喔！"
             },
             {
-                id: "T1_02",
-                grade: 4,
-                curriculumCode: "108課綱 N-4-2",
-                theme: 1,
-                domain: "integer",
-                title: "美味蘋果裝盒",
-                subType: "水果分裝",
-                focus: "餘數決策：無條件捨去 (取商)",
-                text: "果園採收了 <mark>38 顆蘋果</mark>，每 <mark>4 顆</mark> 裝成一盒精緻禮盒，最多可以裝成幾盒？還剩下幾顆蘋果？",
-                dividendName: "38 顆蘋果",
-                dividendNum: "38",
-                divisorName: "每 4 顆裝一盒",
-                divisorNum: "4",
-                divisionType: "containment",
-                divisionTypeName: "分裝 (每盒固定 4 顆，求盒數)",
-                equationStr: "38 ÷ 4 = 9 ... 2",
-                resultQuotient: "9",
-                resultRemainder: "2",
-                resultUnit: "盒",
-                remainderUnit: "顆蘋果",
-                hasRemainder: true,
-                decisionKey: "floor",
-                chipsPool: [
-                    "38 顆蘋果", "每 4 顆裝一盒", "裝滿了 9 盒", "還剩下 2 顆蘋果", "剩下的 2 顆不夠裝滿一盒", "所以最多裝 9 盒",
-                    "剩下 2 盒", "可以裝 10 盒", "剩下 4 顆蘋果"
-                ],
-                distractors: ["剩下 2 盒", "可以裝 10 盒", "剩下 4 顆蘋果"],
-                reasonablenessPrompt: "餘數 2 顆蘋果小於一盒的 4 顆（2 < 4），剩下的不夠湊滿一整盒，這是合理的！所以最多只能裝滿 9 盒。",
-                decisionExplain: "裝滿一盒需要 4 顆蘋果，剩下的 2 顆小於一盒的 4 顆（2 < 4），不夠裝滿一整盒，所以最多只能裝 9 盒（剩下 2 顆）。",
-                finalAnswer: "最多裝 9 盒，剩下 2 顆",
-                hint: "剩下的 2 顆蘋果不夠湊滿一整盒，禮盒只能算完整裝滿的數量！"
+                      "id": "T1_02",
+                      "grade": 3,
+                      "curriculumCode": "108課綱 N-3-4",
+                      "theme": 1,
+                      "domain": "integer",
+                      "title": "球員牛乳分組購買",
+                      "subType": "飲品分裝 (商+1)",
+                      "focus": "餘數決策：無條件進入 (+1)",
+                      "text": "家長提供牛乳給 <mark>56 位球員</mark>，每位球員喝 1 瓶。一組牛乳有 <mark>6 瓶</mark>，家長最少需要買幾組才夠？",
+                      "dividendName": "56位球員需要56瓶牛乳",
+    "step1Choices": [
+    {
+        "id": "correct",
+        "title": "56位球員需要56瓶牛乳",
+        "desc": "每位球員喝 1 瓶，共有 56 瓶牛乳要按每組 6 瓶分組購買"
+    },
+    {
+        "id": "wrong_players",
+        "title": "56 位球員",
+        "desc": "以球員人數作為運算分配的主角"
+    },
+    {
+        "id": "wrong_divisor",
+        "title": "一組牛乳有 6 瓶",
+        "desc": "以每組包裝規格作為被分的主角"
+    }
+],
+                      "dividendNum": "56",
+                      "divisorName": "一組牛乳有 6 瓶",
+                      "divisorNum": "6",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每組固定 6 瓶，求組數)",
+                      "equationStr": "56 ÷ 6 = 9 ... 2",
+                      "resultQuotient": "9",
+                      "resultRemainder": "2",
+                      "resultUnit": "組",
+                      "remainderUnit": "瓶牛乳",
+                      "hasRemainder": true,
+                      "decisionKey": "t1_02_decision",
+    "step4Options": [
+    {
+        "key": "t1_02_rem_check",
+        "title": "【餘數檢核】檢核算出來的「餘數」是否小於「除數」",
+        "desc": "剩下的 2 瓶小於一組 6 瓶（餘數 2 < 除數 6 合理），確認不夠湊成完整一組。",
+        "isCorrect": false,
+        "feedback": "「餘數小於除數」的確是除法的基本檢驗，但這題題目問的是「最少需要買幾組才夠讓 56 位球員每人喝 1 瓶？」如果只買 9 組，剩下的 2 位球員就喝不到了！請再思考：在生活情境中，剩下的 2 瓶該如何決策才能讓全體球員都喝到？"
+    },
+    {
+        "key": "t1_02_decision",
+        "title": "【全數滿足決策】留意商與餘數的單位，剩下的 2 瓶也必須再買 1 整組（商 + 1 組）",
+        "desc": "買 9 組只有 54 瓶，剩下的 2 位球員也必須喝到牛乳，最少需要買 9 + 1 = 10 組。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_02_distractor_quotient_less",
+        "title": "【商數檢核】檢核算出來的「商」是否小於「除數」",
+        "desc": "檢驗合理性時，檢查算出來的商數有沒有比除數小（商 9 大於除數 6）。",
+        "isCorrect": false,
+        "feedback": "再想一想：除法合理性中真正需要檢核的是「餘數小於除數」（剩下的 2 瓶小於除數 6 瓶），而不是「商小於除數」喔！商數的大小是由總數量決定的。"
+    },
+    {
+        "key": "t1_02_distractor_floor",
+        "title": "【只取商數】算式算出商數是 9，所以家長只要買 9 組就夠了",
+        "desc": "除法算式算出來的商是 9，剩下的餘數 2 瓶不夠一組直接捨去，只買 9 組。",
+        "isCorrect": false,
+        "feedback": "再想一想：題目說「每位球員喝 1 瓶」，買 9 組只有 54 瓶，還有 2 位球員沒喝到！剩下的 2 瓶也必須再買一整組，所以最少要買 9 + 1 = 10 組才夠全隊喝喔！"
+    }
+],
+                      "chipsPool": [
+                                "56 瓶牛乳",
+                                "一組有 6 瓶",
+                                "買了 9 組共 54 瓶",
+                                "還剩下 2 位球員沒喝到",
+                                "剩下的 2 瓶也要買一整組",
+                                "所以最少需要買 9 + 1 = 10 組",
+                                "買了 9 瓶",
+                                "還剩下 2 組沒喝到",
+                                "只需要買 9 組"
+                      ],
+                      "distractors": [
+                                "買了 9 瓶",
+                                "還剩下 2 組沒喝到",
+                                "只需要買 9 組"
+                      ],
+                      "reasonablenessPrompt": "算式得出 9 組餘 2 瓶，買 9 組只有 54 瓶，還有 2 位球員沒喝到牛乳！剩下的 2 瓶小於一組 6 瓶（2 < 6 合理），留意商與餘數的單位，為讓每位球員都喝到，剩下的 2 瓶也必須再買一整組（9 + 1 = 10 組）！",
+                      "decisionExplain": "56 ÷ 6 = 9 組 ... 剩下 2 瓶。留意商與餘數的單位；因為每位球員都要喝到，剩下的 2 位球員也需要買 1 整組，所以最少需要 9 + 1 = 10 組。",
+                      "finalAnswer": "最少需要買 10 組才夠",
+                      "hint": "商是 9 代表買了 9 組，剩下的 2 瓶也要再買一整組才夠每位球員喝喔！"
             },
             {
-                id: "T1_03",
-                grade: 5,
-                curriculumCode: "108課綱 N-5-7",
-                theme: 1,
-                domain: "decimal",
-                title: "大桶鮮奶分裝玻璃瓶",
-                subType: "液體分裝 (小數)",
-                focus: "小數分裝：餘數合理性檢驗",
-                text: "牧場有 <mark>7.5 公升</mark> 的優質鮮奶，每 <mark>0.8 公升</mark> 裝滿一瓶玻璃瓶，最多可以裝滿幾瓶？還剩下多少公升鮮奶？",
-                dividendName: "7.5 公升鮮奶",
-                dividendNum: "7.5",
-                divisorName: "每瓶裝 0.8 公升",
-                divisorNum: "0.8",
-                divisionType: "containment",
-                divisionTypeName: "分裝 (每瓶固定 0.8 公升，求瓶數與剩餘)",
-                equationStr: "7.5 ÷ 0.8 = 9 ... 0.3",
-                resultQuotient: "9",
-                resultRemainder: "0.3",
-                resultUnit: "瓶",
-                remainderUnit: "公升鮮奶",
-                hasRemainder: true,
-                decisionKey: "decimalRemainder",
-                chipsPool: [
-                    "7.5 公升鮮奶", "每 0.8 公升裝一瓶", "裝滿了 9 瓶", "還剩下 0.3 公升", "0.3 小於一瓶 0.8 公升", "最多裝 9 瓶剩 0.3 公升",
-                    "剩下 3 公升鮮奶", "剩下 0.8 公升", "可以裝 10 瓶"
-                ],
-                distractors: ["剩下 3 公升鮮奶", "剩下 0.8 公升", "可以裝 10 瓶"],
-                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：做直式除法時，餘數的「3」位置在十分位，代表 0.3 公升！0.3 公升確實小於一整瓶 0.8 公升（0.3 < 0.8），不夠再裝滿一瓶，完全合理！如果寫成剩下 3 公升，比一整瓶 0.8 公升還要多，甚至能再裝好幾瓶，那就不合理了！",
-                decisionExplain: "直式計算時，餘數的小數點必須垂直對齊原本被除數的小數點，所以餘數是 0.3 公升。0.3 公升小於一瓶容量 0.8 公升（0.3 < 0.8），不夠裝滿一瓶，所以答案是最多裝滿 9 瓶，剩下 0.3 公升鮮奶。",
-                finalAnswer: "最多裝 9 瓶，剩下 0.3 公升鮮奶",
-                hint: "小數除法求餘數時，記得餘數的小數點要跟原本的「被除數」對齊喔！"
+                      "id": "T1_03",
+                      "grade": 3,
+                      "curriculumCode": "108課綱 N-3-4",
+                      "theme": 1,
+                      "domain": "integer",
+                      "title": "彩色燈泡排列週期",
+                      "subType": "週期規律問題",
+                      "focus": "餘數決策：循環定位 (餘數決定位次)",
+                      "text": "聖誕彩燈按照「紅、黃、藍、綠」的順序規律重複排列。請問第 <mark>35 顆</mark> 燈泡是什麼顏色？",
+                      "dividendName": "35 顆燈泡",
+    "step1Choices": [
+    {
+        "id": "correct",
+        "title": "35 顆燈泡",
+        "desc": "排在前面的 35 顆燈泡總數量（基數），每 4 顆一組循環"
+    },
+    {
+        "id": "wrong_ordinal",
+        "title": "第 35 顆燈泡",
+        "desc": "題目所問的特定一顆位置（序數）"
+    },
+    {
+        "id": "wrong_divisor",
+        "title": "每 4 顆顏色循環一組",
+        "desc": "以一組循環的數量作為被分的主角"
+    }
+],
+                      "dividendNum": "35",
+                      "divisorName": "每 4 種顏色一組循環",
+                      "divisorNum": "4",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每組循環 4 顆，求循環組數與餘數)",
+                      "equationStr": "35 ÷ 4 = 8 ... 3",
+                      "resultQuotient": "8",
+                      "resultRemainder": "3",
+                      "resultUnit": "組循環",
+                      "remainderUnit": "顆燈泡",
+                      "hasRemainder": true,
+                      "decisionKey": "t1_03_decision",
+    "step4Options": [
+    {
+        "key": "t1_03_rem_check",
+        "title": "【餘數檢核】檢核算出來的「餘數」是否小於「除數」",
+        "desc": "剩下的 3 顆小於一組 4 顆（餘數 3 < 除數 4 合理），確認不夠再湊成一組完整循環。",
+        "isCorrect": false,
+        "feedback": "「餘數 3 顆小於一組 4 顆」確認了剩下的燈泡確實不滿一組完整循環，但題目想知道的是「第 35 顆燈泡是什麼顏色？」只檢驗餘數還沒回答出顏色喔！請再思考：完成 8 組循環後，剩下的 3 顆依照「1紅、2黃、3藍、4綠」的順序數下去，第 3 顆會是什麼顏色呢？"
+    },
+    {
+        "key": "t1_03_decision",
+        "title": "【週期排序決策】商代表完整循環組數，依剩下的餘數 3 判定第 35 顆為藍色燈泡",
+        "desc": "完成 8 組完整循環後，依照紅、黃、藍、綠循環順序（1紅、2黃、3藍、4綠），第 3 顆對應為藍色，因此第 35 顆是藍色燈泡。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_03_distractor_quotient_less",
+        "title": "【商數檢核】檢核算出來的「商」是否小於「除數」",
+        "desc": "檢驗週期合理性時，檢查算出來的商數有沒有比除數小（商 8 大於除數 4）。",
+        "isCorrect": false,
+        "feedback": "再想一想：除法合理性中真正需要檢核的是「餘數小於除數」（餘數 3 顆小於一組 4 顆），商代表完整的循環組數，可以比除數大喔！"
+    },
+    {
+        "key": "t1_03_distractor_use_quotient",
+        "title": "【商數判定】依算出來的商數 8，去數第 8 個循環的顏色",
+        "desc": "認為算出來的商數是 8，所以應該用商數 8 來決定第 35 顆燈泡的顏色。",
+        "isCorrect": false,
+        "feedback": "再想一想：商數 8 代表的是已經排完的「8 組完整紅黃藍綠循環」，每一組循環都被完整排過，要看「剩下的餘數 3 顆」排到下一組的第幾顆才對喔！"
+    }
+],
+                      "chipsPool": [
+                                "總共排到第 35 顆燈泡",
+                                "每 4 顆顏色循環一組",
+                                "排完了 8 組完整循環",
+                                "還剩下 3 顆燈泡",
+                                "循環順序是紅➔黃➔藍",
+                                "所以第 35 顆是藍色",
+                                "排完了 8 顆燈泡",
+                                "還剩下 3 組循環",
+                                "第 35 顆是綠色"
+                      ],
+                      "distractors": [
+                                "排完了 8 顆燈泡",
+                                "還剩下 3 組循環",
+                                "第 35 顆是綠色"
+                      ],
+                      "reasonablenessPrompt": "商是 8 代表排滿了 8 組完整的「紅黃藍綠」循環，剩下的 3 顆燈泡小於一組 4 顆（3 < 4 合理）；留意商與餘數的單位，看餘數 3 顆代表下一組循環裡的第 3 顆，也就是藍色！",
+                      "decisionExplain": "35 ÷ 4 = 8 組 ... 剩下 3 顆。留意商與餘數的單位；完成了 8 組循環後，依照循環順序（1紅、2黃、3藍、4綠），第 3 顆就是藍色，所以第 35 顆是藍色。",
+                      "finalAnswer": "藍色燈泡",
+                      "hint": "商代表 8 組完整循環，看餘數 3 代表下一組循環裡的第幾顆燈泡！"
             },
             {
-                id: "T1_04",
-                grade: 5,
-                curriculumCode: "108課綱 N-5-4",
-                theme: 1,
-                domain: "fraction",
-                title: "手工藝緞帶裁切做花",
-                subType: "長度分裝 (分數)",
-                focus: "分數分裝：餘數合理性檢驗",
-                text: "美勞課有一條長 <mark>2又1/2 公尺 (即 5/2 公尺)</mark> 的緞帶，每 <mark>3/4 公尺</mark> 可以做成一朵漂亮的緞帶花，最多可以做成幾朵花？還剩下幾公尺緞帶？",
-                dividendName: "5/2 公尺緞帶",
-                dividendNum: "5/2",
-                divisorName: "每 3/4 公尺做一朵花",
-                divisorNum: "3/4",
-                divisionType: "containment",
-                divisionTypeName: "分裝 (每朵 3/4 公尺，求朵數與剩餘)",
-                equationStr: "5/2 ÷ 3/4 = 3 ... 1/4",
-                resultQuotient: "3",
-                resultRemainder: "1/4",
-                resultUnit: "朵花",
-                remainderUnit: "公尺緞帶",
-                hasRemainder: true,
-                decisionKey: "fractionRemainder",
-                chipsPool: [
-                    "5/2 公尺長緞帶", "每 3/4 公尺做一朵", "最多做 3 朵花", "還剩下 1/4 公尺緞帶", "剩下長度小於 3/4 公尺", "所以做 3 朵剩 1/4 公尺",
-                    "剩下 1/3 朵花", "剩下 3/4 公尺", "可以做 4 朵花"
-                ],
-                distractors: ["剩下 1/3 朵花", "剩下 3/4 公尺", "可以做 4 朵花"],
-                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：通分後 5/2 = 10/4，做 3 朵花用掉 3 × 3/4 = 9/4 公尺，剩下 10/4 - 9/4 = 1/4 公尺。1/4 公尺小於做一朵花需要的 3/4 公尺（1/4 < 3/4），剩下的長度確實不夠再做一朵花，完全合情合理！",
-                decisionExplain: "5/2 ÷ 3/4 = 10/4 ÷ 3/4 = 3 餘 1/4 公尺。做 3 朵花共用掉 9/4 公尺，緞帶原本有 10/4 公尺，剩下 1/4 公尺。因為 1/4 < 3/4，不夠再做一朵，所以最多做 3 朵，剩下 1/4 公尺。",
-                finalAnswer: "最多做 3 朵花，剩下 1/4 公尺緞帶",
-                hint: "把 5/2 通分換成 10/4，看看可以包含幾個 3/4？剩下的是幾公尺？"
+                      "id": "T1_04",
+                      "grade": 3,
+                      "curriculumCode": "108課綱 N-3-4",
+                      "theme": 1,
+                      "domain": "integer",
+                      "title": "水晶珠手鍊湊滿整組",
+                      "subType": "手工飾品分裝",
+                      "focus": "餘數決策：差額運算 (除數 - 餘數)",
+                      "text": "小文買了 <mark>809 顆水晶珠</mark>，每 <mark>8 顆</mark> 串成一條手鍊。如果他想把剩下的珠子也串成一條完整的手鍊，<mark>還需要再買幾顆</mark> 水晶珠？",
+                      "dividendName": "809 顆水晶珠",
+                      "dividendNum": "809",
+                      "divisorName": "每 8 顆串成一條手鍊",
+                      "divisorNum": "8",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每條固定 8 顆，求條數與剩餘)",
+                      "equationStr": "809 ÷ 8 = 101 ... 1",
+                      "resultQuotient": "101",
+                      "resultRemainder": "1",
+                      "resultUnit": "條手鍊",
+                      "remainderUnit": "顆水晶珠",
+                      "hasRemainder": true,
+                      "decisionKey": "t1_04_decision",
+    "step4Options": [
+    {
+        "key": "t1_04_rem_check",
+        "title": "【餘數檢核】檢核算出來的「餘數」是否小於「除數」",
+        "desc": "剩下的 1 顆小於一條 8 顆（餘數 1 < 除數 8 合理），確認不夠再串成一條完整手鍊。",
+        "isCorrect": false,
+        "feedback": "「餘數小於除數」確認了剩下的 1 顆確實不滿一條手鍊，但題目問的是「如果他想把剩下的珠子也串成一條完整的手鍊，還需要再買幾顆水晶珠？」只檢驗餘數還沒回答到題目的目標！請再思考：一條需要 8 顆，手邊已有 1 顆，還差幾顆呢？"
+    },
+    {
+        "key": "t1_04_decision",
+        "title": "【差額補齊決策】留意商與餘數的單位，用一條顆數扣除剩下的餘數求還差幾顆（8 － 1 ＝ 7 顆）",
+        "desc": "串完 101 條後剩下 1 顆，想湊滿整條需 8 顆，用 8 - 1 求出還需要再買 7 顆。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_04_distractor_quotient_less",
+        "title": "【商數檢核】檢核算出來的「商」是否小於「除數」",
+        "desc": "檢驗合理性時，檢查算出來的商數有沒有比除數小（商 101 大於除數 8）。",
+        "isCorrect": false,
+        "feedback": "再想一想：除法合理性中真正需要檢核的是「餘數小於除數」（剩下的 1 顆小於一條的 8 顆），商代表串好的 101 條手鍊，商大於除數完全合情合理！"
+    },
+    {
+        "key": "t1_04_distractor_rem_is_ans",
+        "title": "【差額判定】算式算出來餘數是 1，所以還需要再買 1 顆水晶珠",
+        "desc": "看到除法算式剩下的餘數是 1，認為還需要再買的顆數就是餘數 1 顆。",
+        "isCorrect": false,
+        "feedback": "再想一想：餘數 1 代表的是「手邊剩下的珠子」，串滿一整條需要 8 顆，現在只有 1 顆，還需要再買 8 - 1 = 7 顆才能湊滿一整條手鍊喔！"
+    }
+],
+                      "chipsPool": [
+                                "809 顆水晶珠",
+                                "每 8 顆串成一條",
+                                "串好了 101 條手鍊",
+                                "還剩下 1 顆水晶珠",
+                                "串滿一條需要 8 顆",
+                                "所以還差 8 - 1 = 7 顆水晶珠",
+                                "串好了 101 顆",
+                                "還剩下 1 條手鍊",
+                                "還需要再買 1 顆水晶珠"
+                      ],
+                      "distractors": [
+                                "串好了 101 顆",
+                                "還剩下 1 條手鍊",
+                                "還需要再買 1 顆水晶珠"
+                      ],
+                      "reasonablenessPrompt": "串成 101 條手鍊後剩下 1 顆水晶珠，剩下的 1 顆小於一條 8 顆（1 < 8 合理）；留意商與餘數的單位，串滿整條需 8 顆，因此還差 8 - 1 = 7 顆！",
+                      "decisionExplain": "809 ÷ 8 = 101 條 ... 剩下 1 顆。留意商與餘數的單位；要再串滿一條需要 8 顆，用一整條規格減去剩下的珠子：8 - 1 = 7 顆，所以還需要再買 7 顆水晶珠。",
+                      "finalAnswer": "還需要再買 7 顆水晶珠",
+                      "hint": "商 101 是條數，餘數 1 是剩下的顆數，看清楚題目問的是『還需要再買幾顆』！"
             },
             {
-                id: "T1_05",
-                grade: 6,
-                curriculumCode: "108課綱 N-6-3",
-                theme: 1,
-                domain: "decimal",
-                title: "白米分裝小保鮮袋",
-                subType: "小單位分裝 (小數除以小於1)",
-                focus: "小數分裝：除以小於 1 商變大",
-                text: "廚房有一大袋 <mark>6 公斤</mark> 的白米，每 <mark>0.4 公斤</mark> 分裝成一個小保鮮袋，總共可以分裝成幾袋？",
-                dividendName: "6 公斤白米",
-                dividendNum: "6",
-                divisorName: "每袋裝 0.4 公斤",
-                divisorNum: "0.4",
-                divisionType: "containment",
-                divisionTypeName: "分裝 (每袋 0.4 公斤，求袋數)",
-                equationStr: "6 ÷ 0.4 = 15",
-                resultQuotient: "15",
-                resultRemainder: "0",
-                resultUnit: "袋",
-                remainderUnit: "",
-                hasRemainder: false,
-                decisionKey: "fractionBigQuotient",
-                chipsPool: [
-                    "6 公斤白米", "每 0.4 公斤裝一袋", "0.4 公斤比 1 公斤小", "1 公斤就能裝 2.5 袋", "所以 6 公斤能裝 15 袋", "商比被除數 6 還大很合理",
-                    "只能裝 1.5 袋", "只能裝 2.4 袋", "除以 0.4 答案一定變小"
-                ],
-                distractors: ["只能裝 1.5 袋", "只能裝 2.4 袋", "除以 0.4 答案一定變小"],
-                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：1 袋只有 0.4 公斤（不到半公斤），光是 1 公斤白米就可以裝滿 2 袋還多一點，那 6 公斤白米分裝出來的袋數當然會比 6 還多！算出 15 袋非常合理！千萬不要以為除法算出來的結果一定會比原來的數字小喔！",
-                decisionExplain: "當除數小於 1（0.4 < 1）時，代表每份的規格比 1 個標準單位還要小，因此分割出來的份數一定比原本的總量還要多！6 ÷ 0.4 = 15 袋，驗算 15 × 0.4 = 6 公斤，完全正確！",
-                finalAnswer: "15 袋",
-                hint: "每袋只有 0.4 公斤（比 1 公斤還小），想想看分出來的袋數會比 6 袋多還是少？"
+                      "id": "T1_05",
+                      "grade": 3,
+                      "curriculumCode": "108課綱 N-3-4",
+                      "theme": 1,
+                      "domain": "integer",
+                      "title": "平年星期天數轉換",
+                      "subType": "曆法分裝",
+                      "focus": "商代表星期數，餘數代表剩下天數",
+                      "text": "平年有 <mark>365 天</mark>，是幾個星期又幾天？",
+                      "dividendName": "平年有 365 天",
+                      "dividendNum": "365",
+                      "divisorName": "一個星期有 7 天",
+                      "divisorNum": "7",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每星期 7 天，求星期數與剩下天數)",
+                      "equationStr": "365 ÷ 7 = 52 ... 1",
+                      "resultQuotient": "52",
+                      "resultRemainder": "1",
+                      "resultUnit": "個星期",
+                      "remainderUnit": "天",
+                      "hasRemainder": true,
+                      "decisionKey": "t1_05_decision",
+    "step4Options": [
+    {
+        "key": "t1_05_rem_check",
+        "title": "【餘數檢核】檢核算出來的「餘數」是否小於「除數」",
+        "desc": "剩下的 1 天小於一週 7 天（餘數 1 < 除數 7 合理），確認剩下的天數不足以再換算為一週。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_05_decision",
+        "title": "【單位轉換決策】留意商與餘數的單位，商代表星期數，餘數代表剩下的天數",
+        "desc": "一週有 7 天，商數代表 52 個完整的星期，餘數代表剩下的 1 天，合為 52 個星期又 1 天。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_05_distractor_quotient_less",
+        "title": "【商數檢核】檢核算出來的「商」是否小於「除數」",
+        "desc": "檢驗曆法轉換合理性時，檢查算出來的商數有沒有比除數小（商 52 大於除數 7）。",
+        "isCorrect": false,
+        "feedback": "再想一想：除法合理性中真正需要檢核的是「餘數小於除數」（剩下的 1 天小於一星期的 7 天），商 52 代表整年的 52 個星期，本來就比 7 大！"
+    },
+    {
+        "key": "t1_05_distractor_floor",
+        "title": "【結果取捨】平年只要回答 52 個星期，剩下的 1 天不滿一週不用理會",
+        "desc": "回答完整的星期數 52 個星期，剩下的 1 天不滿一週故不另作計算。",
+        "isCorrect": false,
+        "feedback": "再想一想：題目問的是「幾個星期又幾天」，必須同時清楚交代完整的星期數與剩下的天數，不能直接忽略餘數喔！"
+    }
+],
+                      "chipsPool": [
+                                "平年 365 天",
+                                "一個星期有 7 天",
+                                "共有 52 個星期",
+                                "還剩下 1 天",
+                                "剩下 1 天小於一週 7 天",
+                                "所以是 52 個星期又 1 天",
+                                "共有 52 天",
+                                "還剩下 1 個星期",
+                                "共有 53 個星期"
+                      ],
+                      "distractors": [
+                                "共有 52 天",
+                                "還剩下 1 個星期",
+                                "共有 53 個星期"
+                      ],
+                      "reasonablenessPrompt": "一個星期有 7 天，365 天每 7 天換算成 1 星期，算出 52 個星期，剩下的 1 天小於一週 7 天（1 < 7 合理），留意商與餘數的單位，所以平年是 52 個星期又 1 天！",
+                      "decisionExplain": "365 ÷ 7 = 52 星期 ... 剩下 1 天。留意商與餘數的單位，餘數小於除數合理，所以平年共有 52 個星期又 1 天。",
+                      "finalAnswer": "52 個星期又 1 天",
+                      "hint": "商代表換算出的完整星期數，餘數是剩下不滿一星期的天數！"
             },
             {
-                id: "T1_06",
-                grade: 6,
-                curriculumCode: "108課綱 N-6-3",
-                theme: 1,
-                domain: "fraction",
-                title: "彩帶切小段做標籤",
-                subType: "單位分數分裝 (分數除以小於1)",
-                focus: "分數分裝：商比被除數還大！",
-                text: "美勞教室有一條長 <mark>3/4 公尺</mark> 的緞帶，每 <mark>1/8 公尺</mark> 剪成一段做成小標籤，總共可以剪成幾段？",
-                dividendName: "3/4 公尺彩帶",
-                dividendNum: "3/4",
-                divisorName: "每段長 1/8 公尺",
-                divisorNum: "1/8",
-                divisionType: "containment",
-                divisionTypeName: "分裝 (每份固定 1/8 公尺，求段數)",
-                equationStr: "3/4 ÷ 1/8 = 6",
-                resultQuotient: "6",
-                resultRemainder: "0",
-                resultUnit: "段",
-                remainderUnit: "",
-                hasRemainder: false,
-                decisionKey: "fractionBigQuotient",
-                chipsPool: [
-                    "3/4 公尺彩帶", "每 1/8 公尺切一段", "3/4 公尺等於 6/8 公尺", "裡面包含了 6 個 1/8", "所以可以剪成 6 段", "切成小細段數量變多很合理",
-                    "剪成 3/32 段", "只能剪 1 段", "除法結果一定比 3/4 小"
-                ],
-                distractors: ["剪成 3/32 段", "只能剪 1 段", "除法結果一定比 3/4 小"],
-                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：1/8 公尺是很短的一小段（1 公尺可以切 8 段）。3/4 公尺通分就是 6/8 公尺，剛好可以切出 6 段！長度雖然不到 1 公尺，但切成更細的段落，段數一定會比 1 多，算出來是 6 段完全合理！",
-                decisionExplain: "除以小於 1 的分數（1/8 < 1），相當於乘以倒數 8。3/4 × 8 = 6 段。把彩帶切成更短的單位，段數自然會變多，驗算 6 × 1/8 = 6/8 = 3/4 公尺，完全正確！",
-                finalAnswer: "6 段",
-                hint: "把 3/4 通分變成 6/8，看看裡面有幾個 1/8？"
+                      "id": "T1_06",
+                      "grade": 4,
+                      "curriculumCode": "108課綱 N-4-2",
+                      "theme": 1,
+                      "domain": "integer",
+                      "title": "運動會飲料平分班級",
+                      "subType": "飲品平分 (等分除)",
+                      "focus": "平分：總箱數 ÷ 班級數 = 每班分得箱數與剩餘",
+                      "text": "學校舉辦運動會時，家長會準備了 <mark>87 箱運動飲料</mark>，平分給 <mark>25 個班級</mark>，每個班最多可以分到幾箱？還剩下幾箱？",
+                      "dividendName": "87 箱運動飲料",
+                      "dividendNum": "87",
+                      "divisorName": "平分給 25 個班級",
+                      "divisorNum": "25",
+                      "divisionType": "sharing",
+                      "divisionTypeName": "平分 (平分給 25 個班級，求每班分得箱數與剩餘)",
+                      "equationStr": "87 ÷ 25 = 3 ... 12",
+                      "resultQuotient": "3",
+                      "resultRemainder": "12",
+                      "resultUnit": "箱",
+                      "remainderUnit": "箱飲料",
+                      "hasRemainder": true,
+                      "decisionKey": "t1_06_decision",
+    "step4Options": [
+    {
+        "key": "t1_06_rem_check",
+        "title": "【餘數檢核】檢核算出來的「餘數」是否小於「除數」",
+        "desc": "剩下的 12 箱小於 25 班（餘數 12 < 除數 25 合理），確認不夠 25 個班級再各分 1 箱。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_06_decision",
+        "title": "【平分決策】留意商與餘數的單位，每班最多分 3 箱，還剩下 12 箱",
+        "desc": "平分給 25 個班級，每班分得 3 箱；留意平分時商與餘數的單位皆為箱。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_06_distractor_quotient_less",
+        "title": "【商數檢核】檢核算出來的「商」是否小於「除數」",
+        "desc": "檢驗平分合理性時，檢查算出來的商數有沒有比除數小（商 3 小於除數 25）。",
+        "isCorrect": false,
+        "feedback": "再想一想：平分合理性的關鍵是「餘數小於除數」（剩下的 12 箱不夠 25 個班再分），而不是看商有沒有小於除數喔！"
+    },
+    {
+        "key": "t1_06_distractor_ignore_rem",
+        "title": "【結果取捨】只要算出每班分 3 箱即可，剩下的箱數不用記錄",
+        "desc": "題目問每個班最多分幾箱，回答每班分 3 箱即可，剩下的 12 箱隨意處置不需記錄。",
+        "isCorrect": false,
+        "feedback": "再想一想：題目同時問了「每個班最多分到幾箱？還剩下幾箱？」，必須完整檢視並回答剩下的 12 箱飲料喔！"
+    }
+],
+                      "chipsPool": [
+                                "87 箱運動飲料",
+                                "平分給 25 個班級",
+                                "每班分得 3 箱",
+                                "還剩下 12 箱飲料",
+                                "剩下 12 箱小於 25 個班級",
+                                "每班最多分 3 箱剩 12 箱",
+                                "每班分得 25 箱",
+                                "還剩下 3 箱",
+                                "每班可以分 4 箱"
+                      ],
+                      "distractors": [
+                                "每班分得 25 箱",
+                                "還剩下 3 箱",
+                                "每班可以分 4 箱"
+                      ],
+                      "reasonablenessPrompt": "87 箱平分給 25 個班，每班分 3 箱共分掉 75 箱，剩下 12 箱小於 25 個班級（12 < 25 合理），不夠每個班再分一箱；留意商與餘數的單位皆為箱，每班最多分 3 箱，還剩下 12 箱！",
+                      "decisionExplain": "87 ÷ 25 = 3 箱 ... 剩下 12 箱。留意商與餘數的單位皆為箱；剩下的 12 箱飲料不足以讓 25 個班級再各分 1 箱，所以最多只能每班分 3 箱，剩下 12 箱飲料。",
+                      "finalAnswer": "最多分 3 箱，剩下 12 箱",
+                      "hint": "平分給 25 個班級，每班分到的箱數是商，分不完的是餘數！"
             },
             {
-                id: "T1_07",
-                grade: 4,
-                curriculumCode: "108課綱 N-4-2",
-                theme: 1,
-                domain: "integer",
-                title: "串珠手鍊湊滿整組",
-                subType: "手工飾品分裝",
-                focus: "餘數決策：差額運算 (除數 - 餘數)",
-                text: "小文買了 <mark>38 顆水晶珠</mark>，每 <mark>4 顆</mark> 串成一條手鍊。如果他想把剩下的珠子也串成一條完整的手鍊，<mark>還需要再買幾顆</mark> 水晶珠？",
-                dividendName: "38 顆水晶珠",
-                dividendNum: "38",
-                divisorName: "每 4 顆串一條手鍊",
-                divisorNum: "4",
-                divisionType: "containment",
-                divisionTypeName: "分裝 (每條固定 4 顆，求條數)",
-                equationStr: "38 ÷ 4 = 9 ... 2",
-                resultQuotient: "9",
-                resultRemainder: "2",
-                resultUnit: "條手鍊",
-                remainderUnit: "顆珠子",
-                hasRemainder: true,
-                decisionKey: "gap",
-                chipsPool: [
-                    "38 顆水晶珠", "每 4 顆串一條", "串好了 9 條手鍊", "還剩下 2 顆珠子", "串滿一條需要 4 顆", "所以還差 4 - 2 = 2 顆珠子",
-                    "還需要 4 顆", "還需要 9 顆", "剩下 2 條手鍊"
-                ],
-                distractors: ["還需要 4 顆", "還需要 9 顆", "剩下 2 條手鍊"],
-                reasonablenessPrompt: "串成 9 條後剩下 2 顆珠子（餘數 2 < 除數 4）。一條手鍊需要 4 顆，現在已經有 2 顆了，只要再補 4 - 2 = 2 顆就能再串成一條！",
-                decisionExplain: "38 ÷ 4 = 9 條 ... 剩下 2 顆。要再串滿一整條手鍊需要 4 顆珠子，用一整條規格減去剩下的珠子：4 - 2 = 2 顆。所以還需要再買 2 顆水晶珠。",
-                finalAnswer: "還需要再買 2 顆水晶珠",
-                hint: "看清楚題目是問『還差幾顆』！用一條需要的 4 顆扣掉剩下的 2 顆！"
+                      "id": "T1_07",
+                      "grade": 4,
+                      "curriculumCode": "108課綱 N-4-2",
+                      "theme": 1,
+                      "domain": "integer",
+                      "title": "物流貨物貨車運輸",
+                      "subType": "大數分裝 (商+1)",
+                      "focus": "餘數決策：無條件進入 (+1)",
+                      "text": "港口進了 <mark>280800 公斤</mark> 的貨物，貨運公司要用貨車將全部貨物運到物流中心，每輛貨車的最大載重量是 <mark>4000 公斤</mark>，請問最少需要多少輛貨車才能運完？",
+                      "dividendName": "280800 公斤貨物",
+                      "dividendNum": "280800",
+                      "divisorName": "每輛貨車載重 4000 公斤",
+                      "divisorNum": "4000",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每車載重 4000 公斤，求需要車數)",
+                      "equationStr": "280800 ÷ 4000 = 70 ... 800",
+                      "resultQuotient": "70",
+                      "resultRemainder": "800",
+                      "resultUnit": "輛貨車",
+                      "remainderUnit": "公斤貨物",
+                      "hasRemainder": true,
+                      "decisionKey": "t1_07_decision",
+    "step4Options": [
+    {
+        "key": "t1_07_rem_check",
+        "title": "【餘數檢核】檢核算出來的「餘數」是否小於「除數」",
+        "desc": "剩下的 800 公斤小於貨車載重 4000 公斤（餘數 800 < 除數 4000 合理），確認不滿一整車載重。",
+        "isCorrect": false,
+        "feedback": "「餘數 800 公斤小於載重 4000 公斤」確認了剩下的貨物不滿一整車，但題目問的是「請問最少需要多少輛貨車才能『全部運完』？」如果只派 70 輛，剩下的 800 公斤就被丟在港口了！請再思考：生活情境中要全部載完，這剩下的 800 公斤該如何安排車輛？"
+    },
+    {
+        "key": "t1_07_decision",
+        "title": "【全數載完決策】大數簡化除法商不變，留意商與餘數的單位與還原，需商 + 1 輛車載完",
+        "desc": "若運用末尾去 0 簡化除法（2808 ÷ 40），商 70 輛車不變；餘數 8 代表 8 個百（即 800 公斤），需 70 + 1 = 71 輛車。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_07_distractor_rem_8kg",
+        "title": "【剩下 8 公斤】大數去 0 簡化計算後，剩下的貨物只有 8 公斤",
+        "desc": "用 2808 ÷ 40 計算時算出的餘數是 8，代表載滿 70 輛車後，剩下的貨物就只有 8 公斤。",
+        "isCorrect": false,
+        "feedback": "再想一想：運用大數除法去掉末尾 0 簡化計算（2808 ÷ 40）時，算出的餘數 8 代表的是「8 個百」，也就是「800 公斤」，而不是「剩下 8 公斤」喔！必須把去掉的兩個 0 補回還原真實重量！"
+    },
+    {
+        "key": "t1_07_distractor_floor",
+        "title": "【只取商數】算出來是 70 餘 800，所以只要派 70 輛貨車即可",
+        "desc": "因為載滿了 70 輛貨車，剩下的 800 公斤裝不滿一整車，所以不載了，只需 70 輛貨車。",
+        "isCorrect": false,
+        "feedback": "再想一想：題目特別說明「要用貨車將全部貨物運到物流中心」，剩下的 800 公斤貨物不能丟在港口，也需要多派 1 輛貨車運送，所以最少需要 70 + 1 = 71 輛貨車！"
+    }
+],
+                      "chipsPool": [
+    "280800 公斤貨物",
+    "每輛貨車載 4000 公斤",
+    "簡化為 2808 個百除以 40 個百",
+    "載滿了 70 輛貨車",
+    "還剩下 800 公斤 (8 個百)",
+    "剩下的 800 公斤也需要一輛車",
+    "所以需要 70 + 1 = 71 輛貨車",
+    "剩下 8 公斤",
+    "剩下 800 輛貨車",
+    "載滿了 70 公斤",
+    "只需要 70 輛貨車"
+  ],
+                      "distractors": [
+    "剩下 8 公斤",
+    "剩下 800 輛貨車",
+    "載滿了 70 公斤",
+    "只需要 70 輛貨車"
+  ],
+                      "reasonablenessPrompt": "載滿 70 輛車共載 280000 公斤（或用 2808 ÷ 40 簡化除法），商 70 輛車不變；留意商與餘數的單位，餘數 8 代表 8 個百（即 800 公斤）；800 公斤小於原載重 4000 公斤（合理），全部載完需 70 + 1 = 71 輛車！",
+                      "decisionExplain": "280800 ÷ 4000 = 70 輛 ... 剩下 800 公斤（亦可用尾數去 0 的大數除法 2808 ÷ 40 = 70 餘 8 個百）。留意商與餘數的單位；因為要將全部貨物運完，剩下的 800 公斤也需要 1 輛車，所以最少需要 70 + 1 = 71 輛貨車。",
+                      "finalAnswer": "最少需要 71 輛貨車才能運完",
+                      "hint": "題目說要把全部貨物運完，剩下的 800 公斤也要派一輛車去運喔！"
             },
             {
-                id: "T1_08",
-                grade: 4,
-                curriculumCode: "108課綱 N-4-2",
-                theme: 1,
-                domain: "integer",
-                title: "彩色燈泡排列週期",
-                subType: "週期規律問題",
-                focus: "餘數決策：循環定位 (餘數決定位次)",
-                text: "聖誕彩燈按照「紅、黃、藍、綠」的順序規律重複排列（每 4 個為一組循環）。請問第 <mark>35 顆</mark> 燈泡是什麼顏色？",
-                dividendName: "第 35 顆燈泡",
-                dividendNum: "35",
-                divisorName: "每 4 個一組循環",
-                divisorNum: "4",
-                divisionType: "containment",
-                divisionTypeName: "分裝 (每組循環 4 個，求循環組數與餘數)",
-                equationStr: "35 ÷ 4 = 8 ... 3",
-                resultQuotient: "8",
-                resultRemainder: "3",
-                resultUnit: "組循環",
-                remainderUnit: "個燈泡",
-                hasRemainder: true,
-                decisionKey: "cycleRank",
-                chipsPool: [
-                    "總共有 35 個燈泡", "每 4 個顏色循環一組", "排完了 8 組完整循環", "還剩下 3 個燈泡", "循環順序是紅➔黃➔藍", "所以第 35 顆是藍色",
-                    "第 35 顆是綠色", "第 35 顆是紅色", "排了 35 組循環"
-                ],
-                distractors: ["第 35 顆是綠色", "第 35 顆是紅色", "排了 35 組循環"],
-                reasonablenessPrompt: "餘數 3 小於一組循環的 4 個（3 < 4），代表它剛好排到下一組循環裡的第 3 個！",
-                decisionExplain: "完成了 8 組完整的「紅黃藍綠」循環後，還剩下 3 個，第 3 個就是藍色（紅➔黃➔藍），所以第 35 顆是藍色。",
-                finalAnswer: "藍色燈泡",
-                hint: "商是 8 代表有 8 組完整循環，看餘數 3 是循環裡的第幾名！"
+                      "id": "T1_08",
+                      "grade": 4,
+                      "curriculumCode": "108課綱 N-4-5",
+                      "theme": 1,
+                      "domain": "fraction",
+                      "title": "繩子等分與帶分數轉換",
+                      "subType": "帶分數轉換 (分數概念)",
+                      "focus": "假分數換帶分數：16 個 1/3，每 3 個換 1 整條",
+                      "text": "一條繩子分成 3 等分，每等分是 1/3 條，<mark>16/3 條</mark> 繩子也可以說是幾條繩子呢？用帶分數記記看。",
+                      "dividendName": "16 個 1/3 條繩子",
+                      "dividendNum": "16",
+                      "divisorName": "每 3 個 1/3 換成 1 整條",
+                      "divisorNum": "3",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每 3 個 1/3 條換成 1 條，求整條數與剩餘)",
+                      "equationStr": "16 ÷ 3 = 5 ... 1 (記為 5又1/3 條)",
+                      "resultQuotient": "5",
+                      "resultRemainder": "1",
+                      "resultUnit": "條繩子",
+                      "remainderUnit": "個 1/3 條",
+                      "hasRemainder": true,
+                      "decisionKey": "t1_08_decision",
+    "step4Options": [
+    {
+        "key": "t1_08_rem_check",
+        "title": "【餘數檢核】檢核算出來的「餘數」是否小於「除數」",
+        "desc": "剩下的 1 等份小於每整條所需的 3 等份（餘數 1 < 除數 3 合理），確認不夠再湊成一整條。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_08_decision",
+        "title": "【分數餘數合理性檢驗】整數商 5 代表 5 整條繩子，餘數 1 等份代表 1/3 條，合起來為 5 又 1/3 條",
+        "desc": "每 3 等份為一整條繩子，16 等份可湊出 5 整條；剩下的 1 等份是 1/3 條，合起來為 5 又 1/3 條。",
+        "isCorrect": true
+    },
+    {
+        "key": "t1_08_distractor_quotient_less",
+        "title": "【商數檢核】檢核算出來的整數「商」是否小於除數",
+        "desc": "檢驗帶分數轉換時，檢查算出來的整數商有沒有比除數小（商 5 大於除數 3）。",
+        "isCorrect": false,
+        "feedback": "再想一想：假分數轉帶分數時，只要分子大於分母，整數商本來就可能大於除數，重點是剩下的等份（餘數 1）必須小於分母 3 喔！"
+    },
+    {
+        "key": "t1_08_distractor_add",
+        "title": "【直接相加】把算出來的整數商 5 和餘數 1 直接相加，等於 6 條繩子",
+        "desc": "直接將整數商 5 加上餘數 1 得到 6 條。",
+        "isCorrect": false,
+        "feedback": "再想一想：整數商 5 代表的是「5 整條繩子」，餘數 1 代表的是「剩下的 1 等份（也就是 1/3 條）」，兩者意義不同不能直接相加喔！"
+    }
+],
+                      "chipsPool": [
+                                "16 個 1/3 條繩子",
+                                "每 3 個 1/3 換成 1 條",
+                                "換成 5 整條繩子",
+                                "剩下 1 個 1/3 條",
+                                "答案是 5又1/3 條",
+                                "記為 5又1/3 條",
+                                "帶分數表示合理",
+                                "答案是 3又1/5 條",
+                                "答案是 1又5/3 條",
+                                "平分成 3 條",
+                                "換成 5 個 1/3 條",
+                                "剩下 1 條"
+                      ],
+                      "distractors": [
+                                "答案是 3又1/5 條",
+                                "答案是 1又5/3 條",
+                                "平分成 3 條",
+                                "換成 5 個 1/3 條",
+                                "剩下 1 條"
+                      ],
+                      "reasonablenessPrompt": "每 3 等份為一整條繩子，16 等份可換算出 5 整條，剩下的 1 等份代表 1/3 條（小於一整條合理），換算為帶分數是 5 又 1/3 條！",
+                      "decisionExplain": "16/3 條繩子＝16 ÷ 3 = 5 餘 1（等份）。整數商 5 代表 5 整條繩子，餘數 1 等份為 1/3 條繩子，轉換為帶分數即為 5 又 1/3 條。",
+                      "finalAnswer": "5又1/3 條",
+                      "hint": "想想看：16 個 1/3，每 3 個可以湊成 1 條，能湊成幾條？還剩下幾個 1/3 條？"
             },
             {
-                id: "T1_09",
-                grade: 5,
-                curriculumCode: "108課綱 N-5-2 / D-5-1",
-                theme: 1,
-                domain: "integer",
-                title: "三個罐子糖果移多補少平分",
-                subType: "平均問題 (平分)",
-                focus: "全部倒出來加總 ➔ 再重新平分給 3 個罐子",
-                text: "有甲、乙、丙三個罐子，分別放了 <mark>3 顆</mark>、<mark>17 顆</mark> 和 <mark>139 顆</mark> 糖果（三罐總共有 <mark>159 顆</mark> 糖果），有什麼方法可以讓每個罐子裡的糖果數量一樣多？平均每個罐子會有幾顆？",
-                dividendName: "糖果總數 159 顆 (3+17+139)",
-                dividendNum: "159",
-                divisorName: "3 個罐子 (平分對象)",
-                divisorNum: "3",
-                divisionType: "sharing",
-                divisionTypeName: "平分 (總和 ÷ 個數 = 平均每個罐子的數量)",
-                equationStr: "159 ÷ 3 = 53",
-                resultQuotient: "53",
-                resultRemainder: "0",
-                resultUnit: "顆/罐",
-                remainderUnit: "",
-                hasRemainder: false,
-                decisionKey: "averageMeaning",
-                chipsPool: [
-                    "全部倒出來加總", "總共有 159 顆糖果", "再重新平分", "平分給 3 個罐子", "算式列為 159 ÷ 3", "平均算出每個罐子的數量",
-                    "每個罐子有 159 顆", "拿甲罐的 3 顆直接分", "乘以 3 個罐子"
-                ],
-                distractors: ["每個罐子有 159 顆", "拿甲罐的 3 顆直接分", "乘以 3 個罐子"],
-                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：原本三個罐子最少是 3 顆、最多是 139 顆。把糖果全部倒出來加總後再重新平分，算出來的平均 53 顆正好介於 3 顆與 139 顆之間（3 < 53 < 139），非常合理！",
-                decisionExplain: "要讓三個罐子數量一樣多，最標準的方法就是「全部倒出來加總 (3+17+139=159)」，然後「再重新平分給 3 個罐子」：159 ÷ 3 = 53 顆。平均 53 顆介於最少 3 顆與最多 139 顆之間，完全符合平均的本質！",
-                finalAnswer: "全部倒出來加總再重新平分，每個罐子 53 顆",
-                hint: "想一想：先把所有糖果集中起來加總，再平分給 3 個罐子！"
+                      "id": "T1_09",
+                      "grade": 5,
+                      "curriculumCode": "108課綱 N-5-2 / D-5-1",
+                      "theme": 1,
+                      "domain": "integer",
+                      "title": "三個罐子糖果移多補少平分",
+                      "subType": "平均問題 (平分)",
+                      "focus": "全部倒出來加總 ➔ 再重新平分給 3 個罐子",
+                      "text": "有甲、乙、丙三個罐子，分別放了 <mark>3 顆</mark>、<mark>17 顆</mark> 和 <mark>139 顆</mark> 糖果（三罐總共有 <mark>159 顆</mark> 糖果），有什麼方法可以讓每個罐子裡的糖果數量一樣多？平均每個罐子會有幾顆？",
+                      "dividendName": "糖果總數 159 顆",
+                      "dividendNum": "159",
+                      "divisorName": "平分給 3 個罐子",
+                      "divisorNum": "3",
+                      "divisionType": "sharing",
+                      "divisionTypeName": "平分 (總和 ÷ 個數 = 平均每個罐子的數量)",
+                      "equationStr": "159 ÷ 3 = 53",
+                      "resultQuotient": "53",
+                      "resultRemainder": "0",
+                      "resultUnit": "顆/罐",
+                      "remainderUnit": "",
+                      "hasRemainder": false,
+                      "decisionKey": "averageMeaning",
+                      "step4Options": [
+                          {
+                              "key": "t1_09_avg_check",
+                              "title": "【平均數合理性檢驗】移多補少求出的每罐平均數 (53 顆)，必定介於最少 (3 顆) 與最多 (139 顆) 之間",
+                              "desc": "三罐的糖果數分別是 3、17、139 顆，全部加總後重新平分，算出來的平均數 53 顆介於 3 與 139 之間，完全合情合理。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_09_exact_check",
+                              "title": "【整除驗算】每罐 53 顆乘上 3 個罐子，53 × 3 = 159 顆，與總顆數完全吻合無剩餘",
+                              "desc": "將每罐平均 53 顆代回乘法驗算，3 個罐子總共有 53 × 3 = 159 顆糖果，完全整除無剩餘。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_09_distractor_large",
+                              "title": "【最大值推估】經過移多補少重新調整後，每罐糖果顆數可以達到 140 顆以上",
+                              "desc": "認為重新平分調整之後，每罐的數量能超過原本最多顆的丙罐 (139 顆)。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：平均數是把大家的糖果集中起來重新平分，算出來的結果必定落在「最少顆 (3 顆)」與「最多顆 (139 顆)」之間，不可能比原本最多顆的罐子還要多喔！"
+                          },
+                          {
+                              "key": "t1_09_distractor_multiply",
+                              "title": "【總量相乘檢驗】將總糖果數 159 顆乘以 3 個罐子，算得平均每罐有 477 顆",
+                              "desc": "直接計算 159 × 3 = 477 顆。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：題目是將 159 顆糖果「平分」給 3 個罐子，平分要用除法 159 ÷ 3 = 53 顆，不能用乘法算成 477 顆喔！"
+                          }
+                      ],
+                      "chipsPool": [
+                                "全部倒出來加總",
+                                "總共有 159 顆糖果",
+                                "再重新平分",
+                                "平分給 3 個罐子",
+                                "算式列為 159 ÷ 3",
+                                "平均算出每個罐子的數量",
+                                "每個罐子有 159 顆",
+                                "拿甲罐的 3 顆直接分",
+                                "乘以 3 個罐子"
+                      ],
+                      "distractors": [
+                                "每個罐子有 159 顆",
+                                "拿甲罐的 3 顆直接分",
+                                "乘以 3 個罐子"
+                      ],
+                      "reasonablenessPrompt": "原本三個罐子最少是 3 顆、最多是 139 顆。把糖果全部倒出來加總後再重新平分，算出來的平均 53 顆正好介於 3 顆與 139 顆之間（3 < 53 < 139），非常合理！",
+                      "decisionExplain": "要讓三個罐子數量一樣多，最標準的方法就是「全部倒出來加總 (3+17+139=159)」，然後「再重新平分給 3 個罐子」：159 ÷ 3 = 53 顆。平均 53 顆介於最少 3 顆與最多 139 顆之間，完全符合平均的本質！",
+                      "finalAnswer": "全部倒出來加總再重新平分，每個罐子 53 顆",
+                      "hint": "想一想：先把所有糖果集中起來加總，再平分給 3 個罐子！"
             },
             {
-                id: "T1_10",
-                grade: 6,
-                curriculumCode: "108課綱 N-6-3",
-                theme: 1,
-                domain: "decimal",
-                title: "水龍頭流水分裝時間",
-                subType: "小數分裝 (求分鐘數)",
-                focus: "總水量 ÷ 每分鐘水量 = 需要的分鐘數",
-                text: "水龍頭每分鐘流出 <mark>3.7 公升</mark> 的水，累積 <mark>25.16 公升</mark> 的水，需要流多少分鐘？",
-                dividendName: "累積總水量 25.16 公升",
-                dividendNum: "25.16",
-                divisorName: "每分鐘流出 3.7 公升 (每份規格)",
-                divisorNum: "3.7",
-                divisionType: "containment",
-                divisionTypeName: "分裝 (每分鐘固定 3.7 公升，求需要幾分鐘)",
-                equationStr: "25.16 ÷ 3.7 = 6.8",
-                resultQuotient: "6.8",
-                resultRemainder: "0",
-                resultUnit: "分鐘",
-                remainderUnit: "",
-                hasRemainder: false,
-                decisionKey: "fractionBigQuotient",
-                chipsPool: [
-                    "總水量 25.16 公升", "每分鐘 3.7 公升", "25.16 裡面有幾個 3.7", "算式列為 25.16 ÷ 3.7", "計算出需要的分鐘數", "分鐘數合情合理",
-                    "算式列為 3.7 ÷ 25.16", "計算出 93.092 分鐘", "用乘法 25.16 × 3.7"
-                ],
-                distractors: ["算式列為 3.7 ÷ 25.16", "計算出 93.092 分鐘", "用乘法 25.16 × 3.7"],
-                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：1 分鐘流 3.7 公升，流 6 分鐘就有 22.2 公升，流 7 分鐘就有 25.9 公升。累積 25.16 公升的時間必定介於 6 到 7 分鐘之間，算出 6.8 分鐘完全合情合理！",
-                decisionExplain: "題目問累積 25.16 公升需要幾分鐘，是看總水量中包含幾個 3.7 公升（每份規格放除數）。25.16 ÷ 3.7 = 6.8 分鐘。驗算 6.8 × 3.7 = 25.16 公升，完全吻合！",
-                finalAnswer: "6.8 分鐘",
-                hint: "想一想：要累積的總水量是被分的主角，每分鐘流出的量是每一份的規格！"
+                      "id": "T1_10",
+                      "grade": 5,
+                      "curriculumCode": "108課綱 N-5-8",
+                      "theme": 1,
+                      "domain": "integer",
+                      "title": "工廠烘製果乾時間除法",
+                      "subType": "時間除法 (單位換算與分裝)",
+                      "focus": "5 日換算為 120 小時 ➔ 120 ÷ 10 = 12 批",
+                      "text": "工廠烘製一批果乾需要 <mark>10 小時</mark>，<mark>5 日</mark> 可以連續烘製幾批果乾？",
+                      "dividendName": "總時間 5 日 (換算為 120 小時)",
+                      "dividendNum": "120",
+                      "divisorName": "每批果乾需要 10 小時",
+                      "divisorNum": "10",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每批固定 10 小時，求可烘製批數)",
+                      "equationStr": "120 ÷ 10 = 12",
+                      "resultQuotient": "12",
+                      "resultRemainder": "0",
+                      "resultUnit": "批果乾",
+                      "remainderUnit": "",
+                      "hasRemainder": false,
+                      "decisionKey": "exactDivision",
+                      "step4Options": [
+                          {
+                              "key": "t1_10_exact_check",
+                              "title": "【單位換算與整除檢驗】5 日換算為 120 小時，每批 10 小時剛好可連續烘製 12 批無剩餘",
+                              "desc": "先換算 5 日 = 120 小時，120 ÷ 10 = 12 批，時間剛好完全用完沒有剩餘。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_10_inverse_check",
+                              "title": "【乘除互逆驗算】烘製 12 批果乾各需 10 小時，12 × 10 = 120 小時 (5 日)，完全吻合",
+                              "desc": "將算出的 12 批代回乘法驗算，12 × 10 = 120 小時，剛好等於 5 日。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_10_distractor_unit",
+                              "title": "【未換算單位檢驗】直接用 10 小時除以 5 日，算得可以烘製 2 批果乾",
+                              "desc": "未將日換算為小時，直接用 10 ÷ 5 = 2 批。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：時間單位不同不能直接相除！必須先將 5 日換算為 5 × 24 = 120 小時，再除以每批的 10 小時，得到 12 批喔！"
+                          },
+                          {
+                              "key": "t1_10_distractor_remainder",
+                              "title": "【剩餘時間檢驗】烘製 12 批後，5 日的時間還剩下 2 小時設備冷卻時間",
+                              "desc": "認為 120 小時除以 10 小時後無法剛好整除，會剩下 2 小時。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：120 ÷ 10 = 12 剛好整除，沒有任何多餘或剩下的時間喔！"
+                          }
+                      ],
+                      "chipsPool": [
+                                "先將 5 日換算為 120 小時",
+                                "每 10 小時烘製一批",
+                                "120 小時包含 12 個 10 小時",
+                                "算式列為 120 ÷ 10",
+                                "連續烘製出 12 批果乾",
+                                "整除沒有剩餘時間",
+                                "直接用 5 ÷ 10 算時間",
+                                "連續烘製出 50 批",
+                                "只烘製出 0.5 批"
+                      ],
+                      "distractors": [
+                                "直接用 5 ÷ 10 算時間",
+                                "連續烘製出 50 批",
+                                "只烘製出 0.5 批"
+                      ],
+                      "reasonablenessPrompt": "1 日有 24 小時，5 日共有 5 × 24 = 120 小時。每 10 小時烘製一批，120 ÷ 10 = 12 批，時間單位統一後計算出的批數非常合理！",
+                      "decisionExplain": "先換算單位：1 日 = 24 小時，5 日 = 24 × 5 = 120 小時。每批果乾需要 10 小時，120 ÷ 10 = 12 批，所以 5 日可以連續烘製 12 批果乾。",
+                      "finalAnswer": "連續烘製 12 批果乾",
+                      "hint": "注意單位不同：先算算看 5 日是幾個小時？再用總小時數除以每批需要的 10 小時！"
             },
             {
-                id: "T1_11",
-                grade: 6,
-                curriculumCode: "108課綱 N-6-3",
-                theme: 1,
-                domain: "decimal",
-                title: "全家喝鮮奶瓶數分裝",
-                subType: "小數分裝 (小數除以大數，商小於1)",
-                focus: "已喝水量 ÷ 一整瓶容量 = 喝了幾瓶 (商小於1)",
-                text: "家庭號鮮奶一瓶是 <mark>1.8 公升</mark>，今日全家共喝了 <mark>0.9 公升</mark>，是喝了幾瓶？",
-                dividendName: "喝掉的鮮奶 0.9 公升",
-                dividendNum: "0.9",
-                divisorName: "一整瓶容量 1.8 公升",
-                divisorNum: "1.8",
-                divisionType: "containment",
-                divisionTypeName: "分裝 (以 1.8 公升為一瓶單位，求 0.9 公升相當於幾瓶)",
-                equationStr: "0.9 ÷ 1.8 = 0.5",
-                resultQuotient: "0.5",
-                resultRemainder: "0",
-                resultUnit: "瓶",
-                remainderUnit: "",
-                hasRemainder: false,
-                decisionKey: "decimalSmallQuotient",
-                chipsPool: [
-                    "喝了 0.9 公升", "一瓶是 1.8 公升", "以一整瓶為單位放除數", "算式列為 0.9 ÷ 1.8", "計算相當於幾瓶鮮奶", "被除數比除數小商小於1",
-                    "計算相當於 2 瓶鮮奶", "大數除以小數 1.8 ÷ 0.9", "用乘法 1.8 × 0.9"
-                ],
-                distractors: ["計算相當於 2 瓶鮮奶", "大數除以小數 1.8 ÷ 0.9", "用乘法 1.8 × 0.9"],
-                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：全家只喝了 0.9 公升，連一整瓶（1.8 公升）都還沒喝完，算出來的瓶數一定要小於 1 瓶！算出 0.5 瓶（剛好半瓶，0.9 × 2 = 1.8）合情合理！如果算出 2 瓶就太誇張了，根本沒喝那麼多！",
-                decisionExplain: "想知道喝了幾瓶，是以「一整瓶的容量 1.8 公升」作為計量基準（除數）。實際喝掉的 0.9 公升是被除數：0.9 ÷ 1.8 = 0.5 瓶（即半瓶）。被除數小於除數，商小於 1 完全合理！",
-                finalAnswer: "0.5 瓶 (或 1/2 瓶)",
-                hint: "千萬別看數字大就直接放前面！全家只喝了 0.9 公升，連一整瓶都不到，除數要放一整瓶的容量 1.8 公升！"
+                      "id": "T1_11",
+                      "grade": 5,
+                      "curriculumCode": "108課綱 N-5-7",
+                      "theme": 1,
+                      "domain": "fraction",
+                      "title": "果汁平分倒杯",
+                      "subType": "分數除以整數 (平分)",
+                      "focus": "總容量 ÷ 杯數 = 每杯容量",
+                      "text": "把 <mark>9/10 公升</mark> 的果汁，平分倒成 <mark>6 杯</mark>，每杯果汁有多少公升？",
+                      "dividendName": "9/10 公升果汁",
+                      "dividendNum": "9/10",
+                      "divisorName": "平分倒成 6 杯",
+                      "divisorNum": "6",
+                      "divisionType": "sharing",
+                      "divisionTypeName": "平分 (把果汁平分倒成 6 杯，求每杯公升數)",
+                      "equationStr": "9/10 ÷ 6 = 3/20",
+                      "resultQuotient": "3/20",
+                      "resultRemainder": "0",
+                      "resultUnit": "公升",
+                      "remainderUnit": "",
+                      "hasRemainder": false,
+                      "decisionKey": "averageMeaning",
+                      "step4Options": [
+                          {
+                              "key": "t1_11_fraction_check",
+                              "title": "【分數運算合理性檢驗】平分給 6 杯，每杯容量 (3/20 公升) 必定比原本總容量 (9/10 公升) 少",
+                              "desc": "將未滿 1 公升的果汁平分倒成 6 杯，每杯分得 3/20 公升，數值縮小合情合理。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_11_exact_check",
+                              "title": "【整除驗算】每杯 3/20 公升乘上 6 杯，3/20 × 6 = 18/20 = 9/10 公升，完全吻合無剩餘",
+                              "desc": "6 杯容量加總恰好等於原本果汁總量 9/10 公升。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_11_distractor_more",
+                              "title": "【顛倒相乘運算】用 9/10 乘上 6 杯，算得每杯有 54/10 公升",
+                              "desc": "計算 9/10 × 6 = 54/10 公升，認為每杯容量比原總量多。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：果汁平分給 6 杯，每一杯分到的量一定會比原本的總量少，不可能倒出比原本總量更多的果汁喔！"
+                          },
+                          {
+                              "key": "t1_11_distractor_quotient_big",
+                              "title": "【商數檢核】檢核算出來的每杯公升數是否大於 1",
+                              "desc": "檢查每杯容量有沒有超過 1 公升。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：原本的果汁只有 9/10 公升（不到 1 公升），分給 6 杯之後每杯必定小於 1 公升，不用檢核大於 1 喔！"
+                          }
+                      ],
+                      "chipsPool": [
+                                "9/10 公升果汁",
+                                "平分倒成 6 杯",
+                                "每杯分得 9/10 ÷ 6",
+                                "計算得 9/60 公升",
+                                "約分後每杯 3/20 公升",
+                                "每杯容量比原果汁少很合理",
+                                "倒成 60 杯",
+                                "每杯有 54/10 公升",
+                                "算式列為 6 ÷ 9/10"
+                      ],
+                      "distractors": [
+                                "倒成 60 杯",
+                                "每杯有 54/10 公升",
+                                "算式列為 6 ÷ 9/10"
+                      ],
+                      "reasonablenessPrompt": "9/10 公升果汁平分倒成 6 杯，每杯容量必定比原本的 9/10 公升更少！9/10 ÷ 6 = 9/60 = 3/20 公升（即 0.15 公升），驗算 3/20 × 6 = 18/20 = 9/10 公升，完全正確！",
+                      "decisionExplain": "9/10 ÷ 6 = 9/10 × 1/6 = 9/60，約分後是 3/20 公升。平分倒成多杯後，每杯容量變少，符合生活常理。",
+                      "finalAnswer": "3/20 公升 (或 9/60 公升、0.15 公升)",
+                      "hint": "被分的是 9/10 公升果汁，平分給 6 杯，列式為 9/10 ÷ 6！"
             },
             {
-                id: "T1_12",
-                grade: 6,
-                curriculumCode: "108課綱 N-6-3",
-                theme: 1,
-                domain: "decimal",
-                title: "滯洪池步道跑步圈數",
-                subType: "小數分裝 (小數除以大數，商小於1)",
-                focus: "已跑距離 ÷ 一整圈距離 = 跑了幾圈 (商小於1)",
-                text: "沿著滯洪池步道跑一圈的距離是 <mark>2.5 公里</mark>，小堂跑了 <mark>1 公里</mark>，是跑了幾圈？",
-                dividendName: "小堂跑的距離 1 公里",
-                dividendNum: "1",
-                divisorName: "跑一圈距離 2.5 公里",
-                divisorNum: "2.5",
-                divisionType: "containment",
-                divisionTypeName: "分裝 (以 2.5 公里為一圈單位，求 1 公里相當於幾圈)",
-                equationStr: "1 ÷ 2.5 = 0.4",
-                resultQuotient: "0.4",
-                resultRemainder: "0",
-                resultUnit: "圈",
-                remainderUnit: "",
-                hasRemainder: false,
-                decisionKey: "decimalSmallQuotient",
-                chipsPool: [
-                    "跑了 1 公里", "一圈是 2.5 公里", "以一整圈為單位放除數", "算式列為 1 ÷ 2.5", "計算跑了幾圈步道", "跑的距離比一圈短商小於1",
-                    "計算跑了 2.5 圈", "大數除以小數 2.5 ÷ 1", "用乘法 2.5 × 1"
-                ],
-                distractors: ["計算跑了 2.5 圈", "大數除以小數 2.5 ÷ 1", "用乘法 2.5 × 1"],
-                reasonablenessPrompt: "【合理性檢驗鏡 🔍】：跑一圈需要 2.5 公里，小堂只跑了 1 公里，連半圈（1.25 公里）都不到，算出來的圈數必定小於 1 圈！算出來 0.4 圈（0.4 < 1）非常合情合理！如果寫成 2.5 圈就顛倒了！",
-                decisionExplain: "題目問的是「跑了幾圈」，所以要把「一整圈的長度 2.5 公里」當作除數。實際跑的 1 公里放在被除數：1 ÷ 2.5 = 0.4 圈。被除數小於除數，商小於 1 完全正確！",
-                finalAnswer: "0.4 圈 (或 2/5 圈)",
-                hint: "問跑了幾圈，基準是一整圈的長度（2.5 公里），所以除數要放 2.5 公里！"
+                      "id": "T1_12",
+                      "grade": 5,
+                      "curriculumCode": "108課綱 N-5-9",
+                      "theme": 1,
+                      "domain": "decimal",
+                      "title": "洗衣精平分均重",
+                      "subType": "小數除以整數 (平分)",
+                      "focus": "總重量 ÷ 瓶數 = 一瓶重量",
+                      "text": "媽媽買了 <mark>12 瓶</mark> 洗衣精，共重 <mark>13.08 公斤</mark>，一瓶洗衣精重幾公斤？",
+                      "dividendName": "總重 13.08 公斤洗衣精",
+                      "dividendNum": "13.08",
+                      "divisorName": "平分給 12 瓶洗衣精",
+                      "divisorNum": "12",
+                      "divisionType": "sharing",
+                      "divisionTypeName": "平分 (總重平分給 12 瓶，求一瓶重量)",
+                      "equationStr": "13.08 ÷ 12 = 1.09",
+                      "resultQuotient": "1.09",
+                      "resultRemainder": "0",
+                      "resultUnit": "公斤",
+                      "remainderUnit": "",
+                      "hasRemainder": false,
+                      "decisionKey": "averageMeaning",
+                      "step4Options": [
+                          {
+                              "key": "t1_12_decimal_check",
+                              "title": "【小數運算合理性檢驗】總重 13.08 公斤平分給 12 瓶，每瓶 1.09 公斤合情合理",
+                              "desc": "12 瓶平分 13.08 公斤，每瓶大約 1 公斤多 (1.09 公斤)，完全符合生活常理。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_12_exact_check",
+                              "title": "【整除驗算】每瓶 1.09 公斤乘上 12 瓶，1.09 × 12 = 13.08 公斤，完全吻合無剩餘",
+                              "desc": "每瓶重量代回原本乘法算式，總重量完全一致。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_12_distractor_heavy",
+                              "title": "【總重相乘運算】將總重 13.08 公斤乘以 12 瓶，算得一瓶重 156.96 公斤",
+                              "desc": "直接計算 13.08 × 12 = 156.96 公斤。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：總重只有 13.08 公斤，平分給 12 瓶後，每瓶不可能重達 156.96 公斤，平分要用除法喔！"
+                          },
+                          {
+                              "key": "t1_12_distractor_point",
+                              "title": "【位值商數檢驗】除法計算商數為 10.9，算得一瓶重 10.9 公斤",
+                              "desc": "直式除法計算時商數十位與個位處理，算得一瓶重量為 10.9 公斤。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：如果一瓶是 10.9 公斤，12 瓶總重量就會超過 130 公斤了！總重只有 13.08 公斤，平均一瓶大約是 1 公斤多（1.09 公斤），不是 10.9 公斤喔！"
+                          }
+                      ],
+                      "chipsPool": [
+                                "總重 13.08 公斤",
+                                "平分給 12 瓶",
+                                "算式列為 13.08 ÷ 12",
+                                "計算出一瓶重 1.09 公斤",
+                                "一瓶大約 1 公斤多",
+                                "數值符合生活常理",
+                                "算式列為 12 ÷ 13.08",
+                                "一瓶重 156.96 公斤",
+                                "一瓶重 10.9 公斤"
+                      ],
+                      "distractors": [
+                                "算式列為 12 ÷ 13.08",
+                                "一瓶重 156.96 公斤",
+                                "一瓶重 10.9 公斤"
+                      ],
+                      "reasonablenessPrompt": "12 瓶洗衣精共 13.08 公斤，平均一瓶大約 1 公斤出頭（12 × 1 = 12）。計算出 1.09 公斤，驗算 1.09 × 12 = 13.08 公斤，完全合情合理！",
+                      "decisionExplain": "被分的是洗衣精的總重量 13.08 公斤，平分給 12 瓶：13.08 ÷ 12 = 1.09 公斤。驗算 1.09 × 12 = 13.08 公斤完全吻合。",
+                      "finalAnswer": "1.09 公斤",
+                      "hint": "總重量是拿來平分的對象，放在被除數；12 瓶放在除數！"
+            },
+            {
+                      "id": "T1_13",
+                      "grade": 6,
+                      "curriculumCode": "108課綱 N-6-3",
+                      "theme": 1,
+                      "domain": "fraction",
+                      "title": "手工藝緞帶裁切做花",
+                      "subType": "長度分裝 (分數除以分數)",
+                      "focus": "分數分裝：餘數合理性檢驗",
+                      "text": "美勞課有一條長 <mark>2又1/2 公尺 (即 5/2 公尺)</mark> 的緞帶，每 <mark>3/4 公尺</mark> 可以做成一朵漂亮的緞帶花，最多可以做成幾朵花？還剩下幾公尺緞帶？",
+                      "dividendName": "5/2 公尺長緞帶",
+                      "dividendNum": "5/2",
+                      "divisorName": "每 3/4 公尺做一朵花",
+                      "divisorNum": "3/4",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每朵固定 3/4 公尺，求朵數與剩餘)",
+                      "equationStr": "5/2 ÷ 3/4 = 3 ... 1/4 (或 1/3 朵)",
+                      "resultQuotient": "3",
+                      "resultRemainder": "1/4",
+                      "resultUnit": "朵花",
+                      "remainderUnit": "公尺緞帶",
+                      "hasRemainder": true,
+                      "decisionKey": "fractionRemainder",
+                      "step4Options": [
+                          {
+                              "key": "t1_13_rem_check",
+                              "title": "【餘數檢核】檢核算出來的「餘數」是否小於「除數」",
+                              "desc": "剩下的 1/4 公尺緞帶小於做一朵花所需的 3/4 公尺（餘數 1/4 < 除數 3/4 合理，或剩下的 1/3 朵小於一整朵），確認不夠再做一朵。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_13_fraction_rem",
+                              "title": "【分數餘數合理性檢驗】留意商與餘數的單位：除出來的餘數 1/3 代表 1/3 朵花，換算長度為 1/4 公尺",
+                              "desc": "除法算出的整數商 3 代表 3 朵花，餘數 1/3 代表 1/3 朵花；因為一朵花需 3/4 公尺，換算緞帶長度為 1/3 × 3/4 = 1/4 公尺，最多做 3 朵剩 1/4 公尺。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_13_distractor_unit_meter",
+                              "title": "【長度餘數認定】除法算式算出的餘數是 1/3，直接代表剩下 1/3 公尺緞帶",
+                              "desc": "根據除法算式求出的餘數 1/3，認定剩餘的緞帶長度就是 1/3 公尺。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：除法算式算出的餘數 1/3，單位是「朵」（也就是 1/3 朵花）！一朵花需要 3/4 公尺，換算成緞帶長度是 1/3 × 3/4 = 1/4 公尺，不是 1/3 公尺喔！"
+                          },
+                          {
+                              "key": "t1_13_distractor_unit_flower",
+                              "title": "【朵數餘數認定】換算出來的長度是 1/4 公尺，直接代表剩下 1/4 朵花",
+                              "desc": "根據扣除整朵後剩餘的長度 1/4 公尺，認定剩下的花朵數就是 1/4 朵花。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：剩下的緞帶長度是 1/4 公尺，而做一朵花需要 3/4 公尺，1/4 公尺佔了一整朵花的 1/3，所以是剩下 1/3 朵花，不是 1/4 朵花喔！"
+                          }
+                      ],
+                      "chipsPool": [
+                                "5/2 公尺長緞帶",
+                                "每 3/4 公尺做一朵",
+                                "最多做 3 朵花",
+                                "剩下 1/3 朵",
+                                "剩下 1/4 公尺",
+                                "1/3 朵相當於 1/4 公尺",
+                                "剩下長度小於 3/4 公尺",
+                                "所以做 3 朵剩 1/4 公尺",
+                                "剩下 1/3 公尺",
+                                "剩下 1/4 朵",
+                                "剩下 3/4 公尺",
+                                "可以做 4 朵花"
+                      ],
+                      "distractors": [
+                                "剩下 1/3 公尺",
+                                "剩下 1/4 朵",
+                                "剩下 3/4 公尺",
+                                "可以做 4 朵花"
+                      ],
+                      "reasonablenessPrompt": "通分後 5/2 = 10/4，做 3 朵花用掉 3 × 3/4 = 9/4 公尺，剩下 10/4 - 9/4 = 1/4 公尺。1/4 公尺小於做一朵花需要的 3/4 公尺（1/4 < 3/4），剩下的長度確實不夠再做一朵花，完全合情合理！",
+                      "decisionExplain": "5/2 ÷ 3/4 = 10/4 ÷ 3/4 = 3 朵 ... 餘 1/4 公尺（或 1/3 朵）。留意商與餘數的單位：除出來的整數商 3 代表 3 朵花，餘數 1/3 代表 1/3 朵花；換算成緞帶長度為 1/3 × 3/4 = 1/4 公尺。因為 1/4 < 3/4，不夠再做一朵，所以最多做 3 朵，剩下 1/4 公尺（即 1/3 朵）。",
+                      "finalAnswer": "最多做 3 朵花，剩下 1/4 公尺緞帶",
+                      "hint": "把 5/2 通分換成 10/4，看看可以包含幾個 3/4？除出來的餘數 1/3 單位是『朵』，換算長度是 1/4 公尺喔！"
+            },
+            {
+                      "id": "T1_14",
+                      "grade": 6,
+                      "curriculumCode": "108課綱 N-6-3",
+                      "theme": 1,
+                      "domain": "fraction",
+                      "title": "彩帶切小段做標籤",
+                      "subType": "單位分數分裝 (分數除以小於1)",
+                      "focus": "分數分裝：商比被除數還大！",
+                      "text": "美勞教室有一條長 <mark>3/4 公尺</mark> 的緞帶，每 <mark>1/8 公尺</mark> 剪成一段做成小標籤，總共可以剪成幾段？",
+                      "dividendName": "3/4 公尺彩帶",
+                      "dividendNum": "3/4",
+                      "divisorName": "每段長 1/8 公尺",
+                      "divisorNum": "1/8",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每份固定 1/8 公尺，求段數)",
+                      "equationStr": "3/4 ÷ 1/8 = 6",
+                      "resultQuotient": "6",
+                      "resultRemainder": "0",
+                      "resultUnit": "段",
+                      "remainderUnit": "",
+                      "hasRemainder": false,
+                      "decisionKey": "fractionBigQuotient",
+                      "step4Options": [
+                          {
+                              "key": "t1_14_fraction_big",
+                              "title": "【分數分裝商數檢驗】除以小於 1 的分數 (1/8)，剪出的段數 (6 段) 比原本長度 (3/4) 大",
+                              "desc": "因為每段規格 1/8 公尺小於 1 公尺，切成更細的段落，段數必定比原本的公尺數大，完全合情合理！",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_14_exact_check",
+                              "title": "【整除檢驗】6 段各長 1/8 公尺，6 × 1/8 = 6/8 = 3/4 公尺，完全分完沒有剩餘",
+                              "desc": "計算剪出的總長度與原本彩帶 3/4 公尺完全吻合。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_14_distractor_less",
+                              "title": "【除法縮小檢驗】除法計算後的段數結果，必定要比原本的長度 (3/4) 還要小",
+                              "desc": "認為任何數進行除法運算後數值都必須變小，段數應小於 3/4 段。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：當除數小於 1（如 1/8）時，除法計算是在看裡面包含了幾個很小的單位，所以商數反而會比原本的被除數還要大喔！"
+                          },
+                          {
+                              "key": "t1_14_distractor_quotient_less",
+                              "title": "【商數檢核】檢核算出來的段數是否小於 1",
+                              "desc": "檢查算出來的段數有沒有比 1 小。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：3/4 公尺是 6/8 公尺，裡面包含 6 個 1/8 公尺，算出的段數是 6 段，不需要檢核商小於 1 喔！"
+                          }
+                      ],
+                      "chipsPool": [
+                                "3/4 公尺彩帶",
+                                "每 1/8 公尺切一段",
+                                "3/4 公尺等於 6/8 公尺",
+                                "裡面包含了 6 個 1/8",
+                                "所以可以剪成 6 段",
+                                "切成小細段數量變多很合理",
+                                "剪成 3/32 段",
+                                "只能剪 1 段",
+                                "除法結果一定比 3/4 小"
+                      ],
+                      "distractors": [
+                                "剪成 3/32 段",
+                                "只能剪 1 段",
+                                "除法結果一定比 3/4 小"
+                      ],
+                      "reasonablenessPrompt": "1/8 公尺是很短的一小段（1 公尺可以切 8 段）。3/4 公尺通分就是 6/8 公尺，剛好可以切出 6 段！長度雖然不到 1 公尺，但切成更細的段落，段數一定會比 1 多，算出來是 6 段完全合理！",
+                      "decisionExplain": "除以小於 1 的分數（1/8 < 1），相當於乘以倒數 8。3/4 × 8 = 6 段。把彩帶切成更短的單位，段數自然會變多，驗算 6 × 1/8 = 6/8 = 3/4 公尺，完全正確！",
+                      "finalAnswer": "6 段",
+                      "hint": "把 3/4 通分變成 6/8，看看裡面有幾個 1/8？"
+            },
+            {
+                      "id": "T1_15",
+                      "grade": 6,
+                      "curriculumCode": "108課綱 N-6-4",
+                      "theme": 1,
+                      "domain": "decimal",
+                      "title": "大桶鮮奶分裝玻璃瓶",
+                      "subType": "液體分裝 (小數除以小數)",
+                      "focus": "小數分裝：餘數合理性檢驗",
+                      "text": "牧場有 <mark>7.5 公升</mark> 的優質鮮奶，每 <mark>0.8 公升</mark> 裝滿一瓶玻璃瓶，最多可以裝滿幾瓶？還剩下多少公升鮮奶？",
+                      "dividendName": "7.5 公升鮮奶",
+                      "dividendNum": "7.5",
+                      "divisorName": "每瓶裝 0.8 公升",
+                      "divisorNum": "0.8",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每瓶固定 0.8 公升，求瓶數與剩餘)",
+                      "equationStr": "7.5 ÷ 0.8 = 9 ... 0.3",
+                      "resultQuotient": "9",
+                      "resultRemainder": "0.3",
+                      "resultUnit": "瓶",
+                      "remainderUnit": "公升鮮奶",
+                      "hasRemainder": true,
+                      "decisionKey": "decimalRemainder",
+                      "step4Options": [
+                          {
+                              "key": "t1_15_decimal_rem",
+                              "title": "【小數餘數合理性檢驗】餘數小數點對齊被除數為 0.3 公升，且餘數小於除數 (0.3 < 0.8)",
+                              "desc": "在小數除法中，餘數的小數點必須垂直對齊原被除數為 0.3 公升；剩下的 0.3 公升小於除數 0.8 公升，最多裝滿 9 瓶，剩下 0.3 公升。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_15_fraction_big_quotient",
+                              "title": "【分裝商數檢驗】除以小於 1 的除數 (0.8)，商 (9 瓶) 比被除數 (7.5) 大完全合理",
+                              "desc": "因為每瓶規格 0.8 公升小於 1 公升，1 公升就能裝超過 1 瓶，所以 7.5 公升分裝出的瓶數必定比 7.5 大，完全符合數學規律！",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_15_distractor_rem_3L",
+                              "title": "【整數餘數認定】直式除法去小數點計算（75 ÷ 8 = 9 餘 3），剩下的鮮奶是 3 公升",
+                              "desc": "將被除數與除數同乘以 10 轉為整數計算，算出的餘數 3 即為剩下 3 公升鮮奶。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：在小數除法中，餘數的小數點必須垂直對齊原本被除數的小數點（7.5）！餘數 3 真正的數值是「0.3 公升」，一瓶也才 0.8 公升，不可能剩下 3 公升喔！"
+                          },
+                          {
+                              "key": "t1_15_distractor_quotient_less",
+                              "title": "【商數檢核】檢核算出來的「商」是否小於「除數」",
+                              "desc": "檢查算出來的商數有沒有比除數小（商 9 大於除數 0.8）。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：除法合理性中真正需要檢核的是「餘數小於除數」（剩下的 0.3 公升小於一瓶 0.8 公升），而不是「商小於除數」喔！而且除以小於 1 的數，商本來就會比除數和被除數大！"
+                          }
+                      ],
+                      "chipsPool": [
+                                "7.5 公升鮮奶",
+                                "每 0.8 公升裝一瓶",
+                                "裝滿了 9 瓶",
+                                "還剩下 0.3 公升",
+                                "0.3 小於一瓶 0.8 公升",
+                                "除數小於1商比被除數大",
+                                "最多裝 9 瓶剩 0.3 公升",
+                                "剩下 3 公升鮮奶",
+                                "剩下 0.8 公升",
+                                "可以裝 10 瓶"
+                      ],
+                      "distractors": [
+                                "剩下 3 公升鮮奶",
+                                "剩下 0.8 公升",
+                                "可以裝 10 瓶"
+                      ],
+                      "reasonablenessPrompt": "做直式除法時，餘數的「3」位置在十分位，代表 0.3 公升！除數 0.8 < 1，商 9 比被除數 7.5 大完全合理；0.3 公升確實小於一整瓶 0.8 公升（0.3 < 0.8），不夠再裝滿一瓶，完全合理！",
+                      "decisionExplain": "直式計算時，餘數的小數點必須垂直對齊原本被除數的小數點，所以餘數是 0.3 公升。除以小於 1 的除數，商 9 比被除數 7.5 大；0.3 公升小於一瓶容量 0.8 公升（0.3 < 0.8），不夠裝滿一瓶，所以答案是最多裝滿 9 瓶，剩下 0.3 公升鮮奶。",
+                      "finalAnswer": "最多裝 9 瓶，剩下 0.3 公升鮮奶",
+                      "hint": "小數除法求餘數時，除數 0.8 小於 1，商比 7.5 大很正常；特別注意餘數的小數點要跟原本被除數對齊喔！"
+            },
+            {
+                      "id": "T1_16",
+                      "grade": 6,
+                      "curriculumCode": "108課綱 N-6-4",
+                      "theme": 1,
+                      "domain": "decimal",
+                      "title": "白米分裝小保鮮袋",
+                      "subType": "小單位分裝 (小數除以小於1)",
+                      "focus": "小數分裝：除以小於 1 商變大",
+                      "text": "廚房有一大袋 <mark>6 公斤</mark> 的白米，每 <mark>0.4 公斤</mark> 分裝成一個小保鮮袋，總共可以分裝成幾袋？",
+                      "dividendName": "6 公斤白米",
+                      "dividendNum": "6",
+                      "divisorName": "每袋裝 0.4 公斤",
+                      "divisorNum": "0.4",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每袋 0.4 公斤，求袋數)",
+                      "equationStr": "6 ÷ 0.4 = 15",
+                      "resultQuotient": "15",
+                      "resultRemainder": "0",
+                      "resultUnit": "袋",
+                      "remainderUnit": "",
+                      "hasRemainder": false,
+                      "decisionKey": "fractionBigQuotient",
+                      "step4Options": [
+                          {
+                              "key": "t1_16_decimal_big",
+                              "title": "【小數分裝商數檢驗】除數 0.4 公斤小於 1，分裝出的袋數 (15 袋) 比原本公斤數 (6) 大",
+                              "desc": "每袋規格 0.4 公斤小於 1 公斤，1 公斤就能裝 2.5 袋，所以 6 公斤能裝 15 袋完全符合數學規律！",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_16_exact_check",
+                              "title": "【整除驗算】15 袋各重 0.4 公斤，15 × 0.4 = 6.0 公斤，完全分完沒有剩餘",
+                              "desc": "將袋數乘上每袋重量，總重剛好等於 6 公斤。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_16_distractor_small",
+                              "title": "【除法縮小檢驗】6 公斤分裝後的總袋數，必定要比原本的總公斤數 (6) 還要少",
+                              "desc": "認為進行除法計算後數值必定變小，總共只能分裝成 1.5 袋或 2.4 袋。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：因為一袋才 0.4 公斤（不到半公斤），每一公斤就能裝 2.5 袋，6 公斤分裝出來的袋數當然會比 6 更多喔！"
+                          },
+                          {
+                              "key": "t1_16_distractor_quotient_less",
+                              "title": "【商數檢核】檢核算出來的袋數是否小於除數 0.4",
+                              "desc": "檢查算出來的袋數有沒有小於 0.4。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：袋數是 15 袋，除以小於 1 的小數，商數必定大於除數與被除數，不需要檢核商小於除數喔！"
+                          }
+                      ],
+                      "chipsPool": [
+                                "6 公斤白米",
+                                "每 0.4 公斤裝一袋",
+                                "0.4 公斤比 1 公斤小",
+                                "1 公斤就能裝 2.5 袋",
+                                "所以 6 公斤能裝 15 袋",
+                                "商比被除數 6 還大很合理",
+                                "只能裝 1.5 袋",
+                                "只能裝 2.4 袋",
+                                "除以 0.4 答案一定變小"
+                      ],
+                      "distractors": [
+                                "只能裝 1.5 袋",
+                                "只能裝 2.4 袋",
+                                "除以 0.4 答案一定變小"
+                      ],
+                      "reasonablenessPrompt": "1 袋只有 0.4 公斤（不到半公斤），光是 1 公斤白米就可以裝滿 2 袋還多一點，那 6 公斤白米分裝出來的袋數當然會比 6 還多！算出 15 袋非常合理！千萬不要以為除法算出來的結果一定會比原來的數字小喔！",
+                      "decisionExplain": "當除數小於 1（0.4 < 1）時，代表每份的規格比 1 個標準單位還要小，因此分割出來的份數一定比原本的總量還要多！6 ÷ 0.4 = 15 袋，驗算 15 × 0.4 = 6 公斤，完全正確！",
+                      "finalAnswer": "15 袋",
+                      "hint": "每袋只有 0.4 公斤（比 1 公斤還小），想想看分出來的袋數會比 6 袋多還是少？"
+            },
+            {
+                      "id": "T1_17",
+                      "grade": 6,
+                      "curriculumCode": "108課綱 N-6-4",
+                      "theme": 1,
+                      "domain": "decimal",
+                      "title": "水龍頭流水分裝時間",
+                      "subType": "小數分裝 (求分鐘數)",
+                      "focus": "總水量 ÷ 每分鐘水量 = 需要的分鐘數",
+                      "text": "水龍頭每分鐘流出 <mark>3.7 公升</mark> 的水，累積 <mark>25.16 公升</mark> 的水，需要流多少分鐘？",
+                      "dividendName": "累積總水量 25.16 公升",
+                      "dividendNum": "25.16",
+                      "divisorName": "每分鐘流出 3.7 公升",
+                      "divisorNum": "3.7",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (每分鐘固定 3.7 公升，求需要幾分鐘)",
+                      "equationStr": "25.16 ÷ 3.7 = 6.8",
+                      "resultQuotient": "6.8",
+                      "resultRemainder": "0",
+                      "resultUnit": "分鐘",
+                      "remainderUnit": "",
+                      "hasRemainder": false,
+                      "decisionKey": "fractionBigQuotient",
+                      "step4Options": [
+                          {
+                              "key": "t1_17_decimal_check",
+                              "title": "【小數運算合理性檢驗】累積 25.16 公升除以每分鐘 3.7 公升，得到 6.8 分鐘合常理",
+                              "desc": "水龍頭每分鐘流 3.7 公升，流 6.8 分鐘累積 25.16 公升，數值與時間長度合理。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_17_exact_check",
+                              "title": "【整除驗算】6.8 分鐘 × 每分鐘 3.7 公升 = 25.16 公升，完全吻合無剩餘",
+                              "desc": "代回乘法算式，總水量完全吻合。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_17_distractor_inv",
+                              "title": "【單位流量相除】用每分鐘 3.7 公升除以總水量 25.16 公升求時間",
+                              "desc": "算式列為 3.7 ÷ 25.16。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：要平分或分裝的總量是「總水量 25.16 公升」，應該放在被除數，每分鐘 3.7 公升是除數，不能顛倒相除喔！"
+                          },
+                          {
+                              "key": "t1_17_distractor_multiply",
+                              "title": "【流量相乘檢驗】將總水量 25.16 公升乘以每分鐘 3.7 公升，算得需要 93.092 分鐘",
+                              "desc": "直接計算 25.16 × 3.7 = 93.092 分鐘。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：題目是已知總水量與每分鐘流量，求需要的分鐘數，應該用除法計算喔！"
+                          }
+                      ],
+                      "chipsPool": [
+                                "總水量 25.16 公升",
+                                "每分鐘 3.7 公升",
+                                "25.16 裡面有幾個 3.7",
+                                "算式列為 25.16 ÷ 3.7",
+                                "計算出需要的分鐘數",
+                                "分鐘數合情合理",
+                                "算式列為 3.7 ÷ 25.16",
+                                "計算出 93.092 分鐘",
+                                "用乘法 25.16 × 3.7"
+                      ],
+                      "distractors": [
+                                "算式列為 3.7 ÷ 25.16",
+                                "計算出 93.092 分鐘",
+                                "用乘法 25.16 × 3.7"
+                      ],
+                      "reasonablenessPrompt": "1 分鐘流 3.7 公升，流 6 分鐘就有 22.2 公升，流 7 分鐘就有 25.9 公升。累積 25.16 公升的時間必定介於 6 到 7 分鐘之間，算出 6.8 分鐘完全合情合理！",
+                      "decisionExplain": "題目問累積 25.16 公升需要幾分鐘，是看總水量中包含幾個 3.7 公升（每份規格放除數）。25.16 ÷ 3.7 = 6.8 分鐘。驗算 6.8 × 3.7 = 25.16 公升，完全吻合！",
+                      "finalAnswer": "6.8 分鐘",
+                      "hint": "想一想：要累積的總水量是被分的主角，每分鐘流出的量是每一份的規格！"
+            },
+            {
+                      "id": "T1_18",
+                      "grade": 6,
+                      "curriculumCode": "108課綱 N-6-4",
+                      "theme": 1,
+                      "domain": "decimal",
+                      "title": "全家喝鮮奶瓶數分裝",
+                      "subType": "小數分裝 (小數除以大數，商小於1)",
+                      "focus": "已喝水量 ÷ 一整瓶容量 = 喝了幾瓶 (商小於1)",
+                      "text": "家庭號鮮奶一瓶是 <mark>1.8 公升</mark>，今日全家共喝了 <mark>0.9 公升</mark>，是喝了幾瓶？",
+                      "dividendName": "喝掉的鮮奶 0.9 公升",
+                      "dividendNum": "0.9",
+                      "divisorName": "一整瓶容量 1.8 公升",
+                      "divisorNum": "1.8",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (以 1.8 公升為一瓶單位，求 0.9 公升相當於幾瓶)",
+                      "equationStr": "0.9 ÷ 1.8 = 0.5",
+                      "resultQuotient": "0.5",
+                      "resultRemainder": "0",
+                      "resultUnit": "瓶",
+                      "remainderUnit": "",
+                      "hasRemainder": false,
+                      "decisionKey": "decimalSmallQuotient",
+                      "step4Options": [
+                          {
+                              "key": "t1_18_small_check",
+                              "title": "【小數商數檢驗】喝的量 (0.9 公升) 比一整瓶 (1.8 公升) 少，商小於 1 (0.5 瓶) 完全合理",
+                              "desc": "喝的量未滿一整瓶，以一整瓶為單位算出的結果必定小於 1 (0.5 瓶，即半瓶)。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_18_exact_check",
+                              "title": "【整除驗算】0.5 瓶 × 每瓶 1.8 公升 = 0.9 公升，完全吻合",
+                              "desc": "將瓶數乘上一瓶容量，完全吻合喝掉的總量。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_18_distractor_big",
+                              "title": "【顛倒相除檢驗】用每瓶 1.8 公升除以喝掉的 0.9 公升，算得喝了 2 瓶",
+                              "desc": "以喝掉的 0.9 公升為除數，計算 1.8 ÷ 0.9 = 2 瓶。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：全家只喝了 0.9 公升，連一瓶 (1.8公升) 都喝不完，怎麼可能喝了 2 瓶呢？被除數小於除數時，商必定小於 1 喔！"
+                          },
+                          {
+                              "key": "t1_18_distractor_multiply",
+                              "title": "【乘法相乘檢驗】將一瓶 1.8 公升與喝掉的 0.9 公升相乘，算得喝了 1.62 瓶",
+                              "desc": "直接計算 1.8 × 0.9 = 1.62 瓶。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：求 0.9 公升相當於幾瓶 1.8 公升的鮮奶，是要以 1.8 公升為基準單位進行除法（0.9 ÷ 1.8），不能用乘法喔！"
+                          }
+                      ],
+                      "chipsPool": [
+                                "喝了 0.9 公升",
+                                "一瓶是 1.8 公升",
+                                "以一整瓶為單位放除數",
+                                "算式列為 0.9 ÷ 1.8",
+                                "計算相當於幾瓶鮮奶",
+                                "被除數比除數小商小於1",
+                                "計算相當於 2 瓶鮮奶",
+                                "算式列為 1.8 ÷ 0.9",
+                                "算式列為 1.8 × 0.9"
+                      ],
+                      "distractors": [
+                                "計算相當於 2 瓶鮮奶",
+                                "算式列為 1.8 ÷ 0.9",
+                                "算式列為 1.8 × 0.9"
+                      ],
+                      "reasonablenessPrompt": "全家只喝了 0.9 公升，連一整瓶（1.8 公升）都還沒喝完，算出來的瓶數一定要小於 1 瓶！算出 0.5 瓶（剛好半瓶，0.9 × 2 = 1.8）合情合理！如果算出 2 瓶就太誇張了，根本沒喝那麼多！",
+                      "decisionExplain": "想知道喝了幾瓶，是以「一整瓶的容量 1.8 公升」作為計量基準（除數）。實際喝掉的 0.9 公升是被除數：0.9 ÷ 1.8 = 0.5 瓶（即半瓶）。被除數小於除數，商小於 1 完全合理！",
+                      "finalAnswer": "0.5 瓶 (或 1/2 瓶)",
+                      "hint": "千萬別看數字大就直接放前面！全家只喝了 0.9 公升，連一整瓶都不到，除數要放一整瓶的容量 1.8 公升！"
+            },
+            {
+                      "id": "T1_19",
+                      "grade": 6,
+                      "curriculumCode": "108課綱 N-6-4",
+                      "theme": 1,
+                      "domain": "decimal",
+                      "title": "滯洪池步道跑步圈數",
+                      "subType": "小數分裝 (小數除以大數，商小於1)",
+                      "focus": "已跑距離 ÷ 一整圈距離 = 跑了幾圈 (商小於1)",
+                      "text": "沿著滯洪池步道跑一圈的距離是 <mark>2.5 公里</mark>，小堂跑了 <mark>1 公里</mark>，是跑了幾圈？",
+                      "dividendName": "小堂跑的距離 1 公里",
+                      "dividendNum": "1",
+                      "divisorName": "跑一圈距離 2.5 公里",
+                      "divisorNum": "2.5",
+                      "divisionType": "containment",
+                      "divisionTypeName": "分裝 (以 2.5 公里為一圈單位，求 1 公里相當於幾圈)",
+                      "equationStr": "1 ÷ 2.5 = 0.4",
+                      "resultQuotient": "0.4",
+                      "resultRemainder": "0",
+                      "resultUnit": "圈",
+                      "remainderUnit": "",
+                      "hasRemainder": false,
+                      "decisionKey": "decimalSmallQuotient",
+                      "step4Options": [
+                          {
+                              "key": "t1_19_small_check",
+                              "title": "【小數商數檢驗】跑的距離 (1 公里) 比一整圈 (2.5 公里) 短，商小於 1 (0.4 圈) 完全合理",
+                              "desc": "跑的距離未滿一整圈，以一整圈為單位算出的圈數必定小於 1 (0.4 圈)。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_19_exact_check",
+                              "title": "【整除驗算】0.4 圈 × 每圈 2.5 公里 = 1.0 公里，完全吻合",
+                              "desc": "將圈數乘上一圈長度，完全吻合跑的距離。",
+                              "isCorrect": true
+                          },
+                          {
+                              "key": "t1_19_distractor_big",
+                              "title": "【顛倒相除檢驗】用一圈 2.5 公里除以跑的距離 1 公里，算得跑了 2.5 圈",
+                              "desc": "以跑的距離 1 公里為除數，計算 2.5 ÷ 1 = 2.5 圈。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：跑的距離只有 1 公里，而一整圈是 2.5 公里，連一圈都沒跑完，怎麼可能跑了 2.5 圈呢？被除數小於除數時，商必定小於 1 喔！"
+                          },
+                          {
+                              "key": "t1_19_distractor_multiply",
+                              "title": "【乘法相乘檢驗】將一圈 2.5 公里與跑的距離 1 公里相乘，算得跑了 2.5 圈",
+                              "desc": "直接計算 2.5 × 1 = 2.5 圈。",
+                              "isCorrect": false,
+                              "feedback": "再想一想：求 1 公里是一整圈 2.5 公里的幾倍（幾圈），是要用除法 1 ÷ 2.5 喔！"
+                          }
+                      ],
+                      "chipsPool": [
+                                "跑了 1 公里",
+                                "一圈是 2.5 公里",
+                                "以一整圈為單位放除數",
+                                "算式列為 1 ÷ 2.5",
+                                "計算跑了幾圈步道",
+                                "跑的距離比一圈短商小於1",
+                                "計算跑了 2.5 圈",
+                                "算式列為 2.5 ÷ 1",
+                                "算式列為 2.5 × 1"
+                      ],
+                      "distractors": [
+                                "計算跑了 2.5 圈",
+                                "算式列為 2.5 ÷ 1",
+                                "算式列為 2.5 × 1"
+                      ],
+                      "reasonablenessPrompt": "跑一圈需要 2.5 公里，小堂只跑了 1 公里，連半圈（1.25 公里）都不到，算出來的圈數必定小於 1 圈！算出來 0.4 圈（0.4 < 1）非常合情合理！如果寫成 2.5 圈就顛倒了！",
+                      "decisionExplain": "題目問的是「跑了幾圈」，所以要把「一整圈的長度 2.5 公里」當作除數。實際跑的 1 公里放在被除數：1 ÷ 2.5 = 0.4 圈。被除數小於除數，商小於 1 完全正確！",
+                      "finalAnswer": "0.4 圈 (或 2/5 圈)",
+                      "hint": "問跑了幾圈，基準是一整圈的長度（2.5 公里），所以除數要放 2.5 公里！"
             },
 
             // ==================== 【主題二：乘除互逆解謎室】 ====================
@@ -1341,7 +2443,8 @@
                 divisionType: "inverse",
                 divisionTypeName: "乘除互逆 (求未知乘數：寬 = 面積 ÷ 長)",
                 targetUnknown: "multiplier", // 未知乘數
-                forwardFormulaStr: "12 (已知長) × ( 未知寬 ) = 96 (面積)",
+                forwardFormulaStr: "12 × ( 未知寬 ) = 96",
+                unknownLabel: "( 未知寬 )",
                 inverseFormulaStr: "未知寬 = 96 ÷ 12",
                 inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：原本乘法關係是「長 (被乘數 12) × 寬 (未知乘數) = 面積 (積 96)」，依乘除互逆還原：未知寬 (乘數) = 積 (96) ÷ 已知長 (被乘數 12) = 8 公尺！",
                 equationStr: "96 ÷ 12 = 8",
@@ -1352,7 +2455,7 @@
                 hasRemainder: false,
                 decisionKey: "inverseVerify",
                 chipsPool: [
-                    "長是 12 公尺(被乘數)", "寬是未知量(乘數)", "長(被乘數) × 寬(乘數) = 面積", "乘除互逆：未知乘數 = 積 ÷ 被乘數", "解題算式：96 ÷ 12", "求出花圃寬度",
+                    "長是 12 公尺", "寬是未知的量", "長 × 寬 = 面積", "乘除互逆：未知寬 = 面積 ÷ 長", "解題算式：96 ÷ 12", "求出花圃寬度",
                     "用乘法 96 × 12", "算式列為 12 ÷ 96"
                 ],
                 distractors: ["用乘法 96 × 12", "算式列為 12 ÷ 96"],
@@ -1378,7 +2481,8 @@
                 divisionType: "inverse",
                 divisionTypeName: "乘除互逆 (求未知乘數：高 = 面積 ÷ 底)",
                 targetUnknown: "multiplier", // 未知乘數
-                forwardFormulaStr: "8.5 (已知底) × ( 未知高 ) = 42.5 (面積)",
+                forwardFormulaStr: "8.5 × ( 未知高 ) = 42.5",
+                unknownLabel: "( 未知高 )",
                 inverseFormulaStr: "未知高 = 42.5 ÷ 8.5",
                 inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：原本乘法關係是「底 (被乘數 8.5) × 高 (未知乘數) = 面積 (積 42.5)」，依乘除互逆還原：未知高 (乘數) = 積 (42.5) ÷ 已知底 (被乘數 8.5) = 5 公分！",
                 equationStr: "42.5 ÷ 8.5 = 5",
@@ -1389,7 +2493,7 @@
                 hasRemainder: false,
                 decisionKey: "inverseVerify",
                 chipsPool: [
-                    "底是 8.5 公分(被乘數)", "高是未知量(乘數)", "底(被乘數) × 高(乘數) = 面積", "乘除互逆：未知乘數 = 積 ÷ 被乘數", "解題算式：42.5 ÷ 8.5", "求出招牌的高",
+                    "底是 8.5 公分", "高是未知的量", "底 × 高 = 面積", "乘除互逆：未知高 = 面積 ÷ 底", "解題算式：42.5 ÷ 8.5", "求出招牌的高",
                     "用乘法 42.5 × 8.5", "算式列為 8.5 ÷ 42.5"
                 ],
                 distractors: ["用乘法 42.5 × 8.5", "算式列為 8.5 ÷ 42.5"],
@@ -1415,7 +2519,8 @@
                 divisionType: "inverse",
                 divisionTypeName: "折扣價格還原 (求未知被乘數：原價 = 售價 ÷ 折數)",
                 targetUnknown: "multiplicand", // 未知被乘數
-                forwardFormulaStr: "( 未知原價 ) × 0.8 (折數乘數) = 720 (特價)",
+                forwardFormulaStr: "( 未知原價 ) × 0.8 = 720",
+                unknownLabel: "( 未知原價 )",
                 inverseFormulaStr: "未知原價 = 720 ÷ 0.8",
                 inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：原本乘法關係是「原價 (未知被乘數) × 折數 (乘數 0.8) = 售價 (積 720)」，依乘除互逆還原：未知原價 (被乘數) = 積 (720) ÷ 已知折數 (乘數 0.8) = 900 元！",
                 equationStr: "720 ÷ 0.8 = 900",
@@ -1426,7 +2531,7 @@
                 hasRemainder: false,
                 decisionKey: "inverseVerify",
                 chipsPool: [
-                    "原價是未知基準(被乘數)", "折數是倍數 0.8(乘數)", "原價(被乘數) × 0.8(乘數) = 720", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "解題算式：720 ÷ 0.8", "求出球鞋原價",
+                    "原價是未知的價格", "打八折是倍數 0.8", "原價 × 0.8 = 720", "乘除互逆：未知原價 = 720 ÷ 0.8", "解題算式：720 ÷ 0.8", "求出球鞋原價",
                     "用乘法 720 × 0.8", "原價比特價更便宜"
                 ],
                 distractors: ["用乘法 720 × 0.8", "原價比特價更便宜"],
@@ -1452,7 +2557,8 @@
                 divisionType: "inverse",
                 divisionTypeName: "圓周公式逆推 (求未知被乘數：直徑 = 周長 ÷ 3.14)",
                 targetUnknown: "multiplicand", // 未知被乘數
-                forwardFormulaStr: "( 未知直徑 ) × 3.14 (圓周率乘數) = 31.4 (圓周長)",
+                forwardFormulaStr: "( 未知直徑 ) × 3.14 = 31.4",
+                unknownLabel: "( 未知直徑 )",
                 inverseFormulaStr: "未知直徑 = 31.4 ÷ 3.14",
                 inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：原本乘法關係是「直徑 (未知被乘數) × 圓周率 (乘數 3.14) = 圓周長 (積 31.4)」，依乘除互逆還原：未知直徑 (被乘數) = 積 (31.4) ÷ 已知圓周率 (乘數 3.14) = 10 公尺！",
                 equationStr: "31.4 ÷ 3.14 = 10",
@@ -1463,7 +2569,7 @@
                 hasRemainder: false,
                 decisionKey: "inverseVerify",
                 chipsPool: [
-                    "直徑是未知基準(被乘數)", "圓周率是 3.14(乘數)", "直徑(被乘數) × 3.14(乘數) = 周長", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "解題算式：31.4 ÷ 3.14", "求出花圃直徑",
+                    "直徑是未知的長度", "圓周率是 3.14", "直徑 × 3.14 = 圓周長", "乘除互逆：未知直徑 = 31.4 ÷ 3.14", "解題算式：31.4 ÷ 3.14", "求出花圃直徑",
                     "用乘法 31.4 × 3.14", "算式列為 3.14 ÷ 31.4"
                 ],
                 distractors: ["用乘法 31.4 × 3.14", "算式列為 3.14 ÷ 31.4"],
@@ -1489,7 +2595,8 @@
                 divisionType: "inverse",
                 divisionTypeName: "年齡倍數差還原 (求未知被乘數：弟弟年齡 = 年齡差 ÷ 倍數差)",
                 targetUnknown: "multiplicand", // 未知被乘數 (弟弟年齡是基準1倍)
-                forwardFormulaStr: "( 未知弟弟年齡 ) × (3 - 1 份倍數差) = 12 (年齡差)",
+                forwardFormulaStr: "( 未知弟弟年齡 ) × 2 = 12",
+                unknownLabel: "( 未知弟弟年齡 )",
                 inverseFormulaStr: "未知弟弟年齡 = 12 ÷ 2",
                 inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：原本乘法關係是「弟弟年齡 (未知基準被乘數) × 倍數差 (乘數 2) = 年齡差 (積 12)」，依乘除互逆還原：弟弟年齡 (被乘數) = 積 (12) ÷ 乘數 (2) = 6 歲！",
                 equationStr: "12 ÷ 2 = 6",
@@ -1500,7 +2607,7 @@
                 hasRemainder: false,
                 decisionKey: "inverseVerify",
                 chipsPool: [
-                    "弟弟年齡是基準(被乘數)", "哥哥比弟弟多 3 - 1 = 2 份(乘數)", "弟弟(被乘數) × 2(乘數) = 12(積)", "乘除互逆：未知被乘數 = 積 ÷ 乘數", "解題算式：12 ÷ 2", "求出弟弟年齡",
+                    "弟弟年齡是基準量", "哥哥比弟弟多 2 份", "弟弟年齡 × 2 = 年齡差 12", "乘除互逆：未知弟弟年齡 = 12 ÷ 2", "解題算式：12 ÷ 2", "求出弟弟年齡",
                     "相差 2 份對應 12 歲", "直接除以 3 倍"
                 ],
                 distractors: ["直接除以 3 倍"],
@@ -1526,7 +2633,8 @@
                 divisionType: "inverse",
                 divisionTypeName: "乘除互逆 (求未知乘數倍數：倍數 = 西瓜重 ÷ 奇異果重)",
                 targetUnknown: "multiplier", // 未知乘數 (倍數未知)
-                forwardFormulaStr: "0.08 (奇異果基準被乘數) × ( 未知倍數 ) = 5 (西瓜重)",
+                forwardFormulaStr: "0.08 × ( 未知倍數 ) = 5",
+                unknownLabel: "( 未知倍數 )",
                 inverseFormulaStr: "未知倍數 = 5 ÷ 0.08",
                 inverseRuleDesc: "依 108 課綱「被乘數 × 乘數 = 積」：原本乘法關係是「奇異果重 (基準被乘數 0.08) × 倍數 (未知乘數) = 西瓜重 (積 5)」，依乘除互逆還原：未知倍數 (乘數) = 積 (5) ÷ 基準 (0.08) = 62.5 倍！",
                 equationStr: "5 ÷ 0.08 = 62.5",
@@ -1537,7 +2645,7 @@
                 hasRemainder: false,
                 decisionKey: "inverseVerify",
                 chipsPool: [
-                    "奇異果 0.08 公斤(基準被乘數)", "倍數是未知量(乘數)", "0.08(被乘數) × 倍數(乘數) = 5", "乘除互逆：未知乘數 = 積 ÷ 被乘數", "解題算式：5 ÷ 0.08", "求出西瓜是奇異果的幾倍",
+                    "奇異果重 0.08 公斤", "倍數是未知的數量", "0.08 × 未知倍數 = 5", "乘除互逆：未知倍數 = 5 ÷ 0.08", "解題算式：5 ÷ 0.08", "求出西瓜是奇異果的幾倍",
                     "算式列為 0.08 ÷ 5", "用乘法 5 × 0.08"
                 ],
                 distractors: ["算式列為 0.08 ÷ 5", "用乘法 5 × 0.08"],
@@ -1555,6 +2663,9 @@
             filteredQuestions: [],
             currentQIndex: 0,
             step: 1,                // 1: 識別主角, 2: 意義分法, 3: 算式與字卡, 4: 剩下什麼與合理性檢驗
+            step1ReadyToAdvance: false,
+            step2ReadyToAdvance: false,
+            step3ReadyToAdvance: false,
             selectedStep1: null,
             selectedStep2: null,
             inputStep3: { dividend: "", divisor: "", quotient: "", remainder: "" },
@@ -1665,6 +2776,9 @@
             if (!state.filteredQuestions[idx]) return;
             state.currentQIndex = idx;
             state.step = 1;
+            state.step1ReadyToAdvance = false;
+            state.step2ReadyToAdvance = false;
+            state.step3ReadyToAdvance = false;
             state.selectedStep1 = null;
             state.selectedStep2 = null;
             state.inputStep3 = { dividend: "", divisor: "", quotient: "", remainder: "" };
@@ -1677,7 +2791,8 @@
             const domainLabel = q.domain === 'integer' ? '🔢 整數' : (q.domain === 'fraction' ? '🍰 分數' : '🔘 小數');
             const gradeEl = document.getElementById('meta-grade');
             if (gradeEl) {
-                gradeEl.textContent = q.grade ? `適合${q.grade}年級 (${q.curriculumCode || ''})` : '國小數學';
+                const gradeCh = ['', '', '', '三', '四', '五', '六'][q.grade] || q.grade;
+            gradeEl.textContent = q.grade ? `適合${gradeCh}年級 (${q.curriculumCode || ''})` : '國小數學';
             }
             document.getElementById('meta-domain').textContent = domainLabel;
             document.getElementById('meta-subtype').textContent = q.subType;
@@ -1739,13 +2854,17 @@
 
                 if (state.activeTheme === 1) {
                     promptEl.textContent = "【第 1 問：什麼被分？】請點選題目中「被拿去分的主角」：";
-                    // 移除字卡中括號內的直接提示，讓學生依生活情境自行判斷主角
-                    const cleanName = s => (s || '').replace(/\s*\([^)]*\)/g, '').trim();
-                    const choices = [
-                        { id: 'correct', title: cleanName(q.dividendName), desc: '點選此項目確認為主角' },
-                        { id: 'wrong', title: cleanName(q.divisorName), desc: '點選此項目確認為主角' }
-                    ].sort(() => Math.random() - 0.5);
-                    renderChoiceCards(choices, body, 'selectedStep1', 'id');
+                    if (q.step1Choices && q.step1Choices.length > 0) {
+                        const shuffled = [...q.step1Choices].sort(() => Math.random() - 0.5);
+                        renderChoiceCards(shuffled, body, 'selectedStep1', 'id');
+                    } else {
+                        const cleanName = s => (s || '').replace(/\s*\([^)]*\)/g, '').trim();
+                        const choices = [
+                            { id: 'correct', title: cleanName(q.dividendName), desc: '點選此項目確認為主角' },
+                            { id: 'wrong', title: cleanName(q.divisorName), desc: '點選此項目確認為主角' }
+                        ].sort(() => Math.random() - 0.5);
+                        renderChoiceCards(choices, body, 'selectedStep1', 'id');
+                    }
                 } else {
                     promptEl.textContent = "【第 1 問：這個題目想知道什麼？】找出未知的被乘數或乘數：";
                     const isMultiplicand = q.targetUnknown === 'multiplicand';
@@ -1780,6 +2899,7 @@
                 } else {
                     promptEl.textContent = "【第 2 問：怎麼依題目寫算式？】依題目線索列出乘法算式：";
                     const isMultiplicand = q.targetUnknown === 'multiplicand';
+                    const unknownTag = q.unknownLabel || '( 未知數 )';
                     
                     const choices = [
                         { 
@@ -1791,14 +2911,14 @@
                         },
                         { 
                             type: 'wrong_reverse_order', 
-                            title: `📝 算式：${isMultiplicand ? `${q.divisorNum} × ( 未知數 ) = ${q.dividendNum}` : `( 未知數 ) × ${q.divisorNum} = ${q.dividendNum}`}`, 
+                            title: `📝 算式：${isMultiplicand ? `${q.divisorNum} × ${unknownTag} = ${q.dividendNum}` : `${unknownTag} × ${q.divisorNum} = ${q.dividendNum}`}`, 
                             desc: isMultiplicand
                                 ? `以題目給定的已知數為基準量，乘上未知數，得到題目的總結果。`
                                 : `以未知數為基準量，乘上題目給定的已知數，得到題目的總結果。`
                         },
                         { 
                             type: 'wrong_multiply_both', 
-                            title: `📝 算式：${q.dividendNum} × ${q.divisorNum} = ( 未知數 )`, 
+                            title: `📝 算式：${q.dividendNum} × ${q.divisorNum} = ${unknownTag}`, 
                             desc: `將題目中出現的兩個已知數字直接相乘，求出未知數。` 
                         }
                     ].sort(() => Math.random() - 0.5);
@@ -1811,25 +2931,29 @@
                 promptEl.textContent = state.activeTheme === 1 
                     ? "【第 3 問：分的結果是什麼？剩下什麼？】請填入算式與商、餘數，並用下方字卡拼出它的意思：" 
                     : "【第 3 問：怎麼依乘除關係來解題？】依乘除互逆寫出解題算式：[積] ÷ [已知數] = [未知數]，並用下方字卡拼出它的意思：";
-                submitBtn.textContent = "檢查算式與字卡 ➔";
+                submitBtn.textContent = "保留作答，進入合理性檢驗 ➔";
                 submitBtn.disabled = false;
 
                 const eqDiv = document.createElement('div');
                 eqDiv.className = 'equation-builder';
 
                 if (q.hasRemainder) {
+                    const extraGuide = (q.id === 'T1_08') 
+                        ? '<div style="margin-bottom: 8px; font-size: 0.88rem; color: var(--primary); font-weight: 600;">💡 提示：本題求以「帶分數」記記看，請填寫除法算式後，在下方語意字卡選取【答案是 5又1/3 條】帶分數選項！</div>' 
+                        : '';
                     eqDiv.innerHTML = `
+                        ${extraGuide}
                         <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-muted);">
                             請填寫算式：[被除數] ÷ [除數] = [商] ... [餘數]
                         </div>
                         <div class="equation-inputs-row">
-                            <input type="text" id="inp-dividend" class="eq-input-box" placeholder="被除數" value="${state.inputStep3.dividend}">
+                            <input type="text" id="inp-dividend" class="eq-input-box" placeholder="被除數" value="${state.inputStep3.dividend}" oninput="state.step3ReadyToAdvance=false; document.getElementById('main-submit-btn').textContent='保留作答，進入合理性檢驗 ➔'; hideFeedback();">
                             <span class="eq-symbol">÷</span>
-                            <input type="text" id="inp-divisor" class="eq-input-box" placeholder="除數" value="${state.inputStep3.divisor}">
+                            <input type="text" id="inp-divisor" class="eq-input-box" placeholder="除數" value="${state.inputStep3.divisor}" oninput="state.step3ReadyToAdvance=false; document.getElementById('main-submit-btn').textContent='保留作答，進入合理性檢驗 ➔'; hideFeedback();">
                             <span class="eq-symbol">=</span>
-                            <input type="text" id="inp-quotient" class="eq-input-box" placeholder="商" value="${state.inputStep3.quotient}">
+                            <input type="text" id="inp-quotient" class="eq-input-box" placeholder="商" value="${state.inputStep3.quotient}" oninput="state.step3ReadyToAdvance=false; document.getElementById('main-submit-btn').textContent='保留作答，進入合理性檢驗 ➔'; hideFeedback();">
                             <span class="eq-symbol">...</span>
-                            <input type="text" id="inp-remainder" class="eq-input-box" placeholder="餘數" value="${state.inputStep3.remainder}">
+                            <input type="text" id="inp-remainder" class="eq-input-box" placeholder="餘數" value="${state.inputStep3.remainder}" oninput="state.step3ReadyToAdvance=false; document.getElementById('main-submit-btn').textContent='保留作答，進入合理性檢驗 ➔'; hideFeedback();">
                         </div>
                     `;
                 } else {
@@ -1838,11 +2962,11 @@
                             請填寫算式：[被除數] ÷ [除數] = [結果]（支援小數或分數）
                         </div>
                         <div class="equation-inputs-row">
-                            <input type="text" id="inp-dividend" class="eq-input-box" placeholder="被除數" value="${state.inputStep3.dividend}">
+                            <input type="text" id="inp-dividend" class="eq-input-box" placeholder="被除數" value="${state.inputStep3.dividend}" oninput="state.step3ReadyToAdvance=false; document.getElementById('main-submit-btn').textContent='保留作答，進入合理性檢驗 ➔'; hideFeedback();">
                             <span class="eq-symbol">÷</span>
-                            <input type="text" id="inp-divisor" class="eq-input-box" placeholder="除數" value="${state.inputStep3.divisor}">
+                            <input type="text" id="inp-divisor" class="eq-input-box" placeholder="除數" value="${state.inputStep3.divisor}" oninput="state.step3ReadyToAdvance=false; document.getElementById('main-submit-btn').textContent='保留作答，進入合理性檢驗 ➔'; hideFeedback();">
                             <span class="eq-symbol">=</span>
-                            <input type="text" id="inp-quotient" class="eq-input-box" placeholder="答案" value="${state.inputStep3.quotient}">
+                            <input type="text" id="inp-quotient" class="eq-input-box" placeholder="答案" value="${state.inputStep3.quotient}" oninput="state.step3ReadyToAdvance=false; document.getElementById('main-submit-btn').textContent='保留作答，進入合理性檢驗 ➔'; hideFeedback();">
                         </div>
                     `;
                 }
@@ -1864,14 +2988,41 @@
                 body.appendChild(chipsContainer);
 
                 renderChipsPool();
+                updateSentenceBox();
             }
             // ========== 步驟 4 (核心升級：合理性檢驗鏡與餘數決策) ==========
             else if (state.step === 4) {
                 stepTag.textContent = "步驟 4 / 4 🎯";
-                submitBtn.textContent = "完成本題推理 ➔";
+                submitBtn.textContent = "完成檢驗與本題推理 ➔";
                 submitBtn.disabled = true;
 
-                if (state.activeTheme === 1) {
+                // 保留步驟 3 作答畫面與字卡之檢驗鏡
+                const reviewBox = document.createElement('div');
+                reviewBox.className = 'step3-review-box';
+                
+                const userEqFormatted = `${state.inputStep3.dividend} ÷ ${state.inputStep3.divisor} = ${state.inputStep3.quotient}` + 
+                    (q.hasRemainder ? ` ... ${state.inputStep3.remainder}` : '');
+                
+                const chipsHtml = state.sentenceChips.map(c => `<span class="review-chip-item">${c}</span>`).join(' ➔ ');
+
+                reviewBox.innerHTML = `
+                    <div class="review-header">
+                        <span class="review-title">📋 <strong>步驟 3 作答畫面保留</strong>（請檢視你的算式與推論）：</span>
+                        <button class="review-edit-btn" onclick="backToStep3()">✏️ 返回修改算式或字卡</button>
+                    </div>
+                    <div class="review-eq-row">
+                        <span class="review-badge">你的算式</span>
+                        <span class="review-eq-text">${userEqFormatted}</span>
+                    </div>
+                    <div class="review-eq-row" style="margin-top: -4px;">
+                        <span class="review-badge" style="background: var(--warning-light); color: var(--warning);">語意詮釋</span>
+                        <div class="review-chips-list">${chipsHtml || '尚未選取字卡'}</div>
+                    </div>
+                `;
+                body.appendChild(reviewBox);
+
+                // 優先使用該題專屬量身打造的生活決策選項
+                if (q.step4Options && q.step4Options.length > 0) {
                     promptEl.textContent = `【第 4 問：這個答案合理嗎？生活決策】請檢驗生活情境決策：`;
 
                     const reasonBanner = document.createElement('div');
@@ -1881,18 +3032,44 @@
                     `;
                     body.appendChild(reasonBanner);
 
-                    const decisions = [
-                        { key: 'ceil', title: '🚘 一個都不能少 (商 + 1：無條件進入)', desc: '搭車、露營等，剩下的人也必須有位置，所以商要 + 1！' },
-                        { key: 'floor', title: '✂️ 不夠湊滿就算了 (取商：無條件捨去)', desc: '做手工藝、買東西等，剩下的不夠再做一件，只能取商！' },
-                        { key: 'gap', title: '🎯 還差多少湊滿？ (除數 - 餘數)', desc: '差額運算，求還差多少東西或材料才能再湊出一整份！' },
-                        { key: 'cycleRank', title: '🔄 週期看餘數 (決定位次)', desc: '完成整組循環後，餘數決定是下一輪循環裡的第幾個！' },
-                        { key: 'decimalRemainder', title: '🔘 合理性檢驗：剩下的量必須小於一瓶容量', desc: '小數點垂直對齊！剩下不夠再裝一瓶，餘數一定要小於除數！如果大於等於除數就錯了！' },
-                        { key: 'fractionRemainder', title: '🍰 合理性檢驗：剩下的長度必須小於做一朵所需長度', desc: '做完 3 朵花後剩下 1/4 公尺緞帶，因為 1/4 < 3/4（餘數小於除數），不夠再做一朵花，完全合理！' },
-                        { key: 'fractionBigQuotient', title: '🍰 分裝檢驗：除以小於 1，商反而變大', desc: '小單位切分，分割出來的段數/份數一定比原來多！' },
-                        { key: 'decimalSmallQuotient', title: '🔘 分裝檢驗：被除數比除數小，商一定小於 1', desc: '實際分到的量還不到一整份（例如不到一整瓶、不到一整圈），商必定小於 1！' },
-                        { key: 'averageMeaning', title: '📊 平均數合理性檢驗：介於最大值與最小值之間', desc: '平均值必定會落在整組數據的最多與最少之間，不可能比最少還少，也不可能比最多還多！' }
-                    ];
-                    renderPillar4Decisions(decisions, q.decisionKey, body);
+                    renderPillar4Decisions(q.step4Options, body);
+                } else if (state.activeTheme === 1) {
+                    promptEl.textContent = `【第 4 問：這個答案合理嗎？生活決策】請檢驗生活情境決策：`;
+
+                    const reasonBanner = document.createElement('div');
+                    reasonBanner.className = 'reasonableness-banner';
+                    reasonBanner.innerHTML = `
+                        <span>🔍 <strong>思考指引：</strong>餘數代表剩下的量，<strong>餘數一定要小於除數</strong>（不夠再湊一份）才合理！根據生活情境，剩下的量該如何處理？</span>
+                    `;
+                    body.appendChild(reasonBanner);
+
+                    // 嚴格領域隔離：分數題只出分數檢驗、小數題只出小數檢驗、整數題只出整數檢驗
+                    let decisions = [];
+                    if (q.domain === 'fraction') {
+                        decisions = [
+                            { key: 'fractionRemainder', title: '🍰 分數餘數合理性檢驗', desc: '計算後剩下的餘數必須小於除數，留意商與餘數的單位與換算。' },
+                            { key: 'fractionBigQuotient', title: '🍰 分數分裝商數檢驗 (除以小於 1 的數，商比被除數大)', desc: '當每份的規格小於 1 時，分割或分裝出來的總份數會比原本的總量還要多。' },
+                            { key: 'averageMeaning', title: '🍰 分數平分運算合理性檢驗', desc: '平分給指定份數求出的每份數值，必定會比原總數小且落在合理的數值區間。' },
+                            { key: 'exactDivision', title: '⏱️ 整除檢驗 (完全分完無剩餘)', desc: '依單位換算與每份規格計算，算式剛好整除沒有剩餘，所得的商數即為總份數。' }
+                        ];
+                    } else if (q.domain === 'decimal') {
+                        decisions = [
+                            { key: 'decimalRemainder', title: '🔘 小數餘數合理性檢驗', desc: '在小數除法中，餘數的小數點必須垂直對齊原被除數，且剩下的餘數必須小於除數。' },
+                            { key: 'decimalSmallQuotient', title: '🔘 小數商數檢驗 (被除數小於除數，商小於 1)', desc: '當被分的總量比一整份的規格還小時，分裝出來的結果必定不足 1 份（商小於 1）。' },
+                            { key: 'fractionBigQuotient', title: '🔘 小數分裝商數檢驗 (除以小於 1 的數，商比被除數大)', desc: '除數小於 1 時，分裝出來的總份數會比原本的總量還要多。' },
+                            { key: 'averageMeaning', title: '🔘 小數平分運算合理性檢驗', desc: '平分給指定份數求出的每份數值，必定會比原總數小且符合生活常理。' }
+                        ];
+                    } else {
+                        decisions = [
+                            { key: 'averageMeaning', title: '📊 平分與平均數合理性檢驗', desc: '平分給指定份數或移多補少求出的每份數值，必定會比原總數小且落在合理的數值區間。' },
+                            { key: 'exactDivision', title: '⏱️ 整除檢驗 (完全分完無剩餘)', desc: '依單位換算與每份規格計算，算式剛好整除沒有剩餘，所得的商數即為總份數。' }
+                        ];
+                    }
+
+                    const targetItem = decisions.find(d => d.key === q.decisionKey);
+                    const otherItems = decisions.filter(d => d.key !== q.decisionKey).sort(() => Math.random() - 0.5).slice(0, 3);
+                    const candidateList = targetItem ? [targetItem, ...otherItems] : otherItems;
+                    renderPillar4Decisions(candidateList, body);
                 } else {
                     promptEl.textContent = `【第 4 問：驗算與合理性】依 108 課綱乘法代回檢驗：`;
                     const reasonBanner = document.createElement('div');
@@ -1903,11 +3080,23 @@
                     body.appendChild(reasonBanner);
 
                     const decisions = [
-                        { key: 'inverseVerify', title: '代回乘法式檢驗完全正確', desc: `${q.reasonablenessPrompt || q.decisionExplain}` },
-                        { key: 'wrong_scale', title: '檢驗發現數值大小不合常理', desc: '還原出來的未知數比原本的總量（積）還要大，乘回去後超出題目條件！' },
-                        { key: 'wrong_multiply_verify', title: '誤用相乘檢驗：把算出來的答案和題目所有數字乘在一起', desc: '沒有依照「被乘數 × 乘數 = 積」的原本結構做代回檢驗，而是直接把數字相乘。' }
+                        { 
+                            key: 'inverseVerify', 
+                            title: '檢驗答案驗算後是否符合原本結構', 
+                            desc: '將算出的未知數代回題目原本的乘法算式（被乘數 × 乘數 = 積），檢驗算式兩端是否相等且合理。' 
+                        },
+                        { 
+                            key: 'wrong_scale', 
+                            title: '檢驗數值是否合常理', 
+                            desc: '由生活經驗判斷數值大小，觀察算出來的數字是否符合日常情境的合理範圍。' 
+                        },
+                        { 
+                            key: 'wrong_multiply_verify', 
+                            title: '直接將答案與題目已知數字相乘', 
+                            desc: '直接把算出的答案與題目中出現的已知數字相乘，檢查計算數值。' 
+                        }
                     ];
-                    renderPillar4Decisions(decisions, q.decisionKey, body);
+                    renderPillar4Decisions(decisions, body);
                 }
             }
         }
@@ -1929,6 +3118,13 @@
                     grid.querySelectorAll('.choice-card').forEach(el => el.classList.remove('selected'));
                     card.classList.add('selected');
                     state[stateKey] = c[matchProp];
+                    if (stateKey === 'selectedStep1') {
+                        state.step1ReadyToAdvance = false;
+                        submitBtn.textContent = "確認 ➔";
+                    } else if (stateKey === 'selectedStep2') {
+                        state.step2ReadyToAdvance = false;
+                        submitBtn.textContent = "確認 ➔";
+                    }
                     submitBtn.disabled = false;
                     hideFeedback();
                     playTone(420, 'sine', 0.08);
@@ -1938,37 +3134,29 @@
             container.appendChild(grid);
         }
 
-        function renderPillar4Decisions(allDecisions, targetKey, container) {
+        function renderPillar4Decisions(options, container) {
             const submitBtn = document.getElementById('main-submit-btn');
             
-            // 確保正確答案一定在候選列表中
-            const targetItem = allDecisions.find(d => d.key === targetKey);
-            const otherItems = allDecisions.filter(d => d.key !== targetKey);
-            
-            // 從其餘選項隨機挑選 2 到 3 個作為誘答項
-            const shuffledOthers = [...otherItems].sort(() => Math.random() - 0.5).slice(0, 3);
-            
-            // 合併正確答案並隨機打散排列
-            const candidateList = targetItem ? [targetItem, ...shuffledOthers] : shuffledOthers;
-            const finalOptions = candidateList.sort(() => Math.random() - 0.5);
+            // 打散隨機排列
+            const finalOptions = [...options].sort(() => Math.random() - 0.5);
 
             const grid = document.createElement('div');
             grid.className = 'option-cards-grid';
 
-            finalOptions.forEach(d => {
+            finalOptions.forEach(c => {
                 const card = document.createElement('div');
                 card.className = 'choice-card';
                 card.innerHTML = `
-                    <div class="choice-title">${d.title}</div>
-                    <div class="choice-desc">${d.desc}</div>
+                    <div class="choice-title">${c.title}</div>
+                    <div class="choice-desc">${c.desc}</div>
                 `;
                 card.onclick = () => {
                     grid.querySelectorAll('.choice-card').forEach(el => el.classList.remove('selected'));
                     card.classList.add('selected');
-                    state.selectedStep4Decision = d.key;
+                    state.selectedStep4Decision = c.key;
                     submitBtn.disabled = false;
                     hideFeedback();
-                    playTone(450, 'sine', 0.08);
+                    playTone(420, 'sine', 0.08);
                 };
                 grid.appendChild(card);
             });
@@ -2031,6 +3219,17 @@
 
             // 步驟 1 檢查
             if (state.step === 1) {
+                // 若已答對且正在等待學生自主推進
+                if (state.step1ReadyToAdvance) {
+                    state.step1ReadyToAdvance = false;
+                    state.step = 2;
+                    document.getElementById('ledger-step-2').className = 'ledger-step active';
+                    document.getElementById('badge-step-2').textContent = '進行中';
+                    document.getElementById('ledger-progress-indicator').textContent = '步驟 2 / 4';
+                    renderStepUI();
+                    return;
+                }
+
                 if (state.selectedStep1 === 'correct') {
                     playSuccessSound();
                     const s1 = document.getElementById('ledger-step-1');
@@ -2038,25 +3237,28 @@
                     document.getElementById('badge-step-1').textContent = '已鎖定 ✓';
 
                     if (state.activeTheme === 1) {
-                        showFeedback('success', `答對了！鎖定被分的主角：「${q.dividendName}」。`);
+                        showFeedback('success', `答對了！鎖定被分的主角：「${q.dividendName}」。<br><small style="opacity:0.9;">請閱讀引導後，點擊下方「繼續：進入第 2 問 ➔」切換。</small>`);
                         document.getElementById('display-step-1').innerHTML = `<strong>${q.dividendName}</strong> 是被分的主角（被除數）`;
                     } else {
                         const unknownLabel = q.targetUnknown === 'multiplicand' ? '未知的被乘數 (基準量/原價/直徑)' : '未知的乘數 (數量/高/寬)';
-                        showFeedback('success', `答對了！成功找出題目想知道的主角是「${unknownLabel}」。`);
+                        showFeedback('success', `答對了！成功找出題目想知道的主角是「${unknownLabel}」。<br><small style="opacity:0.9;">請閱讀引導後，點擊下方「繼續：進入第 2 問 ➔」切換。</small>`);
                         document.getElementById('display-step-1').innerHTML = `題目想知道：<strong>${unknownLabel}</strong>`;
                     }
 
-                    state.step = 2;
-                    setTimeout(() => {
-                        document.getElementById('ledger-step-2').className = 'ledger-step active';
-                        document.getElementById('badge-step-2').textContent = '進行中';
-                        document.getElementById('ledger-progress-indicator').textContent = '步驟 2 / 4';
-                        renderStepUI();
-                    }, 800);
+                    state.step1ReadyToAdvance = true;
+                    const submitBtn = document.getElementById('main-submit-btn');
+                    submitBtn.textContent = "繼續：進入第 2 問 ➔";
+                    submitBtn.disabled = false;
                 } else {
                     playErrorSound();
                     if (state.activeTheme === 1) {
-                        showFeedback('error', '再想一想，是誰被拿來做運算分配？不要看數字大小隨意猜測喔！');
+                        if (q.id === 'T1_02' && state.selectedStep1 === 'wrong_players') {
+                            showFeedback('error', '再想一想：被拿來分組計算的是「56 瓶牛乳」，而不是「56 位球員」喔！56 位球員每人喝 1 瓶，所以總共需要 56 瓶牛乳來做運算。');
+                        } else if (q.id === 'T1_03' && state.selectedStep1 === 'wrong_ordinal') {
+                            showFeedback('error', '再想一想：「第 35 顆」是位置（序數），不能拿來除以 4 喔！被拿來分組循環的是排在前面的「35 顆燈泡」（基數總量）！');
+                        } else {
+                            showFeedback('error', '再想一想，是誰被拿來做運算分配？不要看數字大小隨意猜測喔！');
+                        }
                     } else {
                         showFeedback('error', '再仔細看一下題目：題目給了什麼線索？想要求的是乘號前面的基準被乘數，還是乘號後面的倍數乘數呢？');
                     }
@@ -2064,6 +3266,17 @@
             }
             // 步驟 2 檢查
             else if (state.step === 2) {
+                // 若已答對且正在等待學生自主推進
+                if (state.step2ReadyToAdvance) {
+                    state.step2ReadyToAdvance = false;
+                    state.step = 3;
+                    document.getElementById('ledger-step-3').className = 'ledger-step active';
+                    document.getElementById('badge-step-3').textContent = '進行中';
+                    document.getElementById('ledger-progress-indicator').textContent = '步驟 3 / 4';
+                    renderStepUI();
+                    return;
+                }
+
                 let isStep2Correct = false;
                 if (state.activeTheme === 1) {
                     isStep2Correct = (state.selectedStep2 === q.divisionType);
@@ -2078,20 +3291,17 @@
                     document.getElementById('badge-step-2').textContent = '已鎖定 ✓';
 
                     if (state.activeTheme === 1) {
-                        showFeedback('success', `太棒了！精準看清意義架構：${q.divisionTypeName}。`);
+                        showFeedback('success', `太棒了！精準看清意義架構：${q.divisionTypeName}。<br><small style="opacity:0.9;">請閱讀引導後，點擊下方「繼續：進入第 3 問 ➔」切換。</small>`);
                         document.getElementById('display-step-2').innerHTML = `運算意義：<strong>${q.divisionTypeName}</strong>`;
                     } else {
-                        showFeedback('success', `太棒了！順向乘法算式精準列出：${q.forwardFormulaStr}。`);
+                        showFeedback('success', `太棒了！順向乘法算式精準列出：${q.forwardFormulaStr}。<br><small style="opacity:0.9;">請閱讀引導後，點擊下方「繼續：進入第 3 問 ➔」切換。</small>`);
                         document.getElementById('display-step-2').innerHTML = `依題目寫算式：<strong>${q.forwardFormulaStr}</strong>`;
                     }
 
-                    state.step = 3;
-                    setTimeout(() => {
-                        document.getElementById('ledger-step-3').className = 'ledger-step active';
-                        document.getElementById('badge-step-3').textContent = '進行中';
-                        document.getElementById('ledger-progress-indicator').textContent = '步驟 3 / 4';
-                        renderStepUI();
-                    }, 800);
+                    state.step2ReadyToAdvance = true;
+                    const submitBtn = document.getElementById('main-submit-btn');
+                    submitBtn.textContent = "繼續：進入第 3 問 ➔";
+                    submitBtn.disabled = false;
                 } else {
                     playErrorSound();
                     if (state.activeTheme === 1) {
@@ -2107,29 +3317,73 @@
                     }
                 }
             }
-            // 步驟 3 檢查 (嚴格檢查誘答字卡)
+            // 步驟 3：只記錄作答與字卡，不提前檢查商與餘數對錯，完整保留作答畫面給步驟 4 進行合理性思維
             else if (state.step === 3) {
+                // 若已確認並點擊自主推進進入步驟 4
+                if (state.step3ReadyToAdvance) {
+                    state.step3ReadyToAdvance = false;
+                    state.step = 4;
+                    document.getElementById('ledger-step-4').className = 'ledger-step active';
+                    document.getElementById('badge-step-4').textContent = '進行中';
+                    document.getElementById('ledger-progress-indicator').textContent = '步驟 4 / 4';
+                    renderStepUI();
+                    return;
+                }
+
                 const inDividend = document.getElementById('inp-dividend')?.value.trim();
                 const inDivisor = document.getElementById('inp-divisor')?.value.trim();
                 const inQuotient = document.getElementById('inp-quotient')?.value.trim();
                 const inRemainder = document.getElementById('inp-remainder')?.value.trim();
 
-                if (!inDividend || !inDivisor || !inQuotient) {
+                if (!inDividend || !inDivisor || !inQuotient || (q.hasRemainder && inRemainder === '')) {
                     playErrorSound();
-                    showFeedback('error', '請將算式格子填滿喔！');
+                    showFeedback('error', '請將算式各個格子' + (q.hasRemainder ? '（被除數、除數、商、餘數）' : '（被除數、除數、答案）') + '填寫完整喔！');
+                    return;
+                }
+
+                if (state.sentenceChips.length < 3) {
+                    playErrorSound();
+                    showFeedback('error', '算式填寫完成！請點選下方語意字卡（至少 3 張），拼出這步算式的完整數學意義！');
+                    return;
+                }
+
+                // 儲存學生作答狀態
+                state.inputStep3 = {
+                    dividend: inDividend,
+                    divisor: inDivisor,
+                    quotient: inQuotient,
+                    remainder: inRemainder || ''
+                };
+
+                playSuccessSound();
+                showFeedback('success', '作答已記錄！現在進入步驟 4，仔細思考你所算出的商與餘數是否合理。<br><small style="opacity:0.9;">請閱讀引導後，點擊下方「繼續：進入第 4 問 ➔」切換。</small>');
+
+                const s3 = document.getElementById('ledger-step-3');
+                s3.className = 'ledger-step active';
+                document.getElementById('badge-step-3').textContent = '已記錄 ✎';
+                document.getElementById('display-step-3').innerHTML = (state.activeTheme === 1 ? '意義詮釋：' : '乘除關係解題：') + `${state.sentenceChips.join(' ➔ ')}`;
+                const eqDisp = document.getElementById('display-eq-step-3');
+                eqDisp.style.display = 'block';
+                eqDisp.textContent = `${inDividend} ÷ ${inDivisor} = ${inQuotient}` + (q.hasRemainder ? ` ... ${inRemainder}` : '');
+
+                state.step3ReadyToAdvance = true;
+                const submitBtn = document.getElementById('main-submit-btn');
+                submitBtn.textContent = "繼續：進入第 4 問 ➔";
+                submitBtn.disabled = false;
+            }
+            // 步驟 4 檢查 (驗證生活決策與合理性，同時全面檢驗步驟 3 之算式、商、餘數及字卡)
+            else if (state.step === 4) {
+                if (!state.selectedStep4Decision) {
+                    playErrorSound();
+                    showFeedback('error', '請先點選一個生活情境決策或合理性檢驗選項！');
                     return;
                 }
 
                 const norm = s => (s || '').replace(/\s+/g, '');
-                if (norm(inDividend) !== norm(q.dividendNum) || norm(inDivisor) !== norm(q.divisorNum)) {
-                    playErrorSound();
-                    if (q.id === 'T2_05' && norm(inDivisor) === '3') {
-                        showFeedback('error', '⚠️ 注意陷阱：年齡差 12 歲對應的是「倍數差 3 - 1 = 2 份」，除數應該是倍數差「2」而不是 3 喔！');
-                    } else {
-                        showFeedback('error', '被除數或除數填寫有誤！請回想前兩步驟確認的主角與除數，千萬別看數字大就隨意放前面喔！');
-                    }
-                    return;
-                }
+                const inDividend = state.inputStep3.dividend;
+                const inDivisor = state.inputStep3.divisor;
+                const inQuotient = state.inputStep3.quotient;
+                const inRemainder = state.inputStep3.remainder;
 
                 // 支援等值分數與小數比對
                 const parseMathValue = (str) => {
@@ -2159,73 +3413,178 @@
                     return false;
                 };
 
-                if (!isQuotientCorrect()) {
+                // 1. 檢驗生活決策 / 合理性選項
+                if (q.step4Options && q.step4Options.length > 0) {
+                    const pickedOpt = q.step4Options.find(o => o.key === state.selectedStep4Decision);
+                    if (!pickedOpt || !pickedOpt.isCorrect) {
+                        playErrorSound();
+                        showFeedback('error', pickedOpt?.feedback || '請看清楚合理性檢驗：餘數必須小於除數，且要留意商與餘數的單位，符合生活情境決策！請再思考並重新選擇！');
+                        return;
+                    }
+                } else if (state.selectedStep4Decision !== q.decisionKey) {
                     playErrorSound();
-                    showFeedback('error', '商或計算結果有誤，請再仔細計算一次看看！');
-                    return;
-                }
-
-                if (q.hasRemainder && norm(inRemainder) !== norm(q.resultRemainder)) {
-                    playErrorSound();
-                    if (q.domain === 'decimal') {
-                        showFeedback('error', '餘數有誤，請注意小數點必須垂直對齊原被除數，且餘數必須小於除數。');
+                    if (state.activeTheme === 2) {
+                        if (state.selectedStep4Decision === 'wrong_scale') {
+                            showFeedback('error', '再想一想：只「檢驗數值是否合常理」還不夠嚴謹喔！依乘除互逆驗算要求，必須「檢驗答案驗算後是否符合原本結構」，代回乘法算式中驗算！');
+                        } else if (state.selectedStep4Decision === 'wrong_multiply_verify') {
+                            showFeedback('error', '再想一想：驗算時不能直接將答案與題目數字相乘，應該依照題目原本的乘法結構（被乘數 × 乘數 = 積）代回驗算喔！');
+                        } else {
+                            showFeedback('error', '請仔細檢驗：依乘除互逆，如何完整驗算求出的答案？請選出符合題目乘法結構的驗算方式！');
+                        }
                     } else {
-                        showFeedback('error', '餘數有誤，餘數必須小於除數。');
+                        showFeedback('error', '請看清楚合理性檢驗：餘數必須小於除數，且要留意商與餘數的單位，符合生活情境決策！請再思考並重新選擇！');
                     }
                     return;
                 }
 
-                if (state.sentenceChips.length < 3) {
+                // 2. 檢驗算式中的被除數與除數 (支援大數除法簡化)
+                let isDividendDivisorOk = (norm(inDividend) === norm(q.dividendNum) && norm(inDivisor) === norm(q.divisorNum));
+                if (q.id === 'T1_07') {
+                    // 支援標準 280800 ÷ 4000 與大數簡化除法 2808 ÷ 40
+                    const isStandard = (norm(inDividend) === '280800' && norm(inDivisor) === '4000');
+                    const isSimplified = (norm(inDividend) === '2808' && norm(inDivisor) === '40');
+                    isDividendDivisorOk = isStandard || isSimplified;
+                } else if (q.id === 'T1_08') {
+                    const isDivdOk = norm(inDividend) === '16' || norm(inDividend) === '16/3';
+                    const isDivsOk = norm(inDivisor) === '3' || norm(inDivisor) === '3/3' || norm(inDivisor) === '1';
+                    isDividendDivisorOk = isDivdOk && isDivsOk;
+                }
+
+                if (!isDividendDivisorOk) {
                     playErrorSound();
-                    showFeedback('error', '算式對了！請點選下方語意字卡（至少 3 張），拼出這步算式的完整數學意義！');
+                    if (q.id === 'T2_05' && norm(inDivisor) === '3') {
+                        showFeedback('error', '⚠️ 算式檢驗發現：年齡差 12 歲對應的是「倍數差 3 - 1 = 2 份」，除數應該是倍數差「2」喔！請點擊上方「返回修改算式或字卡」修正。');
+                    } else if (q.id === 'T1_07') {
+                        showFeedback('error', `⚠️ 算式檢驗發現：被除數 (${inDividend}) 或除數 (${inDivisor}) 與題目不符！可填寫原本大數 280800 ÷ 4000，或運用尾數去 0 的大數簡化法 2808 ÷ 40。請點擊上方「返回修改算式或字卡」修正。`);
+                    } else {
+                        showFeedback('error', `⚠️ 算式檢驗發現：被除數 (${inDividend}) 或除數 (${inDivisor}) 與題目不符！請回想前兩步驟確認的主角與除數，點擊上方「返回修改算式或字卡」重新填寫。`);
+                    }
                     return;
                 }
 
-                // 檢查是否選中了誘答字卡
-                if (q.distractors && q.distractors.length > 0) {
-                    const pickedDistractor = state.sentenceChips.find(chip => q.distractors.includes(chip));
-                    if (pickedDistractor) {
+                // 3. 餘數合理性檢驗（餘數必須小於除數）
+                if (q.hasRemainder) {
+                    const valRem = parseMathValue(inRemainder);
+                    const valDiv = parseMathValue(inDivisor);
+                    
+                    let isRemTooLarge = (!isNaN(valRem) && !isNaN(valDiv) && valRem >= valDiv);
+                    if (q.id === 'T1_07' && norm(inDivisor) === '40' && norm(inRemainder) === '800') {
+                        // 800 公斤是還原後的真實重量，小於原貨車載重 4000 公斤，完全合理！
+                        isRemTooLarge = false;
+                    }
+
+                    if (isRemTooLarge) {
                         playErrorSound();
-                        showFeedback('error', `⚠️ 踩到誘答陷阱了！字卡中包含了錯誤的「${pickedDistractor}」。請想一想：被乘數與乘數的定義為何？餘數能大於一整份的容量嗎？請點擊移除這張字卡！`);
+                        showFeedback('error', `⚠️ 關鍵矛盾！你算出的餘數是「${inRemainder}」，但除數是「${inDivisor}」！<strong>餘數大於或等於除數</strong>，表示還可以再分一份，這在數學與生活中是不合理的！請點擊上方「返回修改算式或字卡」重新調整商與餘數。`);
+                        return;
+                    }
+
+                    let isRemCorrect = (norm(inRemainder) === norm(q.resultRemainder));
+                    if (q.id === 'T1_08' && (norm(inRemainder) === '1' || norm(inRemainder) === '1/3')) {
+                        isRemCorrect = true;
+                    }
+                    if (q.id === 'T1_13') {
+                        const r = norm(inRemainder);
+                        if (r === '1/4' || r === '0.25' || r === '1/3' || r === '1/4公尺' || r === '1/3朵') {
+                            isRemCorrect = true;
+                        }
+                    }
+                    if (q.id === 'T1_07') {
+                        if (norm(inDividend) === '2808' && norm(inDivisor) === '40') {
+                            isRemCorrect = (norm(inRemainder) === '8' || norm(inRemainder) === '800');
+                        } else {
+                            isRemCorrect = (norm(inRemainder) === '800');
+                        }
+                    }
+
+                    if (!isRemCorrect) {
+                        playErrorSound();
+                        if (q.domain === 'decimal') {
+                            showFeedback('error', `⚠️ 合理性檢驗發現：餘數 (${inRemainder}) 計算有誤！請注意小數除法中，餘數的小數點必須垂直對齊原被除數。請點擊上方「返回修改算式或字卡」修正。`);
+                        } else if (q.id === 'T1_07') {
+                            showFeedback('error', `⚠️ 合理性檢驗發現：餘數 (${inRemainder}) 計算有誤！使用 2808 ÷ 40 簡化計算時，餘數為 8 個百（填 8 或還原為 800 公斤皆可）。請點擊上方「返回修改算式或字卡」重新計算。`);
+                        } else {
+                            showFeedback('error', `⚠️ 合理性檢驗發現：餘數 (${inRemainder}) 計算有誤！請點擊上方「返回修改算式或字卡」重新計算。`);
+                        }
                         return;
                     }
                 }
 
-                playSuccessSound();
-                showFeedback('success', `算式與語意完全正確！${q.equationStr}`);
+                // 4. 商或未知數數值正確性檢驗
+                if (q.id === 'T1_08' && (norm(inQuotient) === '5' || norm(inQuotient) === '5又1/3')) {
+                    // 假分數換帶分數通過
+                } else if (!isQuotientCorrect()) {
+                    playErrorSound();
+                    showFeedback('error', `⚠️ 合理性檢驗發現：商或計算結果 (${inQuotient}) 有誤，代回題目時無法吻合！請點擊上方「返回修改算式或字卡」重新計算一次。`);
+                    return;
+                }
+
+                // 5. 語意字卡與誘答字卡檢驗
+                if (q.distractors && q.distractors.length > 0) {
+                    const pickedDistractor = state.sentenceChips.find(chip => q.distractors.includes(chip));
+                    if (pickedDistractor) {
+                        playErrorSound();
+                        if (pickedDistractor === '剩下 8 公斤') {
+                            showFeedback('error', '⚠️ 語意檢驗發現：字卡中包含「剩下 8 公斤」！運用大數簡化除法算出的餘數 8 代表「8 個百」，真實重量是 800 公斤，不是 8 公斤喔！請點擊上方「返回修改算式或字卡」修正。');
+                        } else if (pickedDistractor === '剩下 1/3 公尺') {
+                            showFeedback('error', '⚠️ 單位混淆檢驗：除法算式算出的餘數 1/3，單位是「朵」（也就是 1/3 朵花），不是「1/3 公尺」喔！一朵花需 3/4 公尺，1/3 朵換算緞帶長度是 1/3 × 3/4 = 1/4 公尺！請點擊上方「返回修改算式或字卡」修正。');
+                        } else if (pickedDistractor === '剩下 1/4 朵') {
+                            showFeedback('error', '⚠️ 單位混淆檢驗：1/4 的單位是「公尺」，不是「朵」喔！一朵花需要 3/4 公尺，剩下的 1/4 公尺只佔了一整朵花的三分之一，所以是 1/3 朵花！請點擊上方「返回修改算式或字卡」修正。');
+                        } else if (pickedDistractor === '答案是 3又1/5 條') {
+                            showFeedback('error', '⚠️ 帶分數概念檢驗：帶分數的整數部分代表「湊滿的整條數 (5條)」，分母代表「每整條分的等份 (3等份)」，分子代表「剩下的等份 (1等份)」，不能將商與除數顛倒記成 3又1/5 條喔！請點擊上方「返回修改算式或字卡」修正。');
+                        } else if (pickedDistractor === '答案是 1又5/3 條') {
+                            showFeedback('error', '⚠️ 帶分數概念檢驗：帶分數的整數部分是整除出來的整條數 5，不是餘數 1；而且帶分數中的分數部分分子必須小於分母，不能記成 1又5/3 條喔！請點擊上方「返回修改算式或字卡」修正。');
+                        } else {
+                            showFeedback('error', `⚠️ 語意檢驗發現：字卡中包含了「${pickedDistractor}」，概念不正確喔！請點擊上方「返回修改算式或字卡」移除誘答字卡。`);
+                        }
+                        return;
+                    }
+                }
+
+                // 6. 全部檢驗通過，給予慶祝！
+                playFanfareSound();
 
                 const s3 = document.getElementById('ledger-step-3');
                 s3.className = 'ledger-step completed';
                 document.getElementById('badge-step-3').textContent = '已鎖定 ✓';
-                document.getElementById('display-step-3').innerHTML = (state.activeTheme === 1 ? '意義詮釋：' : '乘除關係解題：') + `${state.sentenceChips.join(' ➔ ')}`;
                 const eqDisp = document.getElementById('display-eq-step-3');
                 eqDisp.style.display = 'block';
-                eqDisp.textContent = q.equationStr;
 
-                state.step = 4;
-                setTimeout(() => {
-                    document.getElementById('ledger-step-4').className = 'ledger-step active';
-                    document.getElementById('badge-step-4').textContent = '進行中';
-                    document.getElementById('ledger-progress-indicator').textContent = '步驟 4 / 4';
-                    renderStepUI();
-                }, 900);
-            }
-            // 步驟 4 檢查 (合理性檢驗)
-            else if (state.step === 4) {
-                if (state.selectedStep4Decision === q.decisionKey) {
-                    playFanfareSound();
-
-                    const s4 = document.getElementById('ledger-step-4');
-                    s4.className = 'ledger-step completed';
-                    document.getElementById('badge-step-4').textContent = '推理完成 ✓';
-                    document.getElementById('display-step-4').innerHTML = `<strong>生活與合理性檢驗：</strong>${q.decisionExplain}`;
-
-                    showCelebrationModal();
-                } else {
-                    playErrorSound();
-                    showFeedback('error', `請看清楚合理性檢驗：餘數必須小於除數，而且要符合生活常理喔！再選一次看看！`);
+                let finalEqStr = q.equationStr;
+                let explainText = q.decisionExplain;
+                if (q.id === 'T1_07' && norm(inDividend) === '2808' && norm(inDivisor) === '40') {
+                    finalEqStr = `2808 ÷ 40 = 70 ... ${inRemainder}（相當於 280800 ÷ 4000 = 70 ... 800）`;
+                    explainText = `太棒了！你靈活運用了末尾去掉 0 的大數除法原理（2808 ÷ 40），商 70 輛車不變；餘數 8 代表 8 個百（即 800 公斤）。要將全部貨物運完，剩下的 800 公斤也需要 1 輛車（商 + 1），所以最少需要 70 + 1 = 71 輛貨車！`;
                 }
+                eqDisp.textContent = finalEqStr;
+
+                const s4 = document.getElementById('ledger-step-4');
+                s4.className = 'ledger-step completed';
+                document.getElementById('badge-step-4').textContent = '推理完成 ✓';
+                document.getElementById('display-step-4').innerHTML = `<strong>生活與合理性檢驗：</strong>${explainText}`;
+
+                hideFeedback();
+                showCelebrationModal();
             }
+        }
+
+        /* 返回步驟 3 修改算式與字卡 */
+        function backToStep3() {
+            state.step = 3;
+            state.step3ReadyToAdvance = false;
+            state.selectedStep4Decision = null;
+
+            const s4 = document.getElementById('ledger-step-4');
+            s4.className = 'ledger-step';
+            document.getElementById('badge-step-4').textContent = '待解鎖';
+            document.getElementById('display-step-4').textContent = '等待解鎖...';
+
+            const s3 = document.getElementById('ledger-step-3');
+            s3.className = 'ledger-step active';
+            document.getElementById('badge-step-3').textContent = '進行中';
+            document.getElementById('ledger-progress-indicator').textContent = '步驟 3 / 4';
+
+            renderStepUI();
         }
 
         /* 彈窗顯示 */
@@ -2234,10 +3593,18 @@
             const modal = document.getElementById('celebration-modal');
             const summary = document.getElementById('modal-summary-text');
 
+            let modalEq = q.equationStr;
+            let modalExplain = q.decisionExplain;
+            const norm = s => (s || '').replace(/\s+/g, '');
+            if (q.id === 'T1_07' && norm(state.inputStep3?.dividend) === '2808') {
+                modalEq = `${state.inputStep3.dividend} ÷ ${state.inputStep3.divisor} = 70 ... ${state.inputStep3.remainder}（相當於 280800 ÷ 4000 = 70 ... 800）`;
+                modalExplain = `太棒了！你靈活運用了末尾去掉 0 的大數除法原理（2808 ÷ 40），商 70 輛車不變；餘數 8 代表 8 個百（即 800 公斤）。要將全部貨物運完，剩下的 800 公斤也需要 1 輛車（商 + 1），所以最少需要 70 + 1 = 71 輛貨車！`;
+            }
+
             summary.innerHTML = `
                 <div><strong>📌 題目：</strong>${q.title} (${q.subType})</div>
-                <div style="margin: 6px 0;"><strong>🔢 數學算式：</strong><code>${q.equationStr}</code></div>
-                <div style="margin: 6px 0;"><strong>⚖️ 合理性與生活意涵：</strong>${q.decisionExplain}</div>
+                <div style="margin: 6px 0;"><strong>🔢 數學算式：</strong><code>${modalEq}</code></div>
+                <div style="margin: 6px 0;"><strong>⚖️ 合理性與生活意涵：</strong>${modalExplain}</div>
                 <div style="margin-top: 8px; color: var(--theme2-color); font-weight: bold; font-size: 1.1rem;">💡 最終答案：${q.finalAnswer}</div>
             `;
             modal.style.display = 'flex';
