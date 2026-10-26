@@ -732,6 +732,12 @@
             border: 1px solid rgba(99, 132, 117, 0.3);
             color: var(--theme2-color);
         }
+        .feedback-banner.hint {
+            background: #fcf9f2;
+            border: 1px solid #ebdccb;
+            color: #5c4328;
+            box-shadow: 0 2px 8px rgba(92, 67, 40, 0.05);
+        }
 
         /* 動作按鈕排 */
         .action-row {
@@ -3614,10 +3620,132 @@
             document.getElementById('celebration-modal').style.display = 'none';
         }
 
-        /* 提示指引 */
+        /* 步驟感知與情境連動之動態思考指引 (純思考引導，不直接爆雷答案) */
+        function getStepPedagogicalHint(q, step, activeTheme) {
+            if (activeTheme === 1) {
+                // 主題 1：分裝與平分生活館
+                if (step === 1) {
+                    return `<div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-weight:700; font-size:1.02rem; margin-bottom:6px; color:#4a3219;">💡 【第 1 步思考指引：什麼被分？】</div>
+                            <div style="line-height:1.6;">
+                                讀題目時，請先找出<strong>「是誰被拿去分？」</strong><br>
+                                • <strong>被除數</strong>是一開始擁有的<strong>「整體總量」</strong>（被分配的主角，例如全部的水果總數、鮮奶總量、彩帶全長，或是全體球員的需求總量）。<br>
+                                • ⚠️ <strong>注意排除干擾：</strong>小心不要把裝東西的容器（如箱子、瓶子、袋子）或分給的人數當成主角喔！<br>
+                                🔍 <strong>思考提問：</strong>回頭讀題目第一句話，找找看最初拿出來準備分配的「總量」到底是什麼？
+                            </div>
+                        </div>
+                        <button onclick="hideFeedback()" style="background:none; border:none; color:#8c6d48; font-size:1.1rem; cursor:pointer; padding:2px 6px;">✕</button>
+                    </div>`;
+                } else if (step === 2) {
+                    return `<div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-weight:700; font-size:1.02rem; margin-bottom:6px; color:#4a3219;">💡 【第 2 步思考指引：分裝 vs 平分的差異】</div>
+                            <div style="line-height:1.6;">
+                                請仔細讀題，分辨這兩種除法情境的關鍵特徵：<br>
+                                • 📦 <strong>分裝（包含除）：</strong>知道<strong>「每份固定有多少」</strong>（例如：一瓶 1.8 公升就是「每 1.8 公升裝一瓶」、每 5 顆裝成一盒），題目想知道的是<strong>「可以裝成幾瓶／幾盒」</strong>。<br>
+                                • 🤲 <strong>平分（等分除）：</strong>知道<strong>「要平分給幾份／幾個人」</strong>（例如：平分倒成 6 杯、平分給 12 瓶），題目想問的是<strong>「每一份／每一瓶分到多少」</strong>。<br>
+                                🔍 <strong>思考提問：</strong>觀察題目給的已知條件，是告訴我們「每一份的大小」，還是告訴我們「要分成的份數」呢？
+                            </div>
+                        </div>
+                        <button onclick="hideFeedback()" style="background:none; border:none; color:#8c6d48; font-size:1.1rem; cursor:pointer; padding:2px 6px;">✕</button>
+                    </div>`;
+                } else if (step === 3) {
+                    return `<div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-weight:700; font-size:1.02rem; margin-bottom:6px; color:#4a3219;">💡 【第 3 步思考指引：列式與語意詮釋】</div>
+                            <div style="line-height:1.6;">
+                                • <strong>算式架構：</strong>[步驟 1 的被除數 (總量)] ÷ [步驟 2 的除數] = [商] ... [餘數]。<br>
+                                • <strong>留意商與餘數的單位：</strong><br>
+                                  - 「商」代表分出的份數或每份大小。<br>
+                                  - 「餘數」代表分不完剩下的量（單位跟被除數相同）。<br>
+                                🔍 <strong>思考提問：</strong>除完之後如果有剩下的量，先確認剩下的量有沒有小於除數？下方字卡請挑選符合題意描述的正確推論！
+                            </div>
+                        </div>
+                        <button onclick="hideFeedback()" style="background:none; border:none; color:#8c6d48; font-size:1.1rem; cursor:pointer; padding:2px 6px;">✕</button>
+                    </div>`;
+                } else if (step === 4) {
+                    return `<div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-weight:700; font-size:1.02rem; margin-bottom:6px; color:#4a3219;">💡 【第 4 步思考指引：生活決策與合理性檢驗】</div>
+                            <div style="line-height:1.6;">
+                                • <strong>基本數學檢核：</strong>算出來的「餘數」一定要<strong>小於「除數」</strong>（剩下的量不夠再湊一份才合理）！<br>
+                                • <strong>生活情境決策：</strong>根據生活真實情境，剩下的量該如何處理？<br>
+                                  - 只能裝滿完整整份時：剩下的不足一份，是否直接捨去？<br>
+                                  - 全部載完／每個人都要有時：剩下的雖然不夠一份，是否也需要多算一份 (+1)？<br>
+                                  - 週期循環題：看剩下的餘數數到循環中的第幾個？<br>
+                                🔍 <strong>思考提問：</strong>題目最想知道的目標是什麼？請選出最符合該情境的合理決策！
+                            </div>
+                        </div>
+                        <button onclick="hideFeedback()" style="background:none; border:none; color:#8c6d48; font-size:1.1rem; cursor:pointer; padding:2px 6px;">✕</button>
+                    </div>`;
+                }
+            } else {
+                // 主題 2：乘除互逆解題館
+                if (step === 1) {
+                    return `<div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-weight:700; font-size:1.02rem; margin-bottom:6px; color:#4a3219;">💡 【第 1 步思考指引：題目想知道什麼？】</div>
+                            <div style="line-height:1.6;">
+                                依 108 課綱乘法結構：<strong>「每份量 (被乘數) × 份數/倍數 (乘數) = 總量 (積)」</strong>。<br>
+                                • 如果題目想求的是<strong>「基準量／每一份的數量」</strong>，未知數就是<strong>被乘數</strong>。<br>
+                                • 如果題目想求的是<strong>「有幾份／幾倍」</strong>，未知數就是<strong>乘數</strong>。<br>
+                                🔍 <strong>思考提問：</strong>看一下題目問句，我們想要找出來的未知量，是基準量還是倍數呢？
+                            </div>
+                        </div>
+                        <button onclick="hideFeedback()" style="background:none; border:none; color:#8c6d48; font-size:1.1rem; cursor:pointer; padding:2px 6px;">✕</button>
+                    </div>`;
+                } else if (step === 2) {
+                    return `<div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-weight:700; font-size:1.02rem; margin-bottom:6px; color:#4a3219;">💡 【第 2 步思考指引：依題目線索列出順向算式】</div>
+                            <div style="line-height:1.6;">
+                                先依照題目的生活語意，把已知的數與未知的數寫成原本的乘法關係式：<br>
+                                • 順向乘法：( 未知的量 ) × 已知數 = 總數，或 已知數 × ( 未知的量 ) = 總數。<br>
+                                🔍 <strong>思考提問：</strong>把題目最後要問的未知數用括號 ( ) 表示，照著題意乘起來，結果會等於題目給的哪一個總數呢？
+                            </div>
+                        </div>
+                        <button onclick="hideFeedback()" style="background:none; border:none; color:#8c6d48; font-size:1.1rem; cursor:pointer; padding:2px 6px;">✕</button>
+                    </div>`;
+                } else if (step === 3) {
+                    return `<div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-weight:700; font-size:1.02rem; margin-bottom:6px; color:#4a3219;">💡 【第 3 步思考指引：運用乘除互逆解題】</div>
+                            <div style="line-height:1.6;">
+                                乘法與除法互為逆運算。在乘法算式中求任何一個未知因數：<br>
+                                • <strong>互逆除法算式：</strong>[積 (總量)] ÷ [已知數] = [未知數]。<br>
+                                🔍 <strong>思考提問：</strong>用乘法算式等號右邊的「積」，除以題目已知的那個數，就能解出括號裡的未知數囉！
+                            </div>
+                        </div>
+                        <button onclick="hideFeedback()" style="background:none; border:none; color:#8c6d48; font-size:1.1rem; cursor:pointer; padding:2px 6px;">✕</button>
+                    </div>`;
+                } else if (step === 4) {
+                    return `<div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-weight:700; font-size:1.02rem; margin-bottom:6px; color:#4a3219;">💡 【第 4 步思考指引：代回原式驗算與合理性】</div>
+                            <div style="line-height:1.6;">
+                                • <strong>乘除互逆驗算：</strong>把步驟 3 算出來的未知數，代回步驟 2 原本的乘法算式中。<br>
+                                • <strong>合理性確認：</strong>乘出來的結果是否完全等於題目給的總數？數值大小是否符合生活常理？<br>
+                                🔍 <strong>思考提問：</strong>請在下方選項中，選出最嚴謹的代回驗算方式！
+                            </div>
+                        </div>
+                        <button onclick="hideFeedback()" style="background:none; border:none; color:#8c6d48; font-size:1.1rem; cursor:pointer; padding:2px 6px;">✕</button>
+                    </div>`;
+                }
+            }
+        }
+
+        /* 提示指引切換 */
         function showPedagogicalHint() {
+            const el = document.getElementById('feedback-banner-el');
+            // 若當前已顯示 hint，再次點擊按鈕可切換關閉
+            if (el.style.display === 'block' && el.classList.contains('hint')) {
+                hideFeedback();
+                return;
+            }
             const q = state.filteredQuestions[state.currentQIndex];
-            showFeedback('error', `💡 提示：${q.hint}`);
+            const hintHtml = getStepPedagogicalHint(q, state.step, state.activeTheme);
+            showFeedback('hint', hintHtml);
         }
 
         function showFeedback(type, msg) {
